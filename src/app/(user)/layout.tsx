@@ -1,7 +1,7 @@
 import "@/ui/styles/globals.css";
 
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Jost } from "next/font/google";
 
 import { siteConfig } from "@/core/config/site";
 import { cn } from "@/core/utils/utils";
@@ -12,6 +12,11 @@ import Footer from "@/features/shared/common/Footer";
 import Header from "@/features/shared/common/Header";
 
 const inter = Inter({ subsets: ["latin"] });
+const jost = Jost({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-jost",
+});
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -81,10 +86,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
     <html lang="en" suppressHydrationWarning>
       <head />
       <body
-        className={cn(
-          "min-h-screen bg-background antialiased",
-          inter.className
-        )}
+        className={cn("min-h-screen bg-background antialiased", jost.className)}
       >
         <Providers session={session}>
           <ThemeProvider
