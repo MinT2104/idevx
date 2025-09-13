@@ -259,7 +259,7 @@ const ModelListing = () => {
 
         {/* Explore DevX Today Section */}
         <div className="text-center py-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">
+          <h2 className="text-5xl font-neuropolitical text-center font-normal text-gray-900 mb-8">
             Explore DevX Today
           </h2>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
