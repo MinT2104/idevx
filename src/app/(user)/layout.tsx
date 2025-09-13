@@ -85,9 +85,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <body
-        className={cn("min-h-screen bg-background antialiased", jost.className)}
-      >
+      <body className={cn("min-h-screen bg-white antialiased", jost.className)}>
         <Providers session={session}>
           <ThemeProvider
             attribute="class"
