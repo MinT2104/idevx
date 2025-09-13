@@ -8,6 +8,8 @@ import { cn } from "@/core/utils/utils";
 import { getServerSessionUser } from "@/features/auth/auth-server";
 import { Providers } from "@/features/shared/components/providers";
 import { ThemeProvider } from "@/features/shared/components/theme-provider";
+import Footer from "@/features/shared/common/Footer";
+import Header from "@/features/shared/common/Header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -91,7 +93,9 @@ export default async function RootLayout({ children }: RootLayoutProps) {
             enableSystem
             disableTransitionOnChange
           >
+            <Header />
             {children}
+            <Footer />
           </ThemeProvider>
         </Providers>
       </body>
