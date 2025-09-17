@@ -5,11 +5,14 @@ import GoogleProvider from "next-auth/providers/google"
 
 export default {
   adapter: PrismaAdapter(prisma),
+  // Temporarily commented out NextAuth secret
+  // secret: process.env.NEXTAUTH_SECRET,
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
+    // Temporarily commented out Google provider
+    // GoogleProvider({
+    //   clientId: process.env.GOOGLE_CLIENT_ID!,
+    //   clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    // }),
   ],
   callbacks: {
     session: async ({ session, token }: any) => {

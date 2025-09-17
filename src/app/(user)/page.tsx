@@ -1,16 +1,12 @@
 import { Metadata } from "next";
-import TodoView from "@/features/todos/components/TodoView";
-
-// Enable static generation with revalidation
-export const revalidate = 0; // Disable static generation for authenticated pages
-export const dynamic = "force-dynamic"; // Force dynamic for auth-dependent content
+import Hero from "@/features/shared/components/Hero";
 
 export const metadata: Metadata = {
-  title: "Todo App | Manage Your Tasks",
+  title: "DevX | AI Solutions Built for Your Success",
   description:
-    "A modern todo application built with Next.js, featuring server-side rendering and real-time updates.",
+    "DevX empowers businesses with domain-focused AI services and innovative products—from Education, Healthcare, and Law Firms to Travel, Food, Enterprises, and Creators.",
 };
 
 export default function Home() {
-  return <TodoView />;
+  return <Hero />;
 }
