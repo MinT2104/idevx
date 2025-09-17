@@ -58,27 +58,23 @@ const Header = () => {
           <Link href="/">
             {/* Logo */}
             {!isScrolled ? (
-              <Link href="/">
-                <Image
-                  src="/images/logo.png"
-                  alt="Logo"
-                  height={0}
-                  width={0}
-                  className="w-auto h-[32px]"
-                  sizes="100vw"
-                />
-              </Link>
+              <Image
+                src="/images/logo.png"
+                alt="Logo"
+                height={0}
+                width={0}
+                className="w-auto h-[32px]"
+                sizes="100vw"
+              />
             ) : (
-              <Link href="/">
-                <Image
-                  src="/images/logo_no_text.png"
-                  alt="Logo"
-                  height={0}
-                  width={0}
-                  className="w-auto h-[32px]"
-                  sizes="100vw"
-                />
-              </Link>
+              <Image
+                src="/images/logo_no_text.png"
+                alt="Logo"
+                height={0}
+                width={0}
+                className="w-auto h-[32px]"
+                sizes="100vw"
+              />
             )}
           </Link>
 

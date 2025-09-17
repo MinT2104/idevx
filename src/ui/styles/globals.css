@@ -82,3 +82,12 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .hero-grid {
+    background-image: 
+      linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+}
