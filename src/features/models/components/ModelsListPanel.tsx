@@ -5,7 +5,7 @@ interface Model {
   id: string;
   icon: string;
   name: string;
-  actionType?: 'try' | 'explore';
+  actionType?: "try" | "explore";
 }
 
 interface ModelsListPanelProps {
@@ -21,16 +21,14 @@ export default function ModelsListPanel({
   description,
   models,
   onLearnMore,
-  onModelAction
+  onModelAction,
 }: ModelsListPanelProps) {
   return (
-    <div className="bg-white rounded-lg border-2 border-dashed border-gray-300 p-6 shadow-sm h-full flex flex-col">
+    <div className="bg-white border-2 border-dashed border-gray-300 p-6 shadow-sm h-full flex flex-col">
       {/* Header */}
       <div className="mb-6">
         <div className="flex justify-between items-start mb-2">
-          <h3 className="text-lg font-semibold text-gray-800">
-            {title}
-          </h3>
+          <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
           <Button
             size="sm"
             className="text-xs px-4 py-2 h-8 bg-white text-black border border-gray-300 hover:bg-gray-50 font-medium"
@@ -39,9 +37,7 @@ export default function ModelsListPanel({
             Learn More
           </Button>
         </div>
-        <p className="text-sm text-gray-600 leading-relaxed">
-          {description}
-        </p>
+        <p className="text-sm text-gray-600 leading-relaxed">{description}</p>
       </div>
 
       {/* Models List */}
@@ -52,8 +48,8 @@ export default function ModelsListPanel({
             icon={model.icon}
             name={model.name}
             actionType={model.actionType}
-            onTry={() => onModelAction?.(model.id, 'try')}
-            onExplore={() => onModelAction?.(model.id, 'explore')}
+            onTry={() => onModelAction?.(model.id, "try")}
+            onExplore={() => onModelAction?.(model.id, "explore")}
           />
         ))}
       </div>

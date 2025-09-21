@@ -5,11 +5,11 @@ import { Inter, Jost } from "next/font/google";
 
 import { siteConfig } from "@/core/config/site";
 import { cn } from "@/core/utils/utils";
-// import { getServerSessionUser } from "@/features/auth/auth-server";
-// import { Providers } from "@/features/shared/components/providers";
+import { getServerSessionUser } from "@/features/auth/auth-server";
 import { ThemeProvider } from "@/features/shared/components/theme-provider";
 import Footer from "@/features/shared/common/Footer";
 import Header from "@/features/shared/common/Header";
+import { Providers } from "@/features/shared/components/providers";
 
 const inter = Inter({ subsets: ["latin"] });
 const jost = Jost({
@@ -72,22 +72,24 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({ children }: RootLayoutProps) {
+export default async function RootLayout({ children }: RootLayoutProps) {
   // Temporarily commented out auth functionality
-  // const user = await getServerSessionUser();
-  // const session = user
-  //   ? {
-  //       user,
-  //       expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days
-  //     }
-  //   : null;
+  const user = await getServerSessionUser();
+  const session = user
+    ? {
+        user,
+        expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days
+      }
+    : null;
 
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <body className={cn("min-h-screen bg-white antialiased", jost.className)}>
-        {/* Temporarily commented out Providers wrapper */}
-        {/* <Providers session={session}> */}
+      <body
+        suppressHydrationWarning
+        className={cn("min-h-screen bg-white antialiased", jost.className)}
+      >
+        <Providers session={session}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -98,7 +100,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             {children}
             <Footer />
           </ThemeProvider>
-        {/* </Providers> */}
+        </Providers>
       </body>
     </html>
   );

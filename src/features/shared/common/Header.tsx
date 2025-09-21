@@ -55,9 +55,9 @@ const Header = () => {
             isScrolled ? "h-16 justify-center" : "h-20 justify-between"
           )}
         >
-          <Link href="/">
-            {/* Logo */}
-            {!isScrolled ? (
+          {/* Logo */}
+          {!isScrolled ? (
+            <Link href="/">
               <Image
                 src="/images/logo.png"
                 alt="Logo"
@@ -66,7 +66,9 @@ const Header = () => {
                 className="w-auto h-[32px]"
                 sizes="100vw"
               />
-            ) : (
+            </Link>
+          ) : (
+            <Link href="/">
               <Image
                 src="/images/logo_no_text.png"
                 alt="Logo"
@@ -75,8 +77,8 @@ const Header = () => {
                 className="w-auto h-[32px]"
                 sizes="100vw"
               />
-            )}
-          </Link>
+            </Link>
+          )}
 
           {/* Navigation Menu */}
           <nav
