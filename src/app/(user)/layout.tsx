@@ -1,15 +1,22 @@
 import "@/ui/styles/globals.css";
 
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Jost } from "next/font/google";
 
 import { siteConfig } from "@/core/config/site";
 import { cn } from "@/core/utils/utils";
 import { getServerSessionUser } from "@/features/auth/auth-server";
-import { Providers } from "@/features/shared/components/providers";
 import { ThemeProvider } from "@/features/shared/components/theme-provider";
+import Footer from "@/features/shared/common/Footer";
+import Header from "@/features/shared/common/Header";
+import { Providers } from "@/features/shared/components/providers";
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
+const jost = Jost({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-jost",
+});
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -55,6 +62,8 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+    shortcut: "/favicon-16x16.png",
   },
 };
 
@@ -66,7 +75,7 @@ export const viewport: Viewport = {
 };
 
 export default async function RootLayout({ children }: RootLayoutProps) {
-  // Get session server-side for SSR optimization
+  // Temporarily commented out auth functionality
   const user = await getServerSessionUser();
   const session = user
     ? {
@@ -79,10 +88,8 @@ export default async function RootLayout({ children }: RootLayoutProps) {
     <html lang="en" suppressHydrationWarning>
       <head />
       <body
-        className={cn(
-          "min-h-screen bg-background antialiased",
-          inter.className
-        )}
+        suppressHydrationWarning
+        className={cn("min-h-screen bg-white antialiased", jost.className)}
       >
         <Providers session={session}>
           <ThemeProvider
@@ -91,7 +98,9 @@ export default async function RootLayout({ children }: RootLayoutProps) {
             enableSystem
             disableTransitionOnChange
           >
+            <Header />
             {children}
+            <Footer />
           </ThemeProvider>
         </Providers>
       </body>

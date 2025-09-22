@@ -9,6 +9,13 @@ const nextConfig = {
   // Image optimization
   images: {
     formats: ["image/webp", "image/avif"],
+    domains: [
+      "www.datocms-assets.com",
+      "example.com",
+      "datocms-assets.com",
+      "images.unsplash.com",
+      "plus.unsplash.com",
+    ],
   },
 
   // Headers for better caching
@@ -32,8 +39,8 @@ const nextConfig = {
           },
         ],
       },
-    ]
+    ];
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
