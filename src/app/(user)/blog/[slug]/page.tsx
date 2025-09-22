@@ -81,11 +81,16 @@ export async function generateMetadata({
 }
 
 export async function generateStaticParams() {
-  const posts = await prisma.blogPost.findMany({
-    select: { slug: true, status: true },
-    where: { status: "published" },
-  });
-  return posts.map((p) => ({ slug: p.slug }));
+  try {
+    const posts = await prisma.blogPost.findMany({
+      select: { slug: true, status: true },
+      where: { status: "published" },
+    });
+    return posts.map((p) => ({ slug: p.slug }));
+  } catch (error) {
+    console.warn("Failed to generate static params for blog:", error);
+    return [];
+  }
 }
 
 export default page;

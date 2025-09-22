@@ -1,10 +1,11 @@
-import { prisma } from "@/core/database/db"
-import { PrismaAdapter } from "@auth/prisma-adapter"
+// import { prisma } from "@/core/database/db"
+// import { PrismaAdapter } from "@auth/prisma-adapter"
 import type { NextAuthOptions } from "next-auth"
-import GoogleProvider from "next-auth/providers/google"
+
+// import GoogleProvider from "next-auth/providers/google"
 
 export default {
-  adapter: PrismaAdapter(prisma),
+  // adapter: PrismaAdapter(prisma), // Commented out for build
   // Temporarily commented out NextAuth secret
   // secret: process.env.NEXTAUTH_SECRET,
   providers: [
