@@ -7,6 +7,8 @@ import seed from "../routes/seed";
 import blog from "../routes/blog";
 import testDb from "../routes/test-db";
 
+// Force dynamic rendering to avoid build-time issues
+export const dynamic = "force-dynamic";
 // Revert to "edge" if planning on running on the edge
 export const runtime = "nodejs";
 
