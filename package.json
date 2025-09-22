@@ -8,7 +8,10 @@
     "start": "next start",
     "lint": "next lint",
     "format": "pnpm prettier ./src --write",
-    "format:check": "pnpm prettier ./src --check"
+    "format:check": "pnpm prettier ./src --check",
+    "prisma:generate": "npx prisma generate --schema=./database/prisma/schema.prisma",
+    "prisma:push": "npx prisma db push",
+    "prisma:studio": "npx prisma studio"
   },
   "dependencies": {
     "@auth/core": "0.34.2",
@@ -30,8 +33,11 @@
     "prisma": "^6.11.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-markdown": "^9.1.0",
+    "remark-gfm": "^3.0.1",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
+    "vaul": "^1.1.2",
     "zod": "^3.22.4"
   },
   "devDependencies": {

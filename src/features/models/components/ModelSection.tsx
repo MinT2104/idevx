@@ -1,8 +1,11 @@
+import Image from "next/image";
 type ModelSection = {
+  id?: string;
   logo: string;
   name: string;
   description: string;
   tags: string[];
+  link?: string;
 };
 
 type ModelSectionProps = {
@@ -10,6 +13,7 @@ type ModelSectionProps = {
   models: ModelSection[];
   showSeeAll: boolean;
   sectionIndex: number;
+  onSeeAll?: () => void;
 };
 
 const ModelSection = ({
@@ -17,6 +21,7 @@ const ModelSection = ({
   title,
   models,
   showSeeAll,
+  onSeeAll,
 }: ModelSectionProps) => {
   return (
     <div
@@ -35,13 +40,31 @@ const ModelSection = ({
               className={`border cursor-pointer border-gray-300 p-6 hover:shadow-lg transition-shadow duration-200 ${
                 sectionIndex % 2 === 1 ? "bg-white" : "bg-gray-50"
               }`}
+              onClick={() => {
+                if (model.id) {
+                  window.location.href = `/models/${model.id}`;
+                } else if (model.link) {
+                  window.open(model.link, "_blank");
+                }
+              }}
             >
               {/* Logo */}
               <div className="flex items-start justify-between mb-4">
-                <div className="w-12 h-12 bg-gray-100 flex items-center justify-center">
-                  <span className="text-xl font-bold text-gray-700">
-                    {model.logo}
-                  </span>
+                <div className="w-12 h-12 flex items-center justify-center">
+                  {model.logo &&
+                  (model.logo.startsWith("/") ||
+                    model.logo.startsWith("https")) ? (
+                    <Image
+                      src={model.logo}
+                      alt={model.name}
+                      width={36}
+                      height={36}
+                    />
+                  ) : (
+                    <div className="w-12 h-12 bg-gray-200 flex items-center justify-center text-gray-600 font-semibold text-lg">
+                      {model.logo || model.name.charAt(0).toUpperCase()}
+                    </div>
+                  )}
                 </div>
 
                 {/* Tags */}
@@ -71,7 +94,10 @@ const ModelSection = ({
         {/* See All Button */}
         {showSeeAll && (
           <div className="text-center">
-            <button className="px-6 py-2 border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors duration-200">
+            <button
+              onClick={onSeeAll}
+              className="px-6 py-2 border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+            >
               See All
             </button>
           </div>

@@ -1,0 +1,301 @@
+{
+  "model": {
+    "id": "1",
+    "name": "GPT-5",
+    "brand": "OpenAI",
+    "logo": "https://example.com/openai-logo.png",
+    "type": "LLM",
+    "link": "/models/gpt-5",
+    "description": "OpenAI's most advanced text generation model",
+    "extractedAt": "2025-08-07T00:00:00.000Z",
+    "crawledAt": "2025-08-07T00:00:00.000Z"
+  },
+  "hero": {
+    "title": "Text Generation Models",
+    "description": "Please read these terms and conditions carefully before using Our Service.",
+    "ctaButton": "Get Started",
+    "ctaButton2": "Talk to an Expert",
+    "subtitle": "Open AI",
+    "link1": "https://www.google.com",
+    "link2": "https://www.google.com"
+  },
+  "pageInfo": {
+    "lastUpdated": "Aug 2025",
+    "title": "GPT-5 — OpenAI's Text Generation",
+    "description": "GPT-5 represents OpenAI's most advanced evolution yet, delivering human-level reasoning, multimodal understanding, and high output quality. Released on August 7, 2025, it's crafted for complex coding, extended context workflows, agentic tasks, and safe, reliable interaction—backed by improved affordability and broader accessibility."
+  },
+  "detailedInfo": {
+    "title": "GPT-5 | Model library",
+    "description": "OpenAI's most advanced evolution yet, delivering human-level reasoning, multimodal understanding, and high output quality",
+    "parameters": [],
+    "capabilities": [
+      "reasoning",
+      "coding",
+      "creative writing",
+      "multimodal understanding",
+      "agentic tasks"
+    ],
+    "pricing": [
+      {
+        "variant": "GPT-5 (Standard)",
+        "bestFor": "Full reasoning, coding, multimodal tasks",
+        "input": "$1.25 (cached: $0.125)",
+        "output": "$10.00",
+        "provider": "OpenAI"
+      },
+      {
+        "variant": "GPT-5 Mini",
+        "bestFor": "Faster, cost-efficient tasks",
+        "input": "$0.25 (cached: $0.025)",
+        "output": "$2.00",
+        "provider": "OpenAI"
+      },
+      {
+        "variant": "GPT-5 Nano",
+        "bestFor": "Ultra-low latency, simple classifications",
+        "input": "$0.05 (cached: $0.005)",
+        "output": "$0.40",
+        "provider": "OpenAI"
+      }
+    ],
+    "tags": ["LLM", "Text Generation", "OpenAI"],
+    "modelDetails": {
+      "developedBy": "OpenAI",
+      "modelFamily": "GPT",
+      "useCase": "large language",
+      "variant": "5",
+      "size": "Unknown",
+      "license": "OpenAI License Agreement"
+    },
+    "codeExample": [
+      "# You can use this model with any of the OpenAI clients in any language!\n# Simply change the API Key to get started\nfrom openai import OpenAI\n\nclient = OpenAI(\n    api_key=\"YOUR_API_KEY\",\n    base_url=\"https://api.openai.com/v1\"\n)\n\nresponse = client.chat.completions.create(\n    model=\"gpt-5\",\n    messages=[\n        {\n            \"role\": \"user\",\n            \"content\": \"Generate a responsive Pomodoro timer UI in HTML/CSS/JS.\"\n        }\n    ],\n    stop=[],\n    stream=True,\n    stream_options={\n        \"include_usage\": True,\n        \"continuous_usage_stats\": True\n    },\n    top_p=1,\n    max_tokens=1000,\n    temperature=1,\n    presence_penalty=0,\n    frequency_penalty=0\n)\n\nfor chunk in response:\n    if chunk.choices and chunk.choices[0].delta.content is not None:\n        print(chunk.choices[0].delta.content, end=\"\", flush=True)",
+      "const res = await fetch(\"https://api.openai.com/v1/chat/completions\", {\n    method: \"POST\",\n    headers: {\n        \"Authorization\": \"Bearer ${API_KEY}\",\n        \"Content-Type\": \"application/json\"\n    },\n    body: JSON.stringify({\n        model: \"gpt-5-mini\",\n        messages: [{\"role\": \"user\", \"content\": \"Explain blockchain for beginners.\"}]\n    })\n});\nconst data = await res.json();\nconsole.log(data.choices[0].message.content);",
+      "curl https://api.openai.com/v1/chat/completions \\\\\n  -H \"Authorization: Bearer $API_KEY\" \\\\\n  -H \"Content-Type: application/json\" \\\\\n  -d '{\"model\": \"gpt-5-nano\", \"messages\":[{\"role\":\"user\", \"content\": \"Summarize AI ethics in 3 lines.\"}]}'"
+    ],
+    "apiInfo": {
+      "parameters": [
+        {
+          "parameter": "top_p",
+          "value": "1"
+        },
+        {
+          "parameter": "max_tokens",
+          "value": "1000"
+        },
+        {
+          "parameter": "temperature",
+          "value": "1"
+        },
+        {
+          "parameter": "presence_penalty",
+          "value": "0"
+        },
+        {
+          "parameter": "frequency_penalty",
+          "value": "0"
+        }
+      ]
+    },
+    "performance": {},
+    "hardware": ["H100", "A100", "V100"],
+    "benchmarks": ["MMLU", "HumanEval", "GSM8K"],
+    "useCases": ["assistant", "creative writing", "coding", "reasoning"],
+    "limitations": [
+      "May generate inaccurate information",
+      "Limited to training data cutoff"
+    ]
+  },
+  "whyModelMattersData": {
+    "title": "Why This Model Matters",
+    "points": [
+      {
+        "id": "versatility",
+        "title": "Unmatched Versatility:",
+        "description": "Ideal for developers, analysts, and enterprise users working with code, documents, and tools."
+      },
+      {
+        "id": "efficiency",
+        "title": "Cost & Performance Efficiency:",
+        "description": "Multiple variants unlock flexibility for fast, scalable production without breaking the bank."
+      },
+      {
+        "id": "safety",
+        "title": "Safer Outputs:",
+        "description": "Advanced safety measures with significantly lower hallucination rates and better partial answer handling."
+      },
+      {
+        "id": "integration",
+        "title": "Enterprise Integration:",
+        "description": "Available via API, various platforms, and enterprise solutions for seamless integration."
+      }
+    ],
+    "ctaButton": {
+      "text": "Read Official Documentation",
+      "link": "https://openai.com/docs"
+    }
+  },
+  "sidebarData": {
+    "title": "Model Details",
+    "details": [
+      {
+        "id": "developed-by",
+        "label": "Developed by",
+        "value": "OpenAI"
+      },
+      {
+        "id": "model-family",
+        "label": "Model Family",
+        "value": "GPT"
+      },
+      {
+        "id": "use-case",
+        "label": "Use case",
+        "value": "Large language"
+      },
+      {
+        "id": "version",
+        "label": "Version",
+        "value": "5"
+      },
+      {
+        "id": "variant",
+        "label": "Variant",
+        "value": "Standard/Mini/Nano"
+      },
+      {
+        "id": "size",
+        "label": "Size",
+        "value": "Unknown"
+      },
+      {
+        "id": "hardware",
+        "label": "Hardware",
+        "value": "H100/A100/V100"
+      },
+      {
+        "id": "license",
+        "label": "License",
+        "value": "OpenAI License Agreement"
+      },
+      {
+        "id": "readme",
+        "label": "Readme",
+        "value": "View",
+        "hasLink": true
+      }
+    ],
+    "button": {
+      "text": "View Repository",
+      "link": "https://github.com"
+    }
+  },
+  "modelListData": [
+    {
+      "id": "gpt-5",
+      "name": "GPT-5",
+      "isActive": true
+    },
+    {
+      "id": "o4-mini",
+      "name": "o4-Mini",
+      "isActive": false
+    },
+    {
+      "id": "o3-series",
+      "name": "o3-Mini / o3 / o3-Pro",
+      "isActive": false
+    },
+    {
+      "id": "o1-series",
+      "name": "o1 / o1-Pro",
+      "isActive": false
+    },
+    {
+      "id": "gpt-4o",
+      "name": "GPT-4o (Omni)",
+      "isActive": false
+    },
+    {
+      "id": "gpt-3-5-turbo",
+      "name": "GPT-3.5-Turbo",
+      "isActive": false
+    },
+    {
+      "id": "gpt-3-series",
+      "name": "GPT-3 (Ada → Davinci)",
+      "isActive": false
+    }
+  ],
+  "modelSections": [
+    {
+      "title": "large language models",
+      "models": [
+        {
+          "logo": "/images/models/kimi.png",
+          "name": "Kimi K2 0905",
+          "description": "0905-K2",
+          "tags": ["LLM"]
+        },
+        {
+          "logo": "/images/models/deepseek.png",
+          "name": "DeepSeek V3.1",
+          "description": "V3.1-B200",
+          "tags": ["LLM"]
+        },
+        {
+          "logo": "/images/models/qwen.png",
+          "name": "Qwen3 235B 2507",
+          "description": "2507",
+          "tags": ["LLM"]
+        }
+      ],
+      "showSeeAll": true
+    },
+    {
+      "title": "DeepSeek models",
+      "models": [
+        {
+          "logo": "/images/models/deepseek.png",
+          "name": "DeepSeek-R1 Llama 70B",
+          "description": "R1-LLAMA-TRT-LLM-H100",
+          "tags": ["LLM"]
+        },
+        {
+          "logo": "/images/models/deepseek.png",
+          "name": "DeepSeek V3.1",
+          "description": "V3.1-B200",
+          "tags": ["MODEL API", "LLM"]
+        },
+        {
+          "logo": "/images/models/deepseek.png",
+          "name": "DeepSeek-R1 Qwen 32B",
+          "description": "R1-QWEN-TRT-LLM-H100",
+          "tags": ["LLM"]
+        }
+      ]
+    },
+    {
+      "title": "Trending models",
+      "models": [
+        {
+          "logo": "/images/models/meta.png",
+          "name": "GPT OSS 120B",
+          "description": "MOE",
+          "tags": ["MODEL API", "LLM"]
+        },
+        {
+          "logo": "/images/models/meta.png",
+          "name": "GPT OSS 20B",
+          "description": "MOE",
+          "tags": ["LLM"]
+        },
+        {
+          "logo": "/images/models/qwen.png",
+          "name": "Qwen Image",
+          "description": "TEXT-TO-IMAGE",
+          "tags": ["IMAGE GENERATION"]
+        }
+      ]
+    }
+  ]
+}

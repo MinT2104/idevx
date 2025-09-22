@@ -3,9 +3,10 @@ import ModelListItem from "./ModelListItem";
 
 interface Model {
   id: string;
-  icon: string;
+  image: string;
   name: string;
   actionType?: "try" | "explore";
+  customModelButtonLink?: string;
 }
 
 interface ModelsListPanelProps {
@@ -24,32 +25,34 @@ export default function ModelsListPanel({
   onModelAction,
 }: ModelsListPanelProps) {
   return (
-    <div className="bg-white border-2 border-dashed border-gray-300 p-6 shadow-sm h-full flex flex-col">
+    <div className="bg-[#FDFDFD]/50 border border-dashed border-[#A9A9A9] shadow-sm h-full flex flex-col justify-between">
       {/* Header */}
-      <div className="mb-6">
+      <div className="p-6">
         <div className="flex justify-between items-start mb-2">
           <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
           <Button
             size="sm"
-            className="text-xs px-4 py-2 h-8 bg-white text-black border border-gray-300 hover:bg-gray-50 font-medium"
+            className="text-xs px-4 py-2 h-8 bg-white text-black border border-[#A9A9A9] hover:bg-gray-50 font-medium rounded-none cursor-pointer"
             onClick={onLearnMore}
           >
             Learn More
           </Button>
         </div>
-        <p className="text-sm text-gray-600 leading-relaxed">{description}</p>
+        <p className="text-base text-gray-600 max-w-sm leading-relaxed">
+          {description}
+        </p>
       </div>
 
       {/* Models List */}
-      <div className="space-y-1 flex-1">
+      <div className="">
         {models.map((model) => (
           <ModelListItem
             key={model.id}
-            icon={model.icon}
+            image={model.image}
             name={model.name}
             actionType={model.actionType}
             onTry={() => onModelAction?.(model.id, "try")}
-            onExplore={() => onModelAction?.(model.id, "explore")}
+            onExplore={() => onLearnMore?.()}
           />
         ))}
       </div>

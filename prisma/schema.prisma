@@ -64,4 +64,71 @@ model Todo {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Model {
+  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
+  name                  String?
+  brand                 String?
+  logo                  String?
+  type                  String?
+  link                  String?
+  description           String?
+  extractedAt           String?
+  crawledAt             String?
+  hero                  Json?   // JSON object
+  pageInfo              Json?   // JSON object
+  detailedInfo          Json?   // JSON object
+  whyModelMattersData   Json?   // JSON object
+  sidebarData           Json?   // JSON object
+  modelListData         Json?   // JSON object
+  modelSections         Json?   // JSON object
+  createdAt             DateTime? @default(now())
+  updatedAt             DateTime? @updatedAt
+
+  @@unique([link])
+  @@index([brand])
+  @@index([type])
+  @@index([name])
 } 
+
+model BlogPost {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  slug         String   @unique
+  locale       String   @default("en")
+
+  title        String
+  subtitle     String?
+  excerpt      String?
+  heroImage    Json?
+  cardImage    Json?
+  gallery      Json?
+
+  taxonomy     Json     // { categories: string[]; tags?: string[] }
+  authors      Json     // Author[]
+  content      Json     // { type: "markdown"; body: string }
+  richMeta     Json?
+
+  status       String   // "draft" | "scheduled" | "published" | "archived"
+  publishedAt  DateTime?
+  updatedAt    DateTime? @updatedAt
+  scheduledFor DateTime?
+  reading      Json?
+
+  featured     Boolean?  @default(false)
+  pinned       Boolean?  @default(false)
+  experimental Boolean?  @default(false)
+
+  series       Json?
+  relations    Json?
+  seo          Json?
+
+  createdBy    String?
+  updatedBy    String?
+  source       String    @default("markdown")
+
+  createdAt    DateTime  @default(now())
+
+  @@index([title])
+  @@index([status])
+}

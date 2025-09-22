@@ -69,9 +69,9 @@ const TermsView = () => {
 
           <div className="prose prose-lg max-w-none">
             <p className="text-[#6C6C6C] mb-8">
-              Welcome to DevX! These Terms & Conditions ("Terms") govern your
-              use of our website and services. By engaging with our services,
-              you agree to be bound by these Terms.
+              Welcome to DevX! These Terms & Conditions (&ldquo;Terms&rdquo;)
+              govern your use of our website and services. By engaging with our
+              services, you agree to be bound by these Terms.
             </p>
 
             <div className="space-y-8">

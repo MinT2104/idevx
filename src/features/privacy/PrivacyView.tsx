@@ -69,11 +69,12 @@ const page = () => {
 
           <div className="prose prose-lg max-w-none">
             <p className="text-[#6C6C6C] mb-8">
-              DevX ("Company," "we," "our," or "us") operates the website
-              idevx.ai and provides custom artificial intelligence (AI)
-              solutions, products, and services. This Privacy Policy describes
-              how we collect, use, and protect your information when you
-              interact with our website, services, or products.
+              DevX (&ldquo;Company,&rdquo; &ldquo;we,&rdquo; &ldquo;our,&rdquo;
+              or &ldquo;us&rdquo;) operates the website idevx.ai and provides
+              custom artificial intelligence (AI) solutions, products, and
+              services. This Privacy Policy describes how we collect, use, and
+              protect your information when you interact with our website,
+              services, or products.
             </p>
 
             <div className="space-y-8">
