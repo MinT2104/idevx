@@ -1,5 +1,10 @@
-import { prisma } from "@/core/database/db";
 import { CreateModelInput, UpdateModelInput } from "../schemas/model.schema";
+
+// Dynamic import for Prisma to avoid build-time issues
+const getPrisma = async () => {
+  const { prisma } = await import("@/core/database/db");
+  return prisma;
+};
 
 // Interface cho model trong database (full record)
 export interface ModelRecord {
@@ -39,6 +44,7 @@ export const createModel = async (
   data: CreateModelInput
 ): Promise<ModelRecord> => {
   try {
+    const prisma = await getPrisma();
     const model = await prisma.model.create({
       data: {
         name: data.model.name,
@@ -103,6 +109,7 @@ export const getAllModels = async (
   totalPages: number;
 }> => {
   try {
+    const prisma = await getPrisma();
     const skip = (page - 1) * limit;
 
     // Build where clause
@@ -187,6 +194,7 @@ export const getModelsForView = async (
   totalPages: number;
 }> => {
   try {
+    const prisma = await getPrisma();
     const skip = (page - 1) * limit;
 
     // Build where clause
@@ -242,6 +250,7 @@ export const getModelsForView = async (
 // Lấy model theo ID
 export const getModelById = async (id: string): Promise<ModelRecord | null> => {
   try {
+    const prisma = await getPrisma();
     const model = await prisma.model.findUnique({
       where: { id },
     });
@@ -285,6 +294,7 @@ export const getModelByLink = async (
   link: string
 ): Promise<ModelRecord | null> => {
   try {
+    const prisma = await getPrisma();
     const model = await prisma.model.findFirst({
       where: { link },
     });
@@ -329,6 +339,7 @@ export const updateModel = async (
   data: UpdateModelInput
 ): Promise<ModelRecord> => {
   try {
+    const prisma = await getPrisma();
     const updateData: any = {};
 
     // Chỉ cập nhật các field được cung cấp
@@ -392,6 +403,7 @@ export const updateModel = async (
 // Xóa model
 export const deleteModel = async (id: string): Promise<{ count: number }> => {
   try {
+    const prisma = await getPrisma();
     const result = await prisma.model.delete({
       where: { id },
     });
@@ -406,6 +418,7 @@ export const deleteModel = async (id: string): Promise<{ count: number }> => {
 // Lấy danh sách brands
 export const getBrands = async (): Promise<string[]> => {
   try {
+    const prisma = await getPrisma();
     const brands = await prisma.model.findMany({
       select: { brand: true },
       distinct: ["brand"],
@@ -422,6 +435,7 @@ export const getBrands = async (): Promise<string[]> => {
 // Lấy danh sách types
 export const getTypes = async (): Promise<string[]> => {
   try {
+    const prisma = await getPrisma();
     const types = await prisma.model.findMany({
       select: { type: true },
       distinct: ["type"],
@@ -438,6 +452,7 @@ export const getTypes = async (): Promise<string[]> => {
 // Kiểm tra model có tồn tại không
 export const modelExists = async (id: string): Promise<boolean> => {
   try {
+    const prisma = await getPrisma();
     const count = await prisma.model.count({
       where: { id },
     });
