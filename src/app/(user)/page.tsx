@@ -10,6 +10,9 @@ export const metadata: Metadata = {
     "DevX empowers businesses with domain-focused AI services and innovative products—from Education, Healthcare, and Law Firms to Travel, Food, Enterprises, and Creators.",
 };
 
+// Force dynamic rendering to avoid build-time issues
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   // Server-render: fetch latest posts and map to OurBlog props
   let blogs: Array<{

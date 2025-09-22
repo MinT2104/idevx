@@ -1,6 +1,8 @@
 import BlogDetailView from "@/features/blog/view/BlogDetailView";
 import { prisma } from "@/core/database/db";
 
+// Force dynamic rendering to avoid build-time issues
+export const dynamic = "force-dynamic";
 export const revalidate = 60;
 
 const page = async ({ params }: { params: { slug: string } }) => {

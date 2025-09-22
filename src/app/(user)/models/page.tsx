@@ -5,6 +5,9 @@ import {
   getTypes,
 } from "@/features/models/services/models.service";
 
+// Force dynamic rendering to avoid build-time issues
+export const dynamic = "force-dynamic";
+
 const page = async () => {
   try {
     // Fetch data server-side - sử dụng hàm tối ưu hóa
