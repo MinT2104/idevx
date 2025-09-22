@@ -1,11 +1,11 @@
 import BlogDetailView from "@/features/blog/view/BlogDetailView";
-import { prisma } from "@/core/database/db";
 
 // Force dynamic rendering to avoid build-time issues
 export const dynamic = "force-dynamic";
 export const revalidate = 60;
 
 const page = async ({ params }: { params: { slug: string } }) => {
+  const { prisma } = await import("@/core/database/db");
   const post = await prisma.blogPost.findUnique({
     where: { slug: params.slug },
   });
@@ -55,6 +55,7 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }) {
+  const { prisma } = await import("@/core/database/db");
   const post = await prisma.blogPost.findUnique({
     where: { slug: params.slug },
   });
@@ -84,6 +85,7 @@ export async function generateMetadata({
 
 export async function generateStaticParams() {
   try {
+    const { prisma } = await import("@/core/database/db");
     const posts = await prisma.blogPost.findMany({
       select: { slug: true, status: true },
       where: { status: "published" },

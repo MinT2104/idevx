@@ -1,8 +1,13 @@
 import { Metadata } from "next";
 import Hero from "@/features/shared/components/Hero";
 // import OurBlog from "@/features/home/components/OurBlog";
-import { prisma } from "@/core/database/db";
 // import { headers } from "next/headers";
+
+// Dynamic import for Prisma to avoid build-time issues
+const getPrisma = async () => {
+  const { prisma } = await import("@/core/database/db");
+  return prisma;
+};
 
 export const metadata: Metadata = {
   title: "DevX | AI Solutions Built for Your Success",
@@ -25,6 +30,7 @@ export default async function Home() {
     slug: string;
   }> = [];
   try {
+    const prisma = await getPrisma();
     const posts = await prisma.blogPost.findMany({
       orderBy: { createdAt: "desc" },
       take: 4,
@@ -51,6 +57,7 @@ export default async function Home() {
     customModelButtonLink?: string;
   }> = [];
   try {
+    const prisma = await getPrisma();
     const items = await prisma.model.findMany({
       orderBy: { createdAt: "desc" },
       take: 4,
