@@ -1,5 +1,10 @@
 import { Hono } from "hono";
-import { prisma } from "@/core/database/db";
+
+// Dynamic import for Prisma to avoid build-time issues
+const getPrisma = async () => {
+  const { prisma } = await import("@/core/database/db");
+  return prisma;
+};
 
 const app = new Hono();
 
@@ -7,6 +12,7 @@ const app = new Hono();
 app.get("/test-db", async (c) => {
   try {
     // Test connection bằng cách đếm số lượng models
+    const prisma = await getPrisma();
     const count = await prisma.model.count();
 
     return c.json({

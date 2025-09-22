@@ -1,10 +1,15 @@
 import { Hono } from "hono";
 import { z } from "zod";
-import { prisma } from "@/core/database/db";
 import {
   ALLOWED_BLOG_CATEGORIES,
   areCategoriesValid,
 } from "@/features/blog/constants";
+
+// Dynamic import for Prisma to avoid build-time issues
+const getPrisma = async () => {
+  const { prisma } = await import("@/core/database/db");
+  return prisma;
+};
 
 const app = new Hono();
 
@@ -83,6 +88,7 @@ function validateCategoriesOrThrow(categories: string[]) {
 }
 
 app.get("/", async (c) => {
+  const prisma = await getPrisma();
   const items = await prisma.blogPost.findMany({
     orderBy: { createdAt: "desc" },
   });
@@ -91,6 +97,7 @@ app.get("/", async (c) => {
 
 app.get("/:slug", async (c) => {
   const slug = c.req.param("slug");
+  const prisma = await getPrisma();
   const item = await prisma.blogPost.findUnique({ where: { slug } });
   if (!item) return c.json({ message: "Not found" }, 404);
   return c.json(item);
@@ -102,6 +109,7 @@ app.get("/:slug/related", async (c) => {
   const limitParam = c.req.query("limit");
   const limit = Math.min(12, Math.max(1, Number(limitParam) || 6));
 
+  const prisma = await getPrisma();
   const item = await prisma.blogPost.findUnique({ where: { slug } });
   if (!item) return c.json({ message: "Not found" }, 404);
 
@@ -158,6 +166,7 @@ app.post("/", async (c) => {
   const parsed = baseSchema.parse(body);
   validateCategoriesOrThrow(parsed.taxonomy.categories);
 
+  const prisma = await getPrisma();
   const created = await prisma.blogPost.create({
     data: {
       slug: parsed.slug,
@@ -197,6 +206,7 @@ app.patch("/:slug", async (c) => {
   if (parsed.taxonomy?.categories)
     validateCategoriesOrThrow(parsed.taxonomy.categories);
 
+  const prisma = await getPrisma();
   const updated = await prisma.blogPost.update({
     where: { slug },
     data: {
@@ -214,6 +224,7 @@ app.patch("/:slug", async (c) => {
 
 app.delete("/:slug", async (c) => {
   const slug = c.req.param("slug");
+  const prisma = await getPrisma();
   await prisma.blogPost.delete({ where: { slug } });
   return c.json({ ok: true });
 });

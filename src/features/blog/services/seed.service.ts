@@ -1,9 +1,14 @@
-import { prisma } from "@/core/database/db";
 import { seedPosts } from "@/features/blog/data/seedPosts";
 import {
   areCategoriesValid,
   normalizePrimaryCategory,
 } from "@/features/blog/constants";
+
+// Dynamic import for Prisma to avoid build-time issues
+const getPrisma = async () => {
+  const { prisma } = await import("@/core/database/db");
+  return prisma;
+};
 
 function mapToAllowedCategory(category: string): string {
   const trimmed = (category || "").trim();
@@ -17,6 +22,7 @@ function mapToAllowedCategory(category: string): string {
 }
 
 export async function seedBlogPosts() {
+  const prisma = await getPrisma();
   const results = [] as any[];
   const skipped: Array<{ slug: string; reason: string }> = [];
   let createdCount = 0;
