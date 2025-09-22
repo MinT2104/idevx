@@ -4,11 +4,18 @@ import { siteConfig } from "@/core/config/site";
 export default async function sitemap() {
   const baseUrl = siteConfig.url.base?.replace(/\/$/, "") || "";
 
-  const blog = await prisma.blogPost.findMany({
-    select: { slug: true, updatedAt: true, status: true },
-    where: { status: "published" },
-    orderBy: { updatedAt: "desc" },
-  });
+  let blog: Array<{ slug: string; updatedAt: Date | null; status: string }> = [];
+  try {
+    blog = await prisma.blogPost.findMany({
+      select: { slug: true, updatedAt: true, status: true },
+      where: { status: "published" },
+      orderBy: { updatedAt: "desc" },
+    });
+  } catch (error) {
+    console.warn("Failed to fetch blog posts for sitemap:", error);
+    // Use empty array as fallback
+    blog = [];
+  }
 
   const staticRoutes = [
     "",
