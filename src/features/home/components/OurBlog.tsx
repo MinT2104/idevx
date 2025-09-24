@@ -2,6 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { Button } from "@/ui/components/button";
 
 interface BlogItem {
   id: string;
@@ -73,9 +74,12 @@ const OurBlog: React.FC<OurBlogProps> = ({
                     }}
                     className="flex justify-end mt-3 md:mt-4"
                   >
-                    <button className="px-3 md:px-4 py-1.5 md:py-2 border border-gray-500 text-black font-medium text-xs md:text-sm hover:bg-gray-50 transition-colors">
+                    <Button
+                      variant="outline"
+                      className="px-3 md:px-4 py-1.5 md:py-2 border border-gray-500 text-black font-medium text-xs md:text-sm rounded-none"
+                    >
                       {blog.buttonText}
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>

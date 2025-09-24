@@ -1,3 +1,4 @@
+import { Button } from "@/ui/components/button";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -61,14 +62,15 @@ const GridOfBox: React.FC<GridOfBoxProps> = ({
                   {item.description}
                 </p>
                 <div className="flex justify-end">
-                  <button
+                  <Button
+                    variant="outline"
                     onClick={() => {
                       router.push(item.customModelButtonLink || "");
                     }}
-                    className="px-3 md:px-4 py-2 border border-gray-500 text-black font-medium text-xs md:text-sm bg-[#FAFAFA]"
+                    className="px-3 md:px-4 py-2 border rounded-none border-gray-500 text-black font-medium text-xs md:text-sm bg-[#FAFAFA]"
                   >
                     {item.buttonText}
-                  </button>
+                  </Button>
                 </div>
               </div>
             ))}
@@ -83,14 +85,15 @@ const GridOfBox: React.FC<GridOfBoxProps> = ({
               {customModelDescription}
             </p>
             <div className="flex justify-end">
-              <button
+              <Button
+                variant="outline"
                 onClick={() => {
                   router.push(customModelButtonLink);
                 }}
-                className="px-3 md:px-4 py-2 border border-gray-500 text-black font-medium text-xs md:text-sm bg-[#FAFAFA]"
+                className="px-3 md:px-4 py-2 border rounded-none border-gray-500 text-black font-medium text-xs md:text-sm bg-[#FAFAFA]"
               >
                 {customModelButtonText}
-              </button>
+              </Button>
             </div>
           </div>
         </div>

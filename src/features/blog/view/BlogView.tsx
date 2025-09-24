@@ -148,17 +148,18 @@ const BlogView = ({ posts: serverPosts }: BlogViewProps) => {
           <div className="flex flex-wrap items-center justify-between mb-8 ">
             <div className="flex flex-wrap gap-4 mb-4 md:mb-0">
               {tabs.map((tab) => (
-                <button
+                <Button
+                  variant="outline"
                   key={tab}
                   onClick={() => handleTabClick(tab)}
                   className={`px-4 h-10 py-2 text-sm font-medium transition-colors ${
                     activeTab === tab
-                      ? "text-white bg-[#E15929] border-2 border-[#E15929]"
+                      ? "text-white bg-[#E15929] border-2 border-[#E15929] after:bg-transparent before:bg-transparent"
                       : "text-gray-600 border border-gray-400 hover:text-gray-900"
                   }`}
                 >
                   {tab}
-                </button>
+                </Button>
               ))}
             </div>
 

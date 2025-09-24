@@ -35,7 +35,7 @@ const WhatClientSay: React.FC<WhatClientSayProps> = ({
   testimonials = [],
 }) => {
   const renderStatisticCard = (item: TestimonialItem) => (
-    <div className="bg-gray-100 col-span-1 w-full h-[220px] relative group cursor-pointer border border-[#A9A9A9]">
+    <div className="bg-gray-100 col-span-1 w-full h-[220px] relative group  border border-[#A9A9A9]">
       <div className="flex justify-between items-start mb-4">
         <div className="flex-1">
           <div className="text-3xl font-bold text-gray-900 mb-2 py-3 px-4 border-b border-[#A9A9A9]">
@@ -50,7 +50,7 @@ const WhatClientSay: React.FC<WhatClientSayProps> = ({
   );
 
   const renderQuoteCard = (item: TestimonialItem) => (
-    <div className="bg-gray-100 w-full col-span-2 h-[220px] flex relative group cursor-pointer border border-[#A9A9A9]">
+    <div className="bg-gray-100 w-full col-span-2 h-[220px] flex relative group  border border-[#A9A9A9]">
       <div className="h-full aspect-square p-4">
         <Image
           src={item.client?.logo || ""}

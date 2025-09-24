@@ -40,6 +40,7 @@ export default function ModelListItem({
       </div>
 
       <Button
+        variant={"outline"}
         size="sm"
         className="text-xs w-20 px-4 py-2 h-7 bg-white text-black border border-[#A9A9A9] hover:bg-gray-50 font-medium rounded-none cursor-pointer"
         onClick={handleAction}

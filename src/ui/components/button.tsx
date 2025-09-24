@@ -5,24 +5,22 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/core/utils/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
-        destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        default: "bg-primary text-primary-foreground",
+        destructive: "bg-destructive text-destructive-foreground0",
         outline:
-          "text-black bg-white hover:bg-accent hover:text-accent-foreground",
-        secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+          "relative overflow-hidden border border-gray-400 text-black bg-transparent before:content-[''] before:absolute before:inset-0 before:bg-gray-100 before:-translate-y-full hover:before:translate-y-0 before:transition-transform before:duration-300 before:ease-in-out before:will-change-transform before:transform-gpu before:z-0 before:pointer-events-none after:content-[''] after:absolute after:inset-0 after:bg-white after:translate-y-0 hover:after:-translate-y-full after:transition-transform after:duration-300 after:ease-in-out after:will-change-transform after:transform-gpu after:z-[1] after:pointer-events-none",
+        secondary: "bg-secondary text-secondary-foreground",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
         default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8",
+        sm: "h-9 px-3",
+        lg: "h-11 px-8",
         icon: "h-10 w-10",
       },
     },
@@ -40,14 +38,16 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, children, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         {...props}
-      />
+      >
+        <span className="relative z-[2]">{children}</span>
+      </Comp>
     );
   }
 );
