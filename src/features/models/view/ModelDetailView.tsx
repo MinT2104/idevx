@@ -6,6 +6,7 @@ import HeroSection from "@/features/shared/common/HeroSection";
 import ModelSection from "../components/ModelSection";
 import ExporeDevxToday from "../components/ExporeDevxToday";
 import { ModelRecord } from "../services/models.service";
+import { getModelUrl } from "../utils/slug.utils";
 
 type ModelDetailViewProps = {
   model: ModelRecord;
@@ -19,8 +20,10 @@ const ModelDetailView: React.FC<ModelDetailViewProps> = ({ model }) => {
     }
   };
 
-  const handleCopyPageLink = (url: string) => {
-    navigator.clipboard.writeText(url);
+  const handleCopyPageLink = () => {
+    const modelUrl = getModelUrl(model);
+    const fullUrl = `${window.location.origin}${modelUrl}`;
+    navigator.clipboard.writeText(fullUrl);
   };
 
   const handleCopyCode = async (text: string, index: number) => {
@@ -164,7 +167,7 @@ const ModelDetailView: React.FC<ModelDetailViewProps> = ({ model }) => {
                   {pageInfo?.title || model.name}
                 </h1>
                 <Button
-                  onClick={() => handleCopyPageLink(window.location.href)}
+                  onClick={handleCopyPageLink}
                   variant="outline"
                   size="sm"
                   className="flex items-center gap-2"

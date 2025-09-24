@@ -6,6 +6,7 @@ import { Button } from "@/ui/components/button";
 import { ModelViewRecord } from "../services/models.service";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { getModelUrl } from "../utils/slug.utils";
 
 interface ModelHeroProps {
   models: ModelViewRecord[];
@@ -69,7 +70,8 @@ const ModelHero = ({ models }: ModelHeroProps) => {
   // Handle model click
   const handleModelClick = (model: ModelViewRecord) => {
     if (model.id) {
-      router.push(`/models/${model.id}`);
+      const modelUrl = getModelUrl(model);
+      router.push(modelUrl);
     } else if (model.link) {
       window.open(model.link, "_blank");
     }

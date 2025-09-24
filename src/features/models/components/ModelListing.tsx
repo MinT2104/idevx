@@ -65,6 +65,7 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
         description: string;
         tags: string[];
         link: string;
+        slug: string;
       }>;
       showSeeAll?: boolean;
       seeAllFilter?: string;
@@ -83,6 +84,7 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
           description: model.description || model.type || "No description",
           tags: [model.type || "Unknown"],
           link: model.link || "#",
+          slug: model.slug || "#",
         })),
       });
     }
@@ -103,6 +105,7 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
           description: model.description || model.type || "No description",
           tags: [model.type || "Unknown"],
           link: model.link || "#",
+          slug: model.slug || "#",
         });
         return acc;
       },
@@ -115,6 +118,7 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
           description: string;
           tags: string[];
           link: string;
+          slug: string;
         }>
       >
     );
@@ -171,6 +175,7 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
         description: string;
         tags: string[];
         link: string;
+        slug: string;
       }>;
       showSeeAll?: boolean;
       seeAllFilter?: string;
@@ -194,6 +199,7 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
             description: model.description || model.type || "No description",
             tags: [model.type || "Unknown"],
             link: model.link || "#",
+            slug: model.slug || "#",
           })),
           showSeeAll: false,
         });
@@ -224,6 +230,7 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
           description: model.description || model.type || "No description",
           tags: [model.type || "Unknown"],
           link: model.link || "#",
+          slug: model.slug || "#",
         })),
         showSeeAll: false, // Không cần "See All" vì đã hiển thị tất cả
       });
@@ -248,6 +255,7 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
           description: model.description || model.type || "No description",
           tags: [model.type || "Unknown"],
           link: model.link || "#",
+          slug: model.slug || "#",
         })),
         showSeeAll: false,
       });

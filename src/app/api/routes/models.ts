@@ -6,6 +6,7 @@ import {
   createModelHandler,
   getModelByIdHandler,
   getModelByLinkHandler,
+  getModelBySlugHandler,
   updateModelHandler,
   deleteModelHandler,
   getBrandsHandler,
@@ -49,6 +50,9 @@ const app = new Hono<{ Variables: Variables }>()
   .post("/:id/duplicate", requireAuth(), duplicateModelHandler as any)
 
   // GET /api/models/link/:link - Get model by link
-  .get("/link/:link", getModelByLinkHandler as any);
+  .get("/link/:link", getModelByLinkHandler as any)
+
+  // GET /api/models/slug/:slug - Get model by slug
+  .get("/slug/:slug", getModelBySlugHandler as any);
 
 export default app;

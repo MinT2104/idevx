@@ -37,6 +37,7 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/core/utils/utils";
+import { useRouter } from "next/navigation";
 
 interface DropdownItem {
   label: string;
@@ -57,7 +58,7 @@ const Header = () => {
   >(null);
   // const [isMounted, setIsMounted] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-
+  const router = useRouter();
   useEffect(() => {
     // setIsMounted(true);
 
@@ -369,6 +370,9 @@ const Header = () => {
             {/* Desktop Book Demo Button */}
             <div className="hidden md:block flex-shrink-0">
               <Button
+                onClick={() => {
+                  router.push("/talk-to-us");
+                }}
                 className={cn(
                   "cursor-pointer px-6 py-2 font-medium transition-all duration-500 ease-out rounded-none",
                   isScrolled

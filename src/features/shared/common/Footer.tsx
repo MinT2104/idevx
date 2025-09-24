@@ -12,80 +12,123 @@ const Footer = () => {
     setIsMounted(true);
   }, []);
 
-  // Helper function to get link href based on section and link text
+  // Helper function to get link href based on section and link text (mirrors Header)
   const getLinkHref = (sectionTitle: string, linkText: string): string => {
-    if (sectionTitle === "Resources") {
-      switch (linkText) {
-        case "Blog":
-          return "/blog";
-        case "Partner":
-          return "/partner";
-        case "Careers":
-          return "/careers";
-        case "Contact us":
-          return "/talk-to-us";
-        default:
-          return "#";
+    const toSlug = (s: string) =>
+      s
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+    switch (sectionTitle) {
+      case "Products": {
+        switch (linkText) {
+          case "Study AI":
+            return "/product/study-ai";
+          case "Healthy AI":
+            return "/product/healthy-ai";
+          case "Legal AI":
+            return "/product/legal-ai";
+          case "Travel AI":
+            return "/product/travel-ai";
+          default:
+            return "#";
+        }
       }
+      case "Solutions": {
+        switch (linkText) {
+          case "Image Processing":
+            return "/solution/image-processing";
+          case "Speech to Text":
+            return "/solution/speech-to-text";
+          case "Text to Speech":
+            return "/solution/text-to-speech";
+          case "Embedding":
+            return "/solution/embedding";
+          case "Process Automation":
+            return "/solution/process-automation";
+          case "AI Agent":
+            return "/solution/ai-agent";
+          case "Agentic AI":
+            return "/solution/agentic-ai";
+          case "Text to Song":
+            return "/solution/text-to-song";
+          default:
+            return "#";
+        }
+      }
+      case "Company": {
+        switch (linkText) {
+          case "Privacy Policy":
+            return "/privacy";
+          case "Terms and Conditions":
+            return "/terms";
+          case "Refund Policy":
+            return "/refund";
+          default:
+            return "#";
+        }
+      }
+      case "Resources": {
+        switch (linkText) {
+          case "Model Library":
+            return "/models";
+          case "Blog":
+            return "/blog";
+          case "Partner":
+            return "/partner";
+          case "Careers":
+            return "/careers";
+          case "Contact Us":
+            return "/talk-to-us";
+          default:
+            return "#";
+        }
+      }
+      case "Popular models": {
+        return `/models/${toSlug(linkText)}`;
+      }
+      default:
+        return "#";
     }
-    return "#";
   };
 
+  // Footer sections aligned with Header
   const navigationSections = [
     {
-      title: "Product",
-      links: ["Dedicated deployments", "Model APIs", "Training"],
-    },
-    {
-      title: "Inference Stack",
-      links: ["Model Runtimes", "Infrastructure", "Multi Cloud Capacity"],
-    },
-    {
-      title: "Developer Experience",
-      links: ["Chains", "Model Management"],
-    },
-    {
-      title: "Deployment Options",
-      links: ["Dev X Cloud", "Self-hosted", "Hybrid"],
+      title: "Products",
+      links: ["Study AI", "Healthy AI", "Legal AI", "Travel AI"],
     },
     {
       title: "Solutions",
       links: [
-        "Transcription",
-        "Image generation",
-        "Text-to-speech",
-        "Large language model",
-        "Compound AI",
-        "Embeddings",
+        "Image Processing",
+        "Speech to Text",
+        "Text to Speech",
+        "Embedding",
+        "Process Automation",
+        "AI Agent",
+        "Agentic AI",
+        "Text to Song",
       ],
     },
     {
-      title: "Developer",
-      links: ["Documentation", "Model library", "Changelog"],
+      title: "Company",
+      links: ["Privacy Policy", "Terms and Conditions", "Refund Policy"],
     },
-
     {
       title: "Resources",
-      links: ["Blog", "Partner", "Careers", "Contact us"],
+      links: ["Model Library", "Blog", "Partner", "Careers", "Contact Us"],
     },
     {
-      title: "Popular model",
+      title: "Popular models",
       links: [
-        "GPT OSS 120B",
-        "GPT OSS 20B",
-        "Qwen image",
-        "Orpheus TTS",
-        "Kimi K2",
         "Qwen3 Coder 480B",
+        "Kimi K2 0905",
+        "GPT OSS 20B",
+        "Orpheus TTS",
+        "Qwen3 8B Embedding",
+        "Whisper V3",
         "Explore All",
-      ],
-    },
-    {
-      title: "Legal",
-      links: [
-        "Terms and Conditions",
-        "Privacy Policy",
-        "Service Level Agreement",
       ],
     },
   ];

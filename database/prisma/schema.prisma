@@ -69,6 +69,7 @@ model Todo {
 model Model {
   id                    String   @id @default(auto()) @map("_id") @db.ObjectId
   name                  String?
+  slug                  String
   brand                 String?
   logo                  String?
   type                  String?
@@ -89,6 +90,7 @@ model Model {
   @@index([brand])
   @@index([type])
   @@index([name])
+  @@unique([slug])
 } 
 
 model BlogPost {

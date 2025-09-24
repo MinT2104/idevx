@@ -14,6 +14,7 @@ export interface ModelRecord {
   logo: string | null;
   type: string | null;
   link: string | null;
+  slug: string | null;
   description: string | null;
   extractedAt: string | null;
   crawledAt: string | null;
@@ -35,8 +36,9 @@ export interface ModelViewRecord {
   brand: string | null;
   logo: string | null;
   type: string | null;
-  description: string | null;
   link: string | null;
+  slug: string | null;
+  description: string | null;
 }
 
 // Tạo model mới
@@ -52,6 +54,7 @@ export const createModel = async (
         logo: data.model.logo,
         type: data.model.type,
         link: data.model.link,
+        slug: data.model.slug || "",
         description: data.model.description,
         extractedAt: data.model.extractedAt,
         crawledAt: data.model.crawledAt,
@@ -229,6 +232,7 @@ export const getModelsForView = async (
           type: true,
           description: true,
           link: true,
+          slug: true,
         },
         orderBy: { createdAt: "desc" },
       }),
@@ -329,6 +333,50 @@ export const getModelByLink = async (
     };
   } catch (error) {
     console.error("Error fetching model by link:", error);
+    throw new Error("Failed to fetch model");
+  }
+};
+
+// Lấy model theo slug
+export const getModelBySlug = async (
+  slug: string
+): Promise<ModelRecord | null> => {
+  try {
+    const prisma = await getPrisma();
+    const model = await prisma.model.findUnique({
+      where: { slug },
+    });
+
+    if (!model) {
+      return null;
+    }
+
+    // Helper function to safely parse JSON
+    const safeParseJson = (value: any) => {
+      if (!value) return null;
+      if (typeof value === "object") return value; // Already parsed
+      if (typeof value === "string") {
+        try {
+          return JSON.parse(value);
+        } catch {
+          return null;
+        }
+      }
+      return null;
+    };
+
+    return {
+      ...model,
+      hero: safeParseJson(model.hero),
+      pageInfo: safeParseJson(model.pageInfo),
+      detailedInfo: safeParseJson(model.detailedInfo),
+      whyModelMattersData: safeParseJson(model.whyModelMattersData),
+      sidebarData: safeParseJson(model.sidebarData),
+      modelListData: safeParseJson(model.modelListData),
+      modelSections: safeParseJson(model.modelSections),
+    };
+  } catch (error) {
+    console.error("Error fetching model by slug:", error);
     throw new Error("Failed to fetch model");
   }
 };

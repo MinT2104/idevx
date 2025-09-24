@@ -11,6 +11,7 @@ export const modelSchema = z.object({
   description: z.string().nullable().optional(),
   extractedAt: z.string().nullable().optional(),
   crawledAt: z.string().nullable().optional(),
+  slug: z.string().optional(),
 });
 
 // Schema cho model details

@@ -1,4 +1,6 @@
+"use client";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 type ModelSection = {
   id?: string;
   logo: string;
@@ -6,6 +8,7 @@ type ModelSection = {
   description: string;
   tags: string[];
   link?: string;
+  slug?: string;
 };
 
 type ModelSectionProps = {
@@ -23,6 +26,7 @@ const ModelSection = ({
   showSeeAll,
   onSeeAll,
 }: ModelSectionProps) => {
+  const router = useRouter();
   return (
     <div
       key={sectionIndex}
@@ -41,10 +45,8 @@ const ModelSection = ({
                 sectionIndex % 2 === 1 ? "bg-white" : "bg-gray-50"
               }`}
               onClick={() => {
-                if (model.id) {
-                  window.location.href = `/models/${model.id}`;
-                } else if (model.link) {
-                  window.open(model.link, "_blank");
+                if (model.slug) {
+                  router.push(`/models/${model.slug}`);
                 }
               }}
             >

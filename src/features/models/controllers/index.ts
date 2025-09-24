@@ -12,6 +12,7 @@ import {
   getAllModels,
   getModelById,
   getModelByLink,
+  getModelBySlug,
   updateModel,
   deleteModel,
   getBrands,
@@ -110,6 +111,24 @@ export const getModelByLinkHandler = async (c: ModelContext) => {
     return c.json({ success: true, data: model });
   } catch (error) {
     console.error("Error fetching model by link:", error);
+    return c.json({ error: "Failed to fetch model" }, 500);
+  }
+};
+
+// GET /api/models/slug/:slug - Get model by slug
+export const getModelBySlugHandler = async (c: ModelContext) => {
+  try {
+    const slug = c.req.param("slug");
+
+    const model = await getModelBySlug(slug);
+
+    if (!model) {
+      return c.json({ error: "Model not found" }, 404);
+    }
+
+    return c.json({ success: true, data: model });
+  } catch (error) {
+    console.error("Error fetching model by slug:", error);
     return c.json({ error: "Failed to fetch model" }, 500);
   }
 };
