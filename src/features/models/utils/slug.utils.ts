@@ -74,7 +74,7 @@ export const getModelUrl = (model: {
  * @returns Slug if found, null otherwise
  */
 export const extractSlugFromUrl = (url: string): string | null => {
-  const slugMatch = url.match(/\/models\/slug\/([^\/]+)/);
+  const slugMatch = url.match(/\/models\/slug\/([^/]+)/);
   return slugMatch ? slugMatch[1] : null;
 };
 

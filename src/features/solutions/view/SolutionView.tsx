@@ -15,7 +15,9 @@ const SolutionView = async ({ solutionKey }: SolutionViewProps) => {
       const data = await res.json();
       sections = data?.sections ?? null;
     }
-  } catch (_) {}
+  } catch (_) {
+    // Ignore fetch errors
+  }
 
   if (!sections) {
     return (

@@ -85,7 +85,19 @@ const Footer = () => {
         }
       }
       case "Popular models": {
-        return `/models/${toSlug(linkText)}`;
+        // Map specific model names to their slugs
+        const modelSlugMap: Record<string, string> = {
+          "Qwen3 Coder 480B": "/models/llm-qwen3-coder-480b",
+          "Kimi K2 0905": "/models/llm-kimi-k2-0905",
+          "GPT OSS 20B": "/models/embedding-gpt-oss-20b",
+          "Orpheus TTS": "/models/llm-orpheus-tts",
+          "Qwen3 8B Embedding": "/models/embedding-qwen3-8b-embedding",
+          "Whisper V3": "/models/transcription-whisper-v3",
+          "Explore All": "/models",
+        };
+
+        // Return specific slug if mapped, otherwise fallback to generated slug
+        return modelSlugMap[linkText] || `/models/${toSlug(linkText)}`;
       }
       default:
         return "#";
@@ -122,13 +134,13 @@ const Footer = () => {
     {
       title: "Popular models",
       links: [
-        "Qwen3 Coder 480B",
-        "Kimi K2 0905",
-        "GPT OSS 20B",
-        "Orpheus TTS",
-        "Qwen3 8B Embedding",
-        "Whisper V3",
-        "Explore All",
+        "Qwen3 Coder 480B", // llm-qwen3-coder-480b
+        "Kimi K2 0905", //llm-kimi-k2-0905
+        "GPT OSS 20B", //embedding-gpt-oss-20b
+        "Orpheus TTS", //llm-orpheus-tts
+        "Qwen3 8B Embedding", // embedding-qwen3-8b-embedding
+        "Whisper V3", // transcription-whisper-v3
+        "Explore All", ///models
       ],
     },
   ];
