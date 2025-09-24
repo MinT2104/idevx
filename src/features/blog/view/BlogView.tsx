@@ -125,10 +125,21 @@ const BlogView = ({ posts: serverPosts }: BlogViewProps) => {
       <HeroSection
         title="Blog"
         description="Expert guides and engineering deep dives to help you ship faster, scale easier, and learn along the way."
-        ctaButton="Get Started"
-        ctaButton2="Talk to an Engineer"
-        link1="https://www.google.com"
-        link2="https://www.google.com"
+        buttons={[
+          {
+            text: "Get Started",
+            variant: "outline",
+            size: "lg",
+            link: "/",
+          },
+          {
+            text: "Talk to an Expert",
+            variant: "default",
+            size: "lg",
+            className: "bg-orange-600 hover:bg-orange-700 text-white",
+            link: "/talk-to-us",
+          },
+        ]}
       />
 
       <div className="w-full bg-white">

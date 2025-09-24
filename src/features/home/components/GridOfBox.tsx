@@ -65,7 +65,7 @@ const GridOfBox: React.FC<GridOfBoxProps> = ({
                     onClick={() => {
                       router.push(item.customModelButtonLink || "");
                     }}
-                    className="px-3 md:px-4 py-2 border border-[#A9A9A9] text-gray-700 text-xs md:text-sm bg-[#FAFAFA]"
+                    className="px-3 md:px-4 py-2 border border-gray-500 text-black font-medium text-xs md:text-sm bg-[#FAFAFA]"
                   >
                     {item.buttonText}
                   </button>
@@ -87,7 +87,7 @@ const GridOfBox: React.FC<GridOfBoxProps> = ({
                 onClick={() => {
                   router.push(customModelButtonLink);
                 }}
-                className="px-3 md:px-4 py-2 border border-[#A9A9A9] text-gray-700 text-xs md:text-sm bg-[#FAFAFA]"
+                className="px-3 md:px-4 py-2 border border-gray-500 text-black font-medium text-xs md:text-sm bg-[#FAFAFA]"
               >
                 {customModelButtonText}
               </button>

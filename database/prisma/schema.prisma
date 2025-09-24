@@ -86,7 +86,6 @@ model Model {
   createdAt             DateTime? @default(now())
   updatedAt             DateTime? @updatedAt
 
-  @@unique([link])
   @@index([brand])
   @@index([type])
   @@index([name])
@@ -131,4 +130,15 @@ model BlogPost {
 
   @@index([title])
   @@index([status])
+}
+
+model Solution {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  key       String   // e.g. "image-processing", "product-study-ai"
+  sections  Json               // full sections array as JSON for now
+  kind      String?            // optional: "solution" | "product"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([key])
 }

@@ -7,10 +7,21 @@ const page = () => {
       <HeroSection
         title="Privacy Policy"
         description="Please read these terms and conditions carefully before using Our Service."
-        ctaButton="Get Started"
-        ctaButton2="Talk to an Expert"
-        link1="https://www.google.com"
-        link2="https://www.google.com"
+        buttons={[
+          {
+            text: "Get Started",
+            variant: "outline",
+            size: "lg",
+            link: "/",
+          },
+          {
+            text: "Talk to an Expert",
+            variant: "default",
+            size: "lg",
+            className: "bg-orange-600 hover:bg-orange-700 text-white",
+            link: "/talk-to-us",
+          },
+        ]}
       />
       <div className="w-full bg-[#FAFAFA]">
         <div className="container mx-auto px-4 py-16 max-w-4xl">

@@ -73,7 +73,7 @@ const OurBlog: React.FC<OurBlogProps> = ({
                     }}
                     className="flex justify-end mt-3 md:mt-4"
                   >
-                    <button className="px-3 md:px-4 py-1.5 md:py-2 border border-[#A9A9A9] text-gray-700 text-xs md:text-sm hover:bg-gray-50 transition-colors">
+                    <button className="px-3 md:px-4 py-1.5 md:py-2 border border-gray-500 text-black font-medium text-xs md:text-sm hover:bg-gray-50 transition-colors">
                       {blog.buttonText}
                     </button>
                   </div>

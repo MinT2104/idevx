@@ -23,7 +23,7 @@ const gridBoxData = {
       description:
         "Create product, ad, and learning visuals instantly with DevX AI.",
       buttonText: "Learn More",
-      customModelButtonLink: "/models",
+      customModelButtonLink: "/solution/image-processing",
     },
     {
       id: "speech-to-text",
@@ -31,7 +31,7 @@ const gridBoxData = {
       description:
         "Fast, accurate transcription powered by Whisper, Deepgram & more.",
       buttonText: "Learn More",
-      customModelButtonLink: "/models",
+      customModelButtonLink: "/solution/speech-to-text",
     },
     {
       id: "text-to-speech",
@@ -39,28 +39,28 @@ const gridBoxData = {
       description:
         "Human-like voices with DevX, ElevenLabs, Google, Coqui, Bark, Mozilla.",
       buttonText: "Learn More",
-      customModelButtonLink: "/models",
+      customModelButtonLink: "/solution/text-to-speech",
     },
     {
       id: "embeddings",
       title: "Embeddings",
       description: "Smarter search and retrieval with DevX vector embeddings.",
       buttonText: "Learn More",
-      customModelButtonLink: "/models",
+      customModelButtonLink: "/solution/embedding",
     },
     {
       id: "process-automation",
       title: "Process Automation",
       description: "Automate multi-step workflows end-to-end with DevX AI.",
       buttonText: "Learn More",
-      customModelButtonLink: "/models",
+      customModelButtonLink: "/solution/process-automation",
     },
     {
       id: "ai-agents",
       title: "AI Agents",
       description:
         "Deploy intelligent agents for support, research, and operations.",
-      customModelButtonLink: "/models",
+      customModelButtonLink: "/solution/ai-agent",
       buttonText: "Learn More",
     },
   ],
@@ -68,7 +68,7 @@ const gridBoxData = {
   customModelDescription:
     "DevX builds fine-tuned AI models on your business data, workflows, and domain expertise—delivering unmatched accuracy, compliance, and performance.",
   customModelButtonText: "Learn More",
-  customModelButtonLink: "/models",
+  customModelButtonLink: "/solution/custom-model",
 };
 
 // WhatClientSay data configuration
@@ -259,11 +259,22 @@ export default function Hero({ blogs = [], models = [] }: HeroProps) {
         description="DevX empowers businesses with domain-focused AI services and innovative products—from Education, Healthcare, 
 and Law Firms to Travel, Food, Enterprises, and Creators. Build smarter workflows, automate services, 
 and scale processes with our AI-driven solutions."
-        ctaButton="Get Started"
-        ctaButton2="Talk to an Expert"
+        buttons={[
+          {
+            text: "Get Started",
+            variant: "outline",
+            size: "lg",
+            link: "/",
+          },
+          {
+            text: "Talk to an Expert",
+            variant: "default",
+            size: "lg",
+            className: "bg-orange-600 hover:bg-orange-700 text-white",
+            link: "/talk-to-us",
+          },
+        ]}
         subtitle="Built for Your Success"
-        link1="https://www.google.com"
-        link2="/talk-to-us"
       />
 
       <CompaniesSection />

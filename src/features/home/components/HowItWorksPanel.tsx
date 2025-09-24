@@ -29,7 +29,7 @@ export default function HowItWorksPanel({
         <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
         <Button
           size="sm"
-          className="text-xs px-4 py-2 h-8 bg-white text-black border border-[#A9A9A9] hover:bg-gray-50 font-medium rounded-none cursor-pointer"
+          className="text-xs px-4 py-2 h-8 bg-white border-gray-500 text-black border font-medium rounded-none cursor-pointer"
           onClick={onContactExpert}
         >
           Talk to an Expert

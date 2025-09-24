@@ -1,7 +1,32 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ChevronDown, Menu } from "lucide-react";
+import {
+  ChevronDown,
+  Menu,
+  GraduationCap,
+  Heart,
+  Scale,
+  Plane,
+  Image as ImageIcon,
+  Mic,
+  Volume2,
+  Database,
+  Zap,
+  Bot,
+  Sparkles,
+  Music,
+  Shield,
+  FileText,
+  RefreshCw,
+  BookOpen,
+  Users,
+  Briefcase,
+  MessageCircle,
+  Building2,
+  FileCheck,
+  Handshake,
+} from "lucide-react";
 import { Button } from "@/ui/components/button";
 import {
   Drawer,
@@ -17,6 +42,7 @@ interface DropdownItem {
   label: string;
   href: string;
   category?: string;
+  icon?: React.ComponentType<{ className?: string }>;
 }
 
 interface MenuItem {
@@ -52,10 +78,10 @@ const Header = () => {
       label: "Products",
       hasDropdown: true,
       dropdownItems: [
-        { label: "Study AI", href: "/product/study-ai" },
-        { label: "Healthy AI", href: "/product/healthy-ai" },
-        { label: "Legal AI", href: "/product/legal-ai" },
-        { label: "Travel AI", href: "/product/travel-ai" },
+        { label: "Study AI", href: "/product/study-ai", icon: GraduationCap },
+        { label: "Healthy AI", href: "/product/healthy-ai", icon: Heart },
+        { label: "Legal AI", href: "/product/legal-ai", icon: Scale },
+        { label: "Travel AI", href: "/product/travel-ai", icon: Plane },
       ],
     },
     {
@@ -67,38 +93,50 @@ const Header = () => {
           label: "Image Processing",
           href: "/solution/image-processing",
           category: "GEN AI",
+          icon: ImageIcon,
         },
         {
           label: "Speech to Text",
           href: "/solution/speech-to-text",
           category: "GEN AI",
+          icon: Mic,
         },
         {
           label: "Text to Speech",
           href: "/solution/text-to-speech",
           category: "GEN AI",
+          icon: Volume2,
         },
         {
           label: "Embedding",
           href: "/solution/embedding",
           category: "GEN AI",
+          icon: Database,
         },
         {
           label: "Process Automation",
           href: "/solution/process-automation",
           category: "GEN AI",
+          icon: Zap,
         },
-        { label: "AI Agent", href: "/solution/ai-agent", category: "GEN AI" },
+        {
+          label: "AI Agent",
+          href: "/solution/ai-agent",
+          category: "GEN AI",
+          icon: Bot,
+        },
         // Agentic AI section items
         {
           label: "Agentic AI",
           href: "/solution/agentic-ai",
           category: "Agentic AI",
+          icon: Sparkles,
         },
         {
           label: "Text to Song",
           href: "/solution/text-to-song",
           category: "Agentic AI",
+          icon: Music,
         },
       ],
     },
@@ -106,20 +144,20 @@ const Header = () => {
       label: "Company",
       hasDropdown: true,
       dropdownItems: [
-        { label: "Privacy Policy", href: "/privacy" },
-        { label: "Terms and Conditions", href: "/terms" },
-        { label: "Refund Policy", href: "/refund" },
+        { label: "Privacy Policy", href: "/privacy", icon: Shield },
+        { label: "Terms and Conditions", href: "/terms", icon: FileText },
+        { label: "Refund Policy", href: "/refund", icon: RefreshCw },
       ],
     },
     {
       label: "Resources",
       hasDropdown: true,
       dropdownItems: [
-        { label: "Model Library", href: "/models" },
-        { label: "Blog", href: "/blog" },
-        { label: "Partner", href: "/partner" },
-        { label: "Careers", href: "/careers" },
-        { label: "Contact Us", href: "/talk-to-us" },
+        { label: "Model Library", href: "/models", icon: BookOpen },
+        { label: "Blog", href: "/blog", icon: FileCheck },
+        { label: "Partner", href: "/partner", icon: Handshake },
+        { label: "Careers", href: "/careers", icon: Briefcase },
+        { label: "Contact Us", href: "/talk-to-us", icon: MessageCircle },
       ],
     },
   ];
@@ -230,7 +268,12 @@ const Header = () => {
                           {/* GEN AI Column */}
                           <div className="space-y-1">
                             <div className="px-4 py-2 mb-2">
-                              <h4 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+                              <h4
+                                className={cn(
+                                  "text-sm font-bold text-gray-900 uppercase tracking-wide",
+                                  isScrolled ? "text-white" : "text-gray-900"
+                                )}
+                              >
                                 GEN AI
                               </h4>
                             </div>
@@ -241,12 +284,15 @@ const Header = () => {
                                   key={index}
                                   href={dropdownItem.href}
                                   className={cn(
-                                    "block px-4 py-2.5 text-base whitespace-nowrap font-medium transition-all duration-200 ease-out",
+                                    "flex items-center gap-3 px-4 py-2.5 text-base whitespace-nowrap font-medium transition-all duration-200 ease-out rounded-md",
                                     isScrolled
                                       ? "text-gray-300 hover:text-white hover:bg-white hover:bg-opacity-10"
                                       : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
                                   )}
                                 >
+                                  {dropdownItem.icon && (
+                                    <dropdownItem.icon className="h-4 w-4 flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
+                                  )}
                                   {dropdownItem.label}
                                 </Link>
                               ))}
@@ -255,7 +301,12 @@ const Header = () => {
                           {/* Agentic AI Column */}
                           <div className="space-y-1">
                             <div className="px-4 py-2 mb-2">
-                              <h4 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+                              <h4
+                                className={cn(
+                                  "text-sm font-bold text-gray-900 uppercase tracking-wide",
+                                  isScrolled ? "text-white" : "text-gray-900"
+                                )}
+                              >
                                 Agentic AI
                               </h4>
                             </div>
@@ -266,12 +317,15 @@ const Header = () => {
                                   key={index}
                                   href={dropdownItem.href}
                                   className={cn(
-                                    "block px-4 py-2.5 text-base whitespace-nowrap font-medium transition-all duration-200 ease-out",
+                                    "flex items-center gap-3 px-4 py-2.5 text-base whitespace-nowrap font-medium transition-all duration-200 ease-out rounded-md",
                                     isScrolled
                                       ? "text-gray-300 hover:text-white hover:bg-white hover:bg-opacity-10"
                                       : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
                                   )}
                                 >
+                                  {dropdownItem.icon && (
+                                    <dropdownItem.icon className="h-4 w-4 flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
+                                  )}
                                   {dropdownItem.label}
                                 </Link>
                               ))}
@@ -292,12 +346,15 @@ const Header = () => {
                               key={index}
                               href={dropdownItem.href}
                               className={cn(
-                                "block px-4 py-2.5 text-base whitespace-nowrap font-medium transition-all duration-200 ease-out",
+                                "flex items-center gap-3 px-4 py-2.5 text-base whitespace-nowrap font-medium transition-all duration-200 ease-out rounded-md group",
                                 isScrolled
                                   ? "text-gray-300 hover:text-white hover:bg-white hover:bg-opacity-10"
                                   : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
                               )}
                             >
+                              {dropdownItem.icon && (
+                                <dropdownItem.icon className="h-4 w-4 flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
+                              )}
                               {dropdownItem.label}
                             </Link>
                           ))}
@@ -316,7 +373,7 @@ const Header = () => {
                   "cursor-pointer px-6 py-2 font-medium transition-all duration-500 ease-out rounded-none",
                   isScrolled
                     ? "bg-white text-black hover:bg-gray-100"
-                    : "bg-orange-500 hover:bg-orange-600 text-white"
+                    : "bg-orange-600 hover:bg-orange-600 text-white"
                 )}
               >
                 Book a Demo
@@ -393,8 +450,11 @@ const Header = () => {
                                     <DrawerClose asChild key={index}>
                                       <Link
                                         href={dropdownItem.href}
-                                        className="block text-base text-gray-600 hover:text-gray-900 py-2 font-medium"
+                                        className="flex items-center gap-3 text-base text-gray-600 hover:text-gray-900 py-2 font-medium transition-all duration-200 ease-out"
                                       >
+                                        {dropdownItem.icon && (
+                                          <dropdownItem.icon className="h-4 w-4 flex-shrink-0 transition-transform duration-200" />
+                                        )}
                                         {dropdownItem.label}
                                       </Link>
                                     </DrawerClose>

@@ -19,6 +19,10 @@ const ModelDetailView: React.FC<ModelDetailViewProps> = ({ model }) => {
     }
   };
 
+  const handleCopyPageLink = (url: string) => {
+    navigator.clipboard.writeText(url);
+  };
+
   const handleCopyCode = async (text: string, index: number) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -102,11 +106,24 @@ const ModelDetailView: React.FC<ModelDetailViewProps> = ({ model }) => {
       <HeroSection
         title={hero?.title || model.name || "Model"}
         description={hero?.description || model.description || ""}
-        ctaButton={hero?.ctaButton || "Get Started"}
-        ctaButton2={hero?.ctaButton2 || "Talk to an Expert"}
+        buttons={
+          hero?.buttons || [
+            {
+              text: "Get Started",
+              variant: "outline",
+              size: "lg",
+              link: "/",
+            },
+            {
+              text: "Talk to an Expert",
+              variant: "default",
+              size: "lg",
+              className: "bg-orange-600 hover:bg-orange-700 text-white",
+              link: "/talk-to-us",
+            },
+          ]
+        }
         subtitle={hero?.subtitle}
-        link1={hero?.link1 || "https://www.google.com"}
-        link2={hero?.link2 || "https://www.google.com"}
       />
 
       {/* Main Content */}
@@ -147,6 +164,7 @@ const ModelDetailView: React.FC<ModelDetailViewProps> = ({ model }) => {
                   {pageInfo?.title || model.name}
                 </h1>
                 <Button
+                  onClick={() => handleCopyPageLink(window.location.href)}
                   variant="outline"
                   size="sm"
                   className="flex items-center gap-2"
@@ -310,31 +328,32 @@ const ModelDetailView: React.FC<ModelDetailViewProps> = ({ model }) => {
               );
             })}
 
-            {/* Why Model Matters Section */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                {whyModelMattersData?.title || "Why this model matters"}
-              </h2>
+            {whyModelMattersData?.title && (
+              <div className="mb-8">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                  {whyModelMattersData?.title || "Why this model matters"}
+                </h2>
 
-              <ul className="space-y-1 mb-6 list-disc list-outside ps-5">
-                {(whyModelMattersData?.points || []).map((point: any) => (
-                  <li key={point.id || point.title} className="text-gray-600">
-                    {point.title} {point.description}
-                  </li>
-                ))}
-              </ul>
+                <ul className="space-y-1 mb-6 list-disc list-outside ps-5">
+                  {(whyModelMattersData?.points || []).map((point: any) => (
+                    <li key={point.id || point.title} className="text-gray-600">
+                      {point.title} {point.description}
+                    </li>
+                  ))}
+                </ul>
 
-              <Button
-                variant="outline"
-                size="sm"
-                className="border-orange-100 border rounded-none text-gray-900 bg-gray-50"
-                onClick={() =>
-                  handleOpenLink(whyModelMattersData?.ctaButton?.link || "#")
-                }
-              >
-                {whyModelMattersData?.ctaButton?.text || "Learn more"}
-              </Button>
-            </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-orange-100 border rounded-none text-gray-900 bg-gray-50"
+                  onClick={() =>
+                    handleOpenLink(whyModelMattersData?.ctaButton?.link || "#")
+                  }
+                >
+                  {whyModelMattersData?.ctaButton?.text || "Learn more"}
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Sidebar */}
@@ -379,9 +398,12 @@ const ModelDetailView: React.FC<ModelDetailViewProps> = ({ model }) => {
                     <div className="text-sm font-bold text-gray-900 mb-1">
                       {detail.label}
                     </div>
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-gray-600 cursor-pointer">
                       {detail.hasLink ? (
-                        <div className="flex items-center">
+                        <div
+                          onClick={() => handleOpenLink(detail.value)}
+                          className="flex items-center"
+                        >
                           <span>{detail.value}</span>
                           <svg
                             className="w-3 h-3 ml-1 text-gray-600"

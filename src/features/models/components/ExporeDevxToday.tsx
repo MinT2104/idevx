@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/ui/components/button";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -15,8 +16,7 @@ const ExporeDevxToday = ({ className }: ExploreProps) => {
       </h2>
       <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center max-w-md mx-auto sm:max-w-none">
         <Button
-          variant="outline"
-          className="px-6 md:px-8 py-2 md:py-3 text-base md:text-lg border-gray-300 rounded-none w-full sm:w-auto"
+          className="px-6 md:px-8 py-2 md:py-3 text-base md:text-lg bg-white border border-gray-500 text-black rounded-none w-full sm:w-auto"
           onClick={() => router.push("/")}
         >
           Get Started

@@ -6,6 +6,7 @@ import models from "../routes/models";
 import seed from "../routes/seed";
 import blog from "../routes/blog";
 import testDb from "../routes/test-db";
+import solutions from "../routes/solutions";
 
 // Force dynamic rendering to avoid build-time issues
 export const dynamic = "force-dynamic";
@@ -25,6 +26,7 @@ app.route("/models", models);
 app.route("/seed", seed);
 app.route("/test-db", testDb);
 app.route("/blog", blog);
+app.route("/solutions", solutions);
 
 export const GET = handle(app);
 export const POST = handle(app);
