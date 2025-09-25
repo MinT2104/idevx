@@ -11,6 +11,8 @@ import {
   Lightbulb,
   Settings,
   PanelsTopLeft,
+  MessageSquare,
+  Mail,
 } from "lucide-react";
 
 type NavigationItem = {
@@ -36,6 +38,16 @@ const navigationItems: NavigationItem[] = [
     name: "Solutions",
     href: "/admin/solutions",
     icon: (p) => <Lightbulb {...p} />,
+  },
+  {
+    name: "Feedback",
+    href: "/admin/feedback",
+    icon: (p) => <MessageSquare {...p} />,
+  },
+  {
+    name: "Newsletter",
+    href: "/admin/newsletter",
+    icon: (p) => <Mail {...p} />,
   },
   {
     name: "Settings",

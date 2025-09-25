@@ -12,6 +12,8 @@ import socialLinks from "../routes/social-links";
 import blogAdmin from "../routes/blog-admin";
 import blogForm from "../routes/blog-form";
 import modelAdmin from "../routes/model-admin";
+import feedback from "../routes/feedback";
+import newsletter from "../routes/newsletter";
 
 // Force dynamic rendering to avoid build-time issues
 export const dynamic = "force-dynamic";
@@ -37,6 +39,8 @@ app.route("/social-links", socialLinks);
 app.route("/blog-admin", blogAdmin);
 app.route("/blog-form", blogForm);
 app.route("/model-admin", modelAdmin);
+app.route("/feedback", feedback);
+app.route("/newsletter", newsletter);
 
 export const GET = handle(app as any);
 export const POST = handle(app as any);

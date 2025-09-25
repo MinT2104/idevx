@@ -126,7 +126,6 @@ export default function DataTable<T extends { id: string }>({
         </table>
       </div>
 
-      {/* Pagination */}
       {pagination.totalPages > 1 && (
         <div className="bg-gradient-to-r from-gray-50 to-blue-50 px-6 py-4 border-t border-gray-200">
           <div className="flex items-center justify-between">

@@ -31,11 +31,65 @@ const BlogDetailView = ({
   const [email, setEmail] = useState("");
   const [post] = useState(serverPost);
   const [relatedPosts, setRelatedPosts] = useState<any[]>(related);
+  const [isSubscribing, setIsSubscribing] = useState(false);
+  const [subscribeError, setSubscribeError] = useState("");
   const { success } = useToast();
 
-  const handleSubscribe = () => {
-    // Handle newsletter subscription
-    console.log("Subscribing with email:", email);
+  const handleSubscribe = async () => {
+    if (!email) {
+      setSubscribeError("Please enter your email address");
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setSubscribeError("Please enter a valid email address");
+      return;
+    }
+
+    setIsSubscribing(true);
+    setSubscribeError("");
+
+    try {
+      const response = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email.trim(),
+          source: "blog",
+          // You can add IP address and user agent if needed
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        if (result.alreadySubscribed) {
+          success(
+            "Already Subscribed!",
+            "You are already subscribed to our newsletter."
+          );
+        } else {
+          success(
+            "Subscribed Successfully!",
+            "Thank you for subscribing to our newsletter."
+          );
+        }
+        setEmail(""); // Clear the form
+      } else {
+        setSubscribeError(
+          result.error || "Failed to subscribe. Please try again."
+        );
+      }
+    } catch (error) {
+      console.error("Newsletter subscription error:", error);
+      setSubscribeError("Network error. Please try again.");
+    } finally {
+      setIsSubscribing(false);
+    }
   };
 
   // Share functions
@@ -617,17 +671,29 @@ const BlogDetailView = ({
                     id="email"
                     placeholder="your email address"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full text-base lg:text-lg h-10 lg:h-11 bg-white border-none rounded-none"
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (subscribeError) setSubscribeError(""); // Clear error when typing
+                    }}
+                    className={`w-full text-base lg:text-lg h-10 lg:h-11 bg-white border-none rounded-none ${
+                      subscribeError ? "border border-red-500" : ""
+                    }`}
+                    disabled={isSubscribing}
                   />
+                  {subscribeError && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {subscribeError}
+                    </p>
+                  )}
                 </div>
 
                 <Button
                   onClick={handleSubscribe}
-                  className="w-full bg-black h-10 lg:h-11 text-white text-sm lg:text-base"
+                  disabled={isSubscribing}
+                  className="w-full bg-black h-10 lg:h-11 text-white text-sm lg:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                   size="lg"
                 >
-                  SUBSCRIBE NOW
+                  {isSubscribing ? "SUBSCRIBING..." : "SUBSCRIBE NOW"}
                 </Button>
               </div>
             </div>
