@@ -1,4 +1,5 @@
 import "@/ui/styles/globals.css";
+import "highlight.js/styles/github.css";
 
 import type { Metadata, Viewport } from "next";
 import { Jost } from "next/font/google";

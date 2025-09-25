@@ -1,6 +1,5 @@
 import { prisma } from "@/core/database/db";
-import { getServerSessionUser } from "@/features/auth/auth-server";
-import { redirect } from "next/navigation";
+import Link from "next/link";
 
 async function getStats() {
   try {
@@ -30,8 +29,6 @@ async function getStats() {
 }
 
 export default async function AdminDashboard() {
-  const user = await getServerSessionUser();
-
   const stats = await getStats();
 
   const cards = [
@@ -39,134 +36,145 @@ export default async function AdminDashboard() {
       title: "Total Users",
       value: stats.users,
       icon: "👥",
-      color: "blue",
+      theme: {
+        card: "bg-gradient-to-br from-blue-500/10 via-blue-400/10 to-cyan-400/10 border border-blue-200/60",
+        accent: "text-blue-600",
+        hover:
+          "hover:from-blue-500/20 hover:via-blue-400/20 hover:to-cyan-400/20",
+      },
       href: "/admin/users",
     },
     {
       title: "AI Models",
       value: stats.models,
       icon: "🤖",
-      color: "green",
+      theme: {
+        card: "bg-gradient-to-br from-emerald-500/10 via-green-400/10 to-teal-400/10 border border-emerald-200/60",
+        accent: "text-emerald-600",
+        hover:
+          "hover:from-emerald-500/20 hover:via-green-400/20 hover:to-teal-400/20",
+      },
       href: "/admin/models",
     },
     {
       title: "Blog Posts",
       value: stats.blogPosts,
       icon: "📝",
-      color: "purple",
+      theme: {
+        card: "bg-gradient-to-br from-fuchsia-500/10 via-purple-400/10 to-pink-400/10 border border-fuchsia-200/60",
+        accent: "text-fuchsia-600",
+        hover:
+          "hover:from-fuchsia-500/20 hover:via-purple-400/20 hover:to-pink-400/20",
+      },
       href: "/admin/blog",
     },
     {
       title: "Solutions",
       value: stats.solutions,
       icon: "💡",
-      color: "orange",
+      theme: {
+        card: "bg-gradient-to-br from-amber-500/10 via-orange-400/10 to-yellow-400/10 border border-amber-200/60",
+        accent: "text-amber-600",
+        hover:
+          "hover:from-amber-500/20 hover:via-orange-400/20 hover:to-yellow-400/20",
+      },
       href: "/admin/solutions",
     },
   ];
 
   return (
-    <div className="space-y-6">
-      {/* Page Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-600">Welcome to your admin dashboard</p>
+    <div className="space-y-8">
+      {/* Header with vibrant gradient and subtle grid */}
+      <div className="relative overflow-hidden rounded-2xl border border-gray-200 bg-white">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50" />
+        <div className="relative p-6 sm:p-8">
+          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-fuchsia-600 to-rose-600">
+            Admin Dashboard
+          </h1>
+          <p className="mt-2 text-sm sm:text-base text-gray-600">
+            Quick overview of users, models, posts, and solutions.
+          </p>
+        </div>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {cards.map((card) => (
-          <div
-            key={card.title}
-            className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">
-                  {card.title}
-                </p>
-                <p className="text-3xl font-bold text-gray-900">{card.value}</p>
+          <Link key={card.title} href={card.href} className="group">
+            <div
+              className={`rounded-xl p-6 shadow-sm transition-all duration-300 ${card.theme.card} ${card.theme.hover} hover:shadow-md`}
+            >
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wide text-gray-600">
+                    {card.title}
+                  </p>
+                  <p className="mt-1 text-3xl font-extrabold text-gray-900">
+                    {card.value}
+                  </p>
+                </div>
+                <div className="text-4xl drop-shadow-sm">{card.icon}</div>
               </div>
-              <div className="text-4xl">{card.icon}</div>
+              <div className="mt-4">
+                <span className={`text-sm font-medium ${card.theme.accent}`}>
+                  View all →
+                </span>
+              </div>
             </div>
-            <div className="mt-4">
-              <a
-                href={card.href}
-                className={`text-sm font-medium text-${card.color}-600 hover:text-${card.color}-800`}
-              >
-                View all →
-              </a>
-            </div>
-          </div>
+          </Link>
         ))}
       </div>
 
       {/* Quick Actions */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="rounded-2xl border border-gray-200 bg-white p-6">
         <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <a
-            href="/admin/users"
-            className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+          <Link
+            href="/admin/solutions"
+            className="group relative overflow-hidden rounded-xl border border-amber-200/60 bg-gradient-to-br from-amber-500/10 via-orange-400/10 to-yellow-400/10 p-4 transition-all hover:from-amber-500/20 hover:via-orange-400/20 hover:to-yellow-400/20"
           >
-            <div className="flex items-center space-x-3">
-              <span className="text-2xl">👥</span>
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">💡</span>
               <div>
-                <h3 className="font-medium text-gray-900">Manage Users</h3>
+                <h3 className="font-semibold text-gray-900">
+                  Manage Solutions
+                </h3>
                 <p className="text-sm text-gray-600">
-                  View and edit user accounts
+                  Browse and manage solutions
                 </p>
               </div>
             </div>
-          </a>
+          </Link>
 
-          <a
+          <Link
             href="/admin/models"
-            className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+            className="group relative overflow-hidden rounded-xl border border-emerald-200/60 bg-gradient-to-br from-emerald-500/10 via-green-400/10 to-teal-400/10 p-4 transition-all hover:from-emerald-500/20 hover:via-green-400/20 hover:to-teal-400/20"
           >
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center gap-3">
               <span className="text-2xl">🤖</span>
               <div>
-                <h3 className="font-medium text-gray-900">AI Models</h3>
+                <h3 className="font-semibold text-gray-900">Manage Models</h3>
                 <p className="text-sm text-gray-600">
-                  Add and manage AI models
+                  Add and update AI models
                 </p>
               </div>
             </div>
-          </a>
+          </Link>
 
-          <a
+          <Link
             href="/admin/blog"
-            className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+            className="group relative overflow-hidden rounded-xl border border-fuchsia-200/60 bg-gradient-to-br from-fuchsia-500/10 via-purple-400/10 to-pink-400/10 p-4 transition-all hover:from-fuchsia-500/20 hover:via-purple-400/20 hover:to-pink-400/20"
           >
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center gap-3">
               <span className="text-2xl">📝</span>
               <div>
-                <h3 className="font-medium text-gray-900">Create Post</h3>
-                <p className="text-sm text-gray-600">Write new blog articles</p>
+                <h3 className="font-semibold text-gray-900">Create Post</h3>
+                <p className="text-sm text-gray-600">
+                  Write a new blog article
+                </p>
               </div>
             </div>
-          </a>
-        </div>
-      </div>
-
-      {/* Recent Activity */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">
-          Recent Activity
-        </h2>
-        <div className="space-y-3">
-          <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-            <span className="text-green-600 text-sm">●</span>
-            <div>
-              <p className="text-sm font-medium text-gray-900">
-                Admin dashboard initialized
-              </p>
-              <p className="text-xs text-gray-600">
-                Welcome to your new admin panel
-              </p>
-            </div>
-          </div>
+          </Link>
         </div>
       </div>
     </div>

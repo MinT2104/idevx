@@ -3,13 +3,13 @@ const prisma = new PrismaClient();
 
 async function main() {
   const models = await prisma.model.findMany({
-    select: { id: true, link: true },
+    select: { id: true, slug: true },
   });
   const seen = new Map<string, string>();
   const deletions: string[] = [];
 
   for (const m of models) {
-    const key = (m.link || "").trim();
+    const key = (m.slug || "").trim();
     if (!key) continue;
     if (seen.has(key)) deletions.push(m.id);
     else seen.set(key, m.id);

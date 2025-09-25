@@ -88,9 +88,7 @@ export default async function Home() {
       select: {
         id: true,
         name: true,
-        brand: true,
         logo: true,
-        link: true,
       },
     });
     models = items.map((m: any) => ({

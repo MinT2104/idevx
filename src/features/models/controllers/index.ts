@@ -11,11 +11,9 @@ import {
   createModel,
   getAllModels,
   getModelById,
-  getModelByLink,
   getModelBySlug,
   updateModel,
   deleteModel,
-  getBrands,
   getTypes,
   modelExists,
 } from "@/features/models/services/models.service";
@@ -38,7 +36,7 @@ export const getAllModelsHandler = async (c: ModelContext) => {
     const brand = query.brand;
     const type = query.type;
 
-    const result = await getAllModels(page, limit, search, brand, type);
+    const result = await getAllModels(page, limit, search, type);
 
     return c.json({
       success: true,
@@ -64,7 +62,7 @@ export const createModelHandler = [
       const data = c.req.valid("json");
 
       // Kiểm tra xem model với link này đã tồn tại chưa
-      const existingModel = await getModelByLink(data.model.link);
+      const existingModel = await getModelBySlug(data.model.slug);
       if (existingModel) {
         return c.json({ error: "Model with this link already exists" }, 409);
       }
@@ -102,7 +100,7 @@ export const getModelByLinkHandler = async (c: ModelContext) => {
   try {
     const link = c.req.param("link");
 
-    const model = await getModelByLink(link);
+    const model = await getModelBySlug(link);
 
     if (!model) {
       return c.json({ error: "Model not found" }, 404);
@@ -149,7 +147,7 @@ export const updateModelHandler = [
 
       // Nếu có cập nhật link, kiểm tra xem link mới có bị trùng không
       if (data.model?.link) {
-        const existingModel = await getModelByLink(data.model.link);
+        const existingModel = await getModelBySlug(data.model.slug);
         if (existingModel && existingModel.id !== id) {
           return c.json({ error: "Model with this link already exists" }, 409);
         }
@@ -186,12 +184,12 @@ export const deleteModelHandler = async (c: ModelContext) => {
 // GET /api/models/brands - Get all brands
 export const getBrandsHandler = async (c: ModelContext) => {
   try {
-    const brands = await getBrands();
+    const types = await getTypes();
 
-    return c.json({ success: true, data: brands });
+    return c.json({ success: true, data: types });
   } catch (error) {
     console.error("Error fetching brands:", error);
-    return c.json({ error: "Failed to fetch brands" }, 500);
+    return c.json({ error: "Failed to fetch brands and types" }, 500);
   }
 };
 
@@ -235,24 +233,16 @@ export const duplicateModelHandler = async (c: ModelContext) => {
     const duplicatedData = {
       model: {
         name: `${originalModel.name} (Copy)`,
-        brand: originalModel.brand || "Unknown",
-        logo: originalModel.logo,
         type: originalModel.type || "Unknown",
-        link: `${originalModel.link}-copy`,
+        logo: originalModel.logo,
+        slug: `${originalModel.slug}-copy`,
         description: originalModel.description,
-        extractedAt: originalModel.extractedAt,
-        crawledAt: originalModel.crawledAt,
       },
-      hero: originalModel.hero,
-      pageInfo: originalModel.pageInfo,
       detailedInfo: originalModel.detailedInfo,
-      whyModelMattersData: originalModel.whyModelMattersData,
-      sidebarData: originalModel.sidebarData,
-      modelListData: originalModel.modelListData,
-      modelSections: originalModel.modelSections,
+      content: originalModel.content,
     };
 
-    const duplicatedModel = await createModel(duplicatedData);
+    const duplicatedModel = await createModel(duplicatedData as any);
 
     return c.json({ success: true, data: duplicatedModel }, 201);
   } catch (error) {

@@ -48,13 +48,13 @@ const ModelHero = ({ models }: ModelHeroProps) => {
         const name = model.name?.toLowerCase() || "";
         const description = model.description?.toLowerCase() || "";
         const type = model.type?.toLowerCase() || "";
-        const brand = model.brand?.toLowerCase() || "";
+        const slug = model.slug?.toLowerCase() || "";
 
         return (
           name.includes(query) ||
           description.includes(query) ||
           type.includes(query) ||
-          brand.includes(query)
+          slug.includes(query)
         );
       })
       .slice(0, 8); // Giới hạn 8 kết quả
@@ -72,8 +72,8 @@ const ModelHero = ({ models }: ModelHeroProps) => {
     if (model.id) {
       const modelUrl = getModelUrl(model);
       router.push(modelUrl);
-    } else if (model.link) {
-      window.open(model.link, "_blank");
+    } else if (model.slug) {
+      window.open(model.slug, "_blank");
     }
   };
 

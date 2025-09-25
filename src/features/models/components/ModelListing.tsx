@@ -26,7 +26,6 @@ interface ModelListingProps {
   totalModels: number;
   currentPage: number;
   totalPages: number;
-  brands: string[];
 }
 
 const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
@@ -43,7 +42,6 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
   const [selectedFilterValue, setSelectedFilterValue] = useState<string | null>(
     null
   );
-  const [brandQuery, setBrandQuery] = useState("");
   const [typeQuery, setTypeQuery] = useState("");
   const [isMobile, setIsMobile] = useState(false);
 
@@ -58,23 +56,6 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
     "Speech to Text",
     "Image Processing",
   ];
-
-  // Lấy unique brands và types từ models
-  const availableBrands = useMemo(() => {
-    return Array.from(
-      new Set(
-        models
-          .map((model) => model.brand)
-          .filter((b): b is string => Boolean(b))
-      )
-    ).sort();
-  }, [models]);
-
-  const filteredBrands = useMemo(() => {
-    if (!brandQuery.trim()) return availableBrands;
-    const q = brandQuery.toLowerCase();
-    return availableBrands.filter((b) => b.toLowerCase().includes(q));
-  }, [availableBrands, brandQuery]);
 
   const availableTypes = useMemo(() => {
     const typesFromData = Array.from(
@@ -115,13 +96,11 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
         title: "Trending models",
         models: models.slice(0, 6).map((model) => ({
           id: model.id,
-          logo:
-            model.logo ||
-            (model.brand ? model.brand.charAt(0).toUpperCase() : "?"),
+          logo: model.logo || "/logo.png",
           name: model.name || "Unknown Model",
           description: model.description || model.type || "No description",
           tags: [model.type || "Unknown"],
-          link: model.link || "#",
+          link: model.slug ? `/models/${model.slug}` : "#",
           slug: model.slug || "#",
         })),
       });
@@ -136,13 +115,11 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
         }
         acc[modelType].push({
           id: model.id,
-          logo:
-            model.logo ||
-            (model.brand ? model.brand.charAt(0).toUpperCase() : "?"),
+          logo: model.logo || "/logo.png",
           name: model.name || "Unknown Model",
           description: model.description || model.type || "No description",
           tags: [model.type || "Unknown"],
-          link: model.link || "#",
+          link: model.slug ? `/models/${model.slug}` : "#",
           slug: model.slug || "#",
         });
         return acc;
@@ -193,9 +170,7 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
   const isModelInDropdownFilter = (model: ModelViewRecord): boolean => {
     if (!selectedFilterType || !selectedFilterValue) return true;
 
-    if (selectedFilterType === "brand") {
-      return model.brand === selectedFilterValue;
-    } else if (selectedFilterType === "type") {
+    if (selectedFilterType === "type") {
       return model.type === selectedFilterValue;
     }
 
@@ -212,7 +187,6 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
         name: string;
         description: string;
         tags: string[];
-        link: string;
         slug: string;
       }>;
       showSeeAll?: boolean;
@@ -232,11 +206,10 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
             id: model.id,
             logo:
               model.logo ||
-              (model.brand ? model.brand.charAt(0).toUpperCase() : "?"),
+              (model.type ? model.type.charAt(0).toUpperCase() : "?"),
             name: model.name || "Unknown Model",
             description: model.description || model.type || "No description",
             tags: [model.type || "Unknown"],
-            link: model.link || "#",
             slug: model.slug || "#",
           })),
           showSeeAll: false,
@@ -263,11 +236,10 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
           id: model.id,
           logo:
             model.logo ||
-            (model.brand ? model.brand.charAt(0).toUpperCase() : "?"),
+            (model.type ? model.type.charAt(0).toUpperCase() : "?"),
           name: model.name || "Unknown Model",
           description: model.description || model.type || "No description",
           tags: [model.type || "Unknown"],
-          link: model.link || "#",
           slug: model.slug || "#",
         })),
         showSeeAll: false, // Không cần "See All" vì đã hiển thị tất cả
@@ -288,11 +260,10 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
           id: model.id,
           logo:
             model.logo ||
-            (model.brand ? model.brand.charAt(0).toUpperCase() : "?"),
+            (model.type ? model.type.charAt(0).toUpperCase() : "?"),
           name: model.name || "Unknown Model",
           description: model.description || model.type || "No description",
           tags: [model.type || "Unknown"],
-          link: model.link || "#",
           slug: model.slug || "#",
         })),
         showSeeAll: false,
@@ -480,68 +451,7 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
                 </DrawerHeader>
                 <div className="p-4 space-y-4">
                   {/* Collapsible Brand */}
-                  <details
-                    className="bg-gray-50 rounded-lg border border-gray-200"
-                    open
-                  >
-                    <summary className="list-none cursor-pointer select-none px-3 py-3 flex items-center justify-between">
-                      <span className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
-                        Brand
-                      </span>
-                      <svg
-                        className="w-4 h-4 text-gray-500"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                    </summary>
-                    <div className="p-3 pt-0">
-                      <div className="mb-2">
-                        <input
-                          value={brandQuery}
-                          onChange={(e) => setBrandQuery(e.target.value)}
-                          placeholder="Search brand..."
-                          className="w-full px-3 py-2 text-sm border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-gray-200 bg-white placeholder:text-gray-400"
-                          aria-label="Search brand"
-                        />
-                      </div>
-                      <div className="max-h-[40vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-                        {filteredBrands.map((brand) => (
-                          <DrawerClose asChild key={brand}>
-                            <button
-                              onClick={() =>
-                                handleDropdownFilter("brand", brand!)
-                              }
-                              className={`w-full text-left px-3 py-3 text-base rounded transition-all duration-200 group ${
-                                selectedFilterType === "brand" &&
-                                selectedFilterValue === brand
-                                  ? "bg-gray-100 text-gray-900 font-medium"
-                                  : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                              }`}
-                            >
-                              <div className="flex items-center justify-between">
-                                <span className="font-medium">{brand}</span>
-                                {selectedFilterType === "brand" &&
-                                  selectedFilterValue === brand && (
-                                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                                  )}
-                              </div>
-                            </button>
-                          </DrawerClose>
-                        ))}
-                        {filteredBrands.length === 0 && (
-                          <div className="px-3 py-2 text-sm text-gray-500">
-                            No brands found
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </details>
+                  {/* Removed Brand filter: schema no longer includes brand */}
 
                   {/* Collapsible Type */}
                   <details className="bg-gray-50 rounded-lg border border-gray-200">
@@ -672,54 +582,11 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
                     Filter Models
                   </h3>
                   <p className="text-xs text-gray-500 mt-0.5">
-                    Choose a brand to filter
+                    Choose a type to filter
                   </p>
                 </div>
                 <div className="p-3 space-y-4">
-                  <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="w-2 h-2 bg-gray-600 rounded-full"></div>
-                      <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
-                        Brand
-                      </h4>
-                    </div>
-                    <div className="mb-2">
-                      <input
-                        value={brandQuery}
-                        onChange={(e) => setBrandQuery(e.target.value)}
-                        placeholder="Search brand..."
-                        className="w-full px-3 py-2 text-sm border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-gray-200 bg-white placeholder:text-gray-400"
-                        aria-label="Search brand"
-                      />
-                    </div>
-                    <div className="max-h-40 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-                      {filteredBrands.map((brand) => (
-                        <button
-                          key={brand}
-                          onClick={() => handleDropdownFilter("brand", brand!)}
-                          className={`w-full text-left px-3 py-2 text-sm rounded transition-all duration-200 group ${
-                            selectedFilterType === "brand" &&
-                            selectedFilterValue === brand
-                              ? "bg-gray-100 text-gray-900 font-medium"
-                              : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                          }`}
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="font-medium">{brand}</span>
-                            {selectedFilterType === "brand" &&
-                              selectedFilterValue === brand && (
-                                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                              )}
-                          </div>
-                        </button>
-                      ))}
-                      {filteredBrands.length === 0 && (
-                        <div className="px-3 py-2 text-sm text-gray-500">
-                          No brands found
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                  {/* Removed Brand filter block */}
 
                   {selectedFilterType && (
                     <div className="border-t border-gray-200 pt-3">

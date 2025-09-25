@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import MDEditor from "@uiw/react-md-editor";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
 import EnhancedErrorBoundary from "./EnhancedErrorBoundary";
 
 interface MarkdownRendererProps {
@@ -19,6 +21,8 @@ export default function MarkdownRenderer({
     setRetryCount((prev) => prev + 1);
   };
 
+  console.log(content);
+
   if (!content || typeof content !== "string") {
     return (
       <div className="text-gray-500 italic p-4 border border-gray-200 rounded-lg bg-gray-50">
@@ -34,11 +38,12 @@ export default function MarkdownRenderer({
           <MDEditor.Markdown
             source={content}
             data-color-mode="light"
+            rehypePlugins={[rehypeHighlight]}
+            remarkPlugins={[remarkGfm]}
             style={{
               backgroundColor: "transparent",
               fontSize: "16px",
               lineHeight: "1.6",
-              color: "#1f2937", // text-gray-800
             }}
           />
         </div>

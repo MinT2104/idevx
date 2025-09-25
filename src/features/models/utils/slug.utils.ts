@@ -44,7 +44,7 @@ export const generateModelSlug = (name: string, brand?: string): string => {
  * @returns Model detail URL
  */
 export const getModelUrlBySlug = (slug: string): string => {
-  return `/models/slug/${slug}`;
+  return `/models/${slug}`;
 };
 
 /**

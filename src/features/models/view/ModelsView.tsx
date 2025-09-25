@@ -8,8 +8,6 @@ interface ModelsViewProps {
   totalModels: number;
   currentPage: number;
   totalPages: number;
-  brands: string[];
-  types: string[];
 }
 
 const ModelsView: React.FC<ModelsViewProps> = ({
@@ -17,8 +15,6 @@ const ModelsView: React.FC<ModelsViewProps> = ({
   totalModels,
   currentPage,
   totalPages,
-  brands,
-  types,
 }) => {
   return (
     <div>
@@ -28,7 +24,6 @@ const ModelsView: React.FC<ModelsViewProps> = ({
         totalModels={totalModels}
         currentPage={currentPage}
         totalPages={totalPages}
-        brands={brands}
       />
     </div>
   );

@@ -5,10 +5,15 @@ import { notFound } from "next/navigation";
 // Force dynamic rendering to avoid build-time issues
 export const dynamic = "force-dynamic";
 
-const ModelDetailPageBySlug = async ({ params }: { params: { slug: string } }) => {
+const ModelDetailPageBySlug = async ({
+  params,
+}: {
+  params: { slug: string };
+}) => {
   try {
     const model = await getModelBySlug(params.slug);
     if (!model) return notFound();
+    console.log(model);
     return <ModelDetailView model={model} />;
   } catch (error) {
     console.warn("Failed to fetch model by slug:", error);

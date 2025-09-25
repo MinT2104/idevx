@@ -26,7 +26,6 @@ const navigationItems: NavigationItem[] = [
     href: "/admin",
     icon: (p) => <LayoutDashboard {...p} />,
   },
-  { name: "Users", href: "/admin/users", icon: (p) => <Users {...p} /> },
   {
     name: "Models",
     href: "/admin/models",

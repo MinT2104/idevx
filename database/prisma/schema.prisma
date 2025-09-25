@@ -70,28 +70,22 @@ model Todo {
 
 model Model {
   id                    String   @id @default(auto()) @map("_id") @db.ObjectId
-  name                  String?
+  name                  String
   slug                  String
-  brand                 String?
-  logo                  String?
-  type                  String?
-  link                  String?
+  type                  String
   description           String?
-  extractedAt           String?
-  crawledAt             String?
-  hero                  Json?   // JSON object
-  pageInfo              Json?   // JSON object
-  detailedInfo          Json?   // JSON object
-  whyModelMattersData   Json?   // JSON object
-  sidebarData           Json?   // JSON object
-  modelListData         Json?   // JSON object
-  modelSections         Json?   // JSON object
-  createdAt             DateTime? @default(now())
-  updatedAt             DateTime? @updatedAt
+  logo                  String?
+  status                String   @default("active") // "active" | "inactive"
+  // New structured fields
+  detailedInfo          Json?   // { readme, github, developedBy, modelFamily, useCase, variant, size, license }
+  content               Json?   // { type: "markdown"; body: string }
+  
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 
-  @@index([brand])
   @@index([type])
   @@index([name])
+  @@index([status])
   @@unique([slug])
 } 
 

@@ -13,7 +13,8 @@
     "prisma:push": "npx prisma db push --schema=./database/prisma/schema.prisma",
     "prisma:studio": "npx prisma studio",
     "seed:solutions": "node ./script/seed-solutions.cjs",
-    "seed:admin": "node ./script/seed-admin.cjs"
+    "seed:admin": "node ./script/seed-admin.cjs",
+    "seed:models": "node ./script/seed-models.cjs"
   },
   "dependencies": {
     "@auth/core": "0.34.2",
@@ -42,6 +43,8 @@
     "prisma": "^6.11.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "rehype-highlight": "^7.0.2",
+    "remark-gfm": "^4.0.1",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^1.1.2",
