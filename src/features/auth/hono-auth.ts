@@ -1,27 +1,31 @@
-import { Context } from "hono"
-import { getToken } from "next-auth/jwt"
+import { Context } from "hono";
+import { getToken } from "next-auth/jwt";
 
 export async function getUserFromContext(
   c: Context
-): Promise<{ id: string } | null> {
+): Promise<{ id: string; role?: string; email?: string } | null> {
   try {
     // Get the raw request from Hono context
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const req = c.req.raw as any
+    const req = c.req.raw as any;
 
     const token = await getToken({
       req,
       secret: process.env.NEXTAUTH_SECRET,
-    })
+    });
 
     if (!token?.sub) {
-      return null
+      return null;
     }
 
-    return { id: token.sub }
+    return {
+      id: token.sub,
+      role: token.role as string,
+      email: token.email as string,
+    };
   } catch (error) {
-    console.error("Error getting user from token:", error)
-    return null
+    console.error("Error getting user from token:", error);
+    return null;
   }
 }
 
@@ -30,18 +34,41 @@ export async function getUserFromContext(
  */
 export function requireAuth() {
   return async (c: Context, next: () => Promise<void>) => {
-    const user = await getUserFromContext(c)
+    const user = await getUserFromContext(c);
 
     if (!user) {
-      return c.json({ error: "Unauthorized" }, 401)
+      return c.json({ error: "Unauthorized" }, 401);
     }
 
     // Set user in context for easy access in routes
-    c.set("user", user)
-    c.set("userId", user.id)
+    c.set("user", user);
+    c.set("userId", user.id);
 
-    await next()
-  }
+    await next();
+  };
+}
+
+/**
+ * Admin auth middleware that requires admin role
+ */
+export function requireAdmin() {
+  return async (c: Context, next: () => Promise<void>) => {
+    const user = await getUserFromContext(c);
+
+    if (!user) {
+      return c.json({ error: "Unauthorized" }, 401);
+    }
+
+    if (user.role !== "admin") {
+      return c.json({ error: "Admin access required" }, 403);
+    }
+
+    // Set user in context for easy access in routes
+    c.set("user", user);
+    c.set("userId", user.id);
+
+    await next();
+  };
 }
 
 /**
@@ -49,13 +76,13 @@ export function requireAuth() {
  */
 export function optionalAuth() {
   return async (c: Context, next: () => Promise<void>) => {
-    const user = await getUserFromContext(c)
+    const user = await getUserFromContext(c);
 
     if (user) {
-      c.set("user", user)
-      c.set("userId", user.id)
+      c.set("user", user);
+      c.set("userId", user.id);
     }
 
-    await next()
-  }
+    await next();
+  };
 }

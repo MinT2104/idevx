@@ -15,7 +15,7 @@ interface BlogCard {
   id: number;
   title: string;
   description: string;
-  category: string;
+  category: string[];
   author: string;
   authorCount: number;
   image: string;
@@ -37,8 +37,24 @@ const BlogView = ({ posts: serverPosts }: BlogViewProps) => {
   const posts = serverPosts;
 
   const tabs = useMemo(() => {
-    return ["All", ...ALLOWED_BLOG_CATEGORIES];
-  }, []);
+    // Extract all unique categories from posts
+    const allCategories = new Set<string>();
+    posts.forEach((post: any) => {
+      if (
+        post.taxonomy?.categories &&
+        Array.isArray(post.taxonomy.categories)
+      ) {
+        post.taxonomy.categories.forEach((cat: string) => {
+          allCategories.add(cat);
+        });
+      }
+    });
+
+    // Convert to array and sort
+    const uniqueCategories = Array.from(allCategories).sort();
+
+    return ["All", ...uniqueCategories];
+  }, [posts]);
 
   const blogCards: BlogCard[] = useMemo(
     () =>
@@ -46,8 +62,8 @@ const BlogView = ({ posts: serverPosts }: BlogViewProps) => {
         id: idx + 1,
         title: p.title,
         description: p.excerpt || p.subtitle || p.seo?.metaDescription || "",
-        category: normalizePrimaryCategory(p.taxonomy.categories),
-        author: p.authors[0]?.name || "",
+        category: p.taxonomy.categories || [],
+        author: p.authors[0]?.name || "DevX Editorial",
         authorCount: p.authors.length,
         image: p.cardImage?.url || p.heroImage?.url || "",
         subtitle: p.subtitle,
@@ -60,7 +76,15 @@ const BlogView = ({ posts: serverPosts }: BlogViewProps) => {
     const byCategory =
       activeTab === "All"
         ? blogCards
-        : blogCards.filter((card) => card.category === activeTab);
+        : blogCards.filter((card) => {
+            // Find the original post to check all categories
+            const originalPost = posts.find((p: any) => p.slug === card.slug);
+            const postCategories = originalPost?.taxonomy?.categories || [];
+            return postCategories.some(
+              (cat: string) => cat.toLowerCase() === activeTab.toLowerCase()
+            );
+          });
+
     const q = query.trim().toLowerCase();
     if (!q) return byCategory;
     return byCategory.filter((card) => {
@@ -70,7 +94,7 @@ const BlogView = ({ posts: serverPosts }: BlogViewProps) => {
         (card.author || "").toLowerCase().includes(q)
       );
     });
-  }, [activeTab, blogCards, query]);
+  }, [activeTab, blogCards, query, posts]);
 
   const pageCount = Math.max(1, Math.ceil(filteredCards.length / pageSize));
   const safeCurrentPage = Math.min(currentPage, pageCount);
@@ -167,23 +191,9 @@ const BlogView = ({ posts: serverPosts }: BlogViewProps) => {
             <div className="flex items-center gap-2 text-gray-600 mt-0">
               <Button
                 onClick={() => setIsSearchOpen(true)}
-                className="h-10 hover:bg-white"
+                className="h-10 hover:bg-white flex flex-row items-center justify-center"
                 variant="outline"
               >
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="mr-2"
-                >
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <path d="m21 21-4.35-4.35"></path>
-                </svg>
                 Search
               </Button>
             </div>

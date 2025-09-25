@@ -1,11 +1,12 @@
-"use client"
+"use client";
 
-import type { Session } from "next-auth"
-import { SessionProvider } from "next-auth/react"
+import type { Session } from "next-auth";
+import { SessionProvider } from "next-auth/react";
+import { ToastProvider } from "@/ui/components/toast-provider";
 
 interface ProvidersProps {
-  children: React.ReactNode
-  session?: Session | null
+  children: React.ReactNode;
+  session?: Session | null;
 }
 
 export function Providers({ children, session }: ProvidersProps) {
@@ -16,7 +17,7 @@ export function Providers({ children, session }: ProvidersProps) {
       refetchInterval={5 * 60} // 5 minutes
       refetchOnWindowFocus={false}
     >
-      {children}
+      <ToastProvider>{children}</ToastProvider>
     </SessionProvider>
-  )
+  );
 }

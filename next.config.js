@@ -15,6 +15,7 @@ const nextConfig = {
       "datocms-assets.com",
       "images.unsplash.com",
       "plus.unsplash.com",
+      "gtacourse.s3.us-east-2.amazonaws.com",
     ],
   },
 

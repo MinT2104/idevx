@@ -57,13 +57,13 @@ const OurBlog: React.FC<OurBlogProps> = ({
                 </div>
 
                 {/* Content */}
-                <div className=" flex flex-col justify-between min-h-[80px] md:min-h-[96px]">
-                  <div>
+                <div className="flex flex-col justify-between h-full w-full">
+                  <div className="flex-1">
                     <h3 className="text-base md:text-lg font-bold text-gray-900 mb-1 md:mb-2 line-clamp-2">
                       {blog.title}
                     </h3>
-                    <p className="text-gray-600 text-xs md:text-sm line-clamp-2">
-                      {blog.description}
+                    <p className="text-gray-600 text-xs md:text-sm line-clamp-2 min-h-[2.5rem]">
+                      {blog.description || "No description available"}
                     </p>
                   </div>
 

@@ -13,6 +13,7 @@ export const revalidate = 60;
 const page = async () => {
   const prisma = await getPrisma();
   const posts = await prisma.blogPost.findMany({
+    where: { status: "published" },
     orderBy: { createdAt: "desc" },
   });
   return <BlogView posts={posts as any} />;

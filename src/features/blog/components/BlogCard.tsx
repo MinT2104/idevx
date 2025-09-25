@@ -6,7 +6,7 @@ type BlogCardProps = {
     id: number;
     title: string;
     description: string;
-    category: string;
+    category: string[];
     author: string;
     authorCount: number;
     image: string;
@@ -16,6 +16,7 @@ type BlogCardProps = {
 };
 
 const BlogCard = ({ card }: BlogCardProps) => {
+  console.log(card);
   return (
     <Link
       href={card?.slug ? `/blog/${card.slug}` : "#"}
@@ -53,60 +54,46 @@ const BlogCard = ({ card }: BlogCardProps) => {
         </div>
 
         {/* Category Tag */}
-        <div className="mb-3">
-          <span className="inline-block px-3 py-1 border border-[#A9A9A9 text-gray-700 text-xs font-medium">
-            {card?.category}
-          </span>
+        <div className="mb-3 space-x-2">
+          {card?.category?.map((category, index) => (
+            <span
+              key={`${category}-${index}`}
+              className="inline-block px-3 py-1 border border-[#A9A9A9] text-gray-700 text-xs font-medium"
+            >
+              {category}
+            </span>
+          ))}
         </div>
 
         {/* Title */}
         <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-          {card?.description}
+          {card?.title}
         </h3>
 
         {/* Author */}
         <div className="flex items-center gap-3">
           <div className="flex -space-x-3">
             {/* Main author profile */}
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-semibold">
-              {card?.author.charAt(0)}
+            <div className="w-8 h-8 rounded-full border-2 border-white overflow-hidden">
+              <img
+                src="/images/client_2.png"
+                alt={card?.author || "Author"}
+                className="w-full h-full object-cover"
+              />
             </div>
 
             {/* Additional author profiles */}
-            {card?.authorCount > 0 && (
-              <>
-                <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-green-600 rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-semibold">
-                  {card?.authorCount >= 1 ? "A" : ""}
-                </div>
-                {card?.authorCount > 1 && (
-                  <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-semibold">
-                    {card?.authorCount >= 2 ? "B" : ""}
-                  </div>
-                )}
-                {card?.authorCount > 2 && (
-                  <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-semibold">
-                    {card?.authorCount >= 3 ? "C" : ""}
-                  </div>
-                )}
-                {card?.authorCount > 3 && (
-                  <div className="w-8 h-8 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-semibold">
-                    +
-                  </div>
-                )}
-              </>
+            {card?.authorCount > 1 && (
+              <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-green-600 rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-semibold">
+                +{card.authorCount - 1}
+              </div>
             )}
           </div>
 
           <div className="flex items-center">
             <span className="text-sm font-medium text-gray-900">
-              {card?.author}
+              {card?.author || "DevX Editorial"}
             </span>
-            {card.authorCount > 0 && (
-              <span className="text-xs text-gray-500">
-                +{card.authorCount} other
-                {card?.authorCount > 1 ? "s" : ""}
-              </span>
-            )}
           </div>
         </div>
       </div>

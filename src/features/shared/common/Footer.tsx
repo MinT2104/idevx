@@ -4,13 +4,36 @@ import Link from "next/link";
 import Image from "next/image";
 import { Github, Twitter, Linkedin, Youtube } from "lucide-react";
 import { useEffect, useState } from "react";
+import { SocialLink } from "@/features/settings/types/social-links.types";
 
 const Footer = () => {
   const [isMounted, setIsMounted] = useState(false);
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
 
   useEffect(() => {
     setIsMounted(true);
+    fetchSocialLinks();
   }, []);
+
+  const fetchSocialLinks = async () => {
+    try {
+      const response = await fetch("/api/social-links");
+      const data = await response.json();
+
+      if (data.success && data.data?.socialLinks) {
+        setSocialLinks(data.data.socialLinks);
+      }
+    } catch (error) {
+      console.error("Error fetching social links:", error);
+      // Fallback to default links
+      setSocialLinks([
+        { name: "Github", href: "" },
+        { name: "Twitter", href: "" },
+        { name: "Linkedin", href: "" },
+        { name: "Youtube", href: "" },
+      ]);
+    }
+  };
 
   // Helper function to get link href based on section and link text (mirrors Header)
   const getLinkHref = (sectionTitle: string, linkText: string): string => {
@@ -145,12 +168,21 @@ const Footer = () => {
     },
   ];
 
-  const socialLinks = [
-    { icon: Github, href: "#" },
-    { icon: Twitter, href: "#" },
-    { icon: Linkedin, href: "#" },
-    { icon: Youtube, href: "#" },
-  ];
+  // Icon mapping for social platforms
+  const iconMap = {
+    Github,
+    Twitter,
+    Linkedin,
+    Youtube,
+  };
+
+  // Filter and map social links with their icons
+  const socialLinksWithIcons = socialLinks
+    .filter((link) => link.href && link.href.trim() !== "")
+    .map((link) => ({
+      ...link,
+      icon: iconMap[link.name as keyof typeof iconMap] || Github,
+    }));
 
   if (!isMounted) {
     return <footer className="bg-black text-white"></footer>;
@@ -173,11 +205,13 @@ const Footer = () => {
               />
             </Link>
             <div className="flex space-x-4 mt-4">
-              {socialLinks.map((social, index) => (
+              {socialLinksWithIcons.map((social, index) => (
                 <Link
                   key={index}
                   href={social.href}
                   className="text-white hover:text-orange-400 transition-colors duration-200"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   <social.icon className="h-5 w-5" />
                 </Link>

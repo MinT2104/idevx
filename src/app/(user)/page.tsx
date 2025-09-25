@@ -31,11 +31,35 @@ export default async function Home() {
   }> = [];
   try {
     const prisma = await getPrisma();
-    const posts = await prisma.blogPost.findMany({
+
+    // First, try to get featured posts
+    let featuredPosts = await prisma.blogPost.findMany({
+      where: {
+        featured: true,
+        status: "published",
+      },
       orderBy: { createdAt: "desc" },
       take: 4,
     });
-    blogs = (posts || []).map((p: any, idx: number) => ({
+
+    // If we don't have enough featured posts, fill with regular posts
+    if (featuredPosts.length < 4) {
+      const remainingCount = 4 - featuredPosts.length;
+      const featuredSlugs = featuredPosts.map((p) => p.slug);
+
+      const regularPosts = await prisma.blogPost.findMany({
+        where: {
+          status: "published",
+          slug: { notIn: featuredSlugs },
+        },
+        orderBy: { createdAt: "desc" },
+        take: remainingCount,
+      });
+
+      featuredPosts = [...featuredPosts, ...regularPosts];
+    }
+
+    blogs = (featuredPosts || []).map((p: any, idx: number) => ({
       id: p.slug || String(idx),
       title: p.title || "",
       description: p.excerpt || p.subtitle || "",

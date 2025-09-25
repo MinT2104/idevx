@@ -21,7 +21,5 @@ export function areCategoriesValid(categories: string[]): boolean {
 export function normalizePrimaryCategory(categories: string[]): string {
   if (!categories || categories.length === 0) return "";
   const primary = categories[0];
-  return (ALLOWED_BLOG_CATEGORIES as readonly string[]).includes(primary)
-    ? primary
-    : "";
+  return primary;
 }

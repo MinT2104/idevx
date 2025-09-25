@@ -1,4 +1,5 @@
 import BlogDetailView from "@/features/blog/view/BlogDetailView";
+import { notFound } from "next/navigation";
 
 // Force dynamic rendering to avoid build-time issues
 export const dynamic = "force-dynamic";
@@ -9,12 +10,20 @@ const page = async ({ params }: { params: { slug: string } }) => {
   const post = await prisma.blogPost.findUnique({
     where: { slug: params.slug },
   });
+
+  // If post doesn't exist or status is not published, show 404
+  if (!post || post.status !== "published") {
+    notFound();
+  }
   const relations = (post?.relations as any) || {};
   let related: any[] = [];
 
   if (relations.relatedSlugs && Array.isArray(relations.relatedSlugs)) {
     related = await prisma.blogPost.findMany({
-      where: { slug: { in: relations.relatedSlugs || [] } },
+      where: {
+        slug: { in: relations.relatedSlugs || [] },
+        status: "published", // Only published posts
+      },
     });
   }
 
@@ -35,6 +44,7 @@ const page = async ({ params }: { params: { slug: string } }) => {
         where: {
           // cannot easily filter JSON category with Mongo + Prisma; overfetch and filter in memory
           slug: { notIn: Array.from(excludeSlugs) },
+          status: "published", // Only published posts
         },
         orderBy: { createdAt: "desc" },
         take: 24,
@@ -59,7 +69,11 @@ export async function generateMetadata({
   const post = await prisma.blogPost.findUnique({
     where: { slug: params.slug },
   });
-  if (!post) return { title: "Blog" } as any;
+
+  // If post doesn't exist or status is not published, return basic metadata
+  if (!post || post.status !== "published") {
+    return { title: "Not Found" } as any;
+  }
   const seo = (post.seo as any) || {};
   const title = seo.metaTitle || post.title;
   const description =

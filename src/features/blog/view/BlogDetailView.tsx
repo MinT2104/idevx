@@ -3,18 +3,18 @@ import ExporeDevxToday from "@/features/models/components/ExporeDevxToday";
 import HeroSection from "@/features/shared/common/HeroSection";
 import { Button } from "@/ui/components/button";
 import { Input } from "@/ui/components/input";
+import { useToast } from "@/ui/components/toast-provider";
 import { useEffect, useMemo, useState } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import BlogCard from "../components/BlogCard";
 import { getPostBySlug } from "../services/blog.service";
 import Image from "next/image";
+import MarkdownRenderer from "../components/MarkdownRenderer";
 
 interface BlogCard {
   id: number;
   title: string;
   description: string;
-  category: string;
+  category: string[];
   author: string;
   authorCount: number;
   image: string;
@@ -31,10 +31,72 @@ const BlogDetailView = ({
   const [email, setEmail] = useState("");
   const [post] = useState(serverPost);
   const [relatedPosts, setRelatedPosts] = useState<any[]>(related);
+  const { success } = useToast();
 
   const handleSubscribe = () => {
     // Handle newsletter subscription
     console.log("Subscribing with email:", email);
+  };
+
+  // Share functions
+  const handleShare = (platform: string) => {
+    const postUrl = typeof window !== "undefined" ? window.location.href : "";
+    const postTitle = currentPost?.title || "";
+    const postDescription = currentPost?.excerpt || "";
+
+    let shareUrl = "";
+
+    switch (platform) {
+      case "twitter":
+        shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(postTitle)}&url=${encodeURIComponent(postUrl)}`;
+        break;
+      case "linkedin":
+        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}`;
+        break;
+      case "facebook":
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`;
+        break;
+      case "copy":
+        // Copy to clipboard
+        if (navigator.clipboard) {
+          navigator.clipboard
+            .writeText(postUrl)
+            .then(() => {
+              success(
+                "Link copied to clipboard!",
+                "You can now paste it anywhere"
+              );
+            })
+            .catch(() => {
+              // Fallback for older browsers
+              const textArea = document.createElement("textarea");
+              textArea.value = postUrl;
+              document.body.appendChild(textArea);
+              textArea.select();
+              document.execCommand("copy");
+              document.body.removeChild(textArea);
+              success(
+                "Link copied to clipboard!",
+                "You can now paste it anywhere"
+              );
+            });
+        } else {
+          // Fallback for older browsers
+          const textArea = document.createElement("textarea");
+          textArea.value = postUrl;
+          document.body.appendChild(textArea);
+          textArea.select();
+          document.execCommand("copy");
+          document.body.removeChild(textArea);
+          success("Link copied to clipboard!", "You can now paste it anywhere");
+        }
+        return;
+      default:
+        return;
+    }
+
+    // Open share window
+    window.open(shareUrl, "_blank", "width=600,height=400");
   };
 
   const currentPost = post;
@@ -67,8 +129,8 @@ const BlogDetailView = ({
         id: idx + 1,
         title: p.title,
         description: p.excerpt || p.subtitle || p.seo?.metaDescription || "",
-        category: p.taxonomy.categories[0] || "",
-        author: p.authors[0]?.name || "",
+        category: p.taxonomy.categories || [],
+        author: p.authors[0]?.name || "DevX Editorial",
         authorCount: p.authors.length,
         image: p.cardImage?.url || p.heroImage?.url || "",
         subtitle: p.subtitle,
@@ -286,7 +348,7 @@ const BlogDetailView = ({
                     <Image
                       width={100}
                       height={100}
-                      src={primaryAuthor?.avatar?.url}
+                      src={primaryAuthor?.avatar?.url || "/images/client_2.png"}
                       alt={primaryAuthor?.name}
                       className="w-full h-full object-cover rounded-full"
                     />
@@ -360,93 +422,130 @@ const BlogDetailView = ({
               <div>
                 <h2 className="text-xl font-bold text-black mb-2">Share</h2>
                 <div className="flex gap-4">
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 34 33"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
+                  <button
+                    onClick={() => handleShare("twitter")}
+                    className="hover:opacity-70 transition-opacity cursor-pointer"
+                    title="Share on Twitter"
                   >
-                    <g clipPath="url(#clip0_646_1235)">
-                      <mask
-                        id="mask0_646_1235"
-                        style={{ maskType: "luminance" }}
-                        maskUnits="userSpaceOnUse"
-                        x="0"
-                        y="0"
-                        width="34"
-                        height="33"
-                      >
-                        <path d="M0.5 0H33.5V33H0.5V0Z" fill="white" />
-                      </mask>
-                      <g mask="url(#mask0_646_1235)">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 34 33"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <g clipPath="url(#clip0_646_1235)">
+                        <mask
+                          id="mask0_646_1235"
+                          style={{ maskType: "luminance" }}
+                          maskUnits="userSpaceOnUse"
+                          x="0"
+                          y="0"
+                          width="34"
+                          height="33"
+                        >
+                          <path d="M0.5 0H33.5V33H0.5V0Z" fill="white" />
+                        </mask>
+                        <g mask="url(#mask0_646_1235)">
+                          <path
+                            d="M26.4875 1.54639H31.5483L20.4933 14.2137L33.5 31.4538H23.3171L15.3359 20.9999L6.21371 31.4538H1.14821L12.9716 17.9002L0.5 1.54874H10.9421L18.1456 11.1022L26.4875 1.54639ZM24.7079 28.4178H27.5129L9.41 4.42446H6.40229L24.7079 28.4178Z"
+                            fill="black"
+                          />
+                        </g>
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_646_1235">
+                          <rect
+                            width="33"
+                            height="33"
+                            fill="white"
+                            transform="translate(0.5)"
+                          />
+                        </clipPath>
+                      </defs>
+                    </svg>
+                  </button>
+
+                  <button
+                    onClick={() => handleShare("linkedin")}
+                    className="hover:opacity-70 transition-opacity cursor-pointer"
+                    title="Share on LinkedIn"
+                  >
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 34 33"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <g clipPath="url(#clip0_646_1252)">
                         <path
-                          d="M26.4875 1.54639H31.5483L20.4933 14.2137L33.5 31.4538H23.3171L15.3359 20.9999L6.21371 31.4538H1.14821L12.9716 17.9002L0.5 1.54874H10.9421L18.1456 11.1022L26.4875 1.54639ZM24.7079 28.4178H27.5129L9.41 4.42446H6.40229L24.7079 28.4178Z"
+                          d="M29.8333 0C30.8058 0 31.7384 0.386308 32.4261 1.07394C33.1137 1.76157 33.5 2.69421 33.5 3.66667V29.3333C33.5 30.3058 33.1137 31.2384 32.4261 31.9261C31.7384 32.6137 30.8058 33 29.8333 33H4.16667C3.19421 33 2.26157 32.6137 1.57394 31.9261C0.886308 31.2384 0.5 30.3058 0.5 29.3333V3.66667C0.5 2.69421 0.886308 1.76157 1.57394 1.07394C2.26157 0.386308 3.19421 0 4.16667 0H29.8333ZM28.9167 28.4167V18.7C28.9167 17.1149 28.287 15.5947 27.1661 14.4739C26.0453 13.353 24.5251 12.7233 22.94 12.7233C21.3817 12.7233 19.5667 13.6767 18.6867 15.1067V13.0717H13.5717V28.4167H18.6867V19.3783C18.6867 17.9667 19.8233 16.8117 21.235 16.8117C21.9157 16.8117 22.5686 17.0821 23.0499 17.5634C23.5313 18.0448 23.8017 18.6976 23.8017 19.3783V28.4167H28.9167ZM7.61333 10.1933C8.4302 10.1933 9.21361 9.86884 9.79122 9.29122C10.3688 8.71361 10.6933 7.9302 10.6933 7.11333C10.6933 5.40833 9.31833 4.015 7.61333 4.015C6.7916 4.015 6.00353 4.34143 5.42248 4.92248C4.84143 5.50353 4.515 6.2916 4.515 7.11333C4.515 8.81833 5.90833 10.1933 7.61333 10.1933ZM10.1617 28.4167V13.0717H5.08333V28.4167H10.1617Z"
                           fill="black"
                         />
                       </g>
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_646_1235">
-                        <rect
-                          width="33"
-                          height="33"
-                          fill="white"
-                          transform="translate(0.5)"
-                        />
-                      </clipPath>
-                    </defs>
-                  </svg>
+                      <defs>
+                        <clipPath id="clip0_646_1252">
+                          <rect
+                            width="33"
+                            height="33"
+                            fill="white"
+                            transform="translate(0.5)"
+                          />
+                        </clipPath>
+                      </defs>
+                    </svg>
+                  </button>
 
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 34 33"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
+                  <button
+                    onClick={() => handleShare("facebook")}
+                    className="hover:opacity-70 transition-opacity cursor-pointer"
+                    title="Share on Facebook"
                   >
-                    <g clipPath="url(#clip0_646_1252)">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 34 33"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <g clipPath="url(#clip0_646_1259)">
+                        <path
+                          d="M33.5 16.5414C33.5 7.41053 26.108 0 17 0C7.892 0 0.5 7.41053 0.5 16.5414C0.5 24.5474 6.176 31.2135 13.7 32.7519V21.5038H10.4V16.5414H13.7V12.406C13.7 9.21353 16.2905 6.61654 19.475 6.61654H23.6V11.5789H20.3C19.3925 11.5789 18.65 12.3233 18.65 13.2331V16.5414H23.6V21.5038H18.65V33C26.9825 32.1729 33.5 25.1263 33.5 16.5414Z"
+                          fill="black"
+                        />
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_646_1259">
+                          <rect
+                            width="33"
+                            height="33"
+                            fill="white"
+                            transform="translate(0.5)"
+                          />
+                        </clipPath>
+                      </defs>
+                    </svg>
+                  </button>
+
+                  <button
+                    onClick={() => handleShare("copy")}
+                    className="hover:opacity-70 transition-opacity cursor-pointer"
+                    title="Copy link"
+                  >
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
                       <path
-                        d="M29.8333 0C30.8058 0 31.7384 0.386308 32.4261 1.07394C33.1137 1.76157 33.5 2.69421 33.5 3.66667V29.3333C33.5 30.3058 33.1137 31.2384 32.4261 31.9261C31.7384 32.6137 30.8058 33 29.8333 33H4.16667C3.19421 33 2.26157 32.6137 1.57394 31.9261C0.886308 31.2384 0.5 30.3058 0.5 29.3333V3.66667C0.5 2.69421 0.886308 1.76157 1.57394 1.07394C2.26157 0.386308 3.19421 0 4.16667 0H29.8333ZM28.9167 28.4167V18.7C28.9167 17.1149 28.287 15.5947 27.1661 14.4739C26.0453 13.353 24.5251 12.7233 22.94 12.7233C21.3817 12.7233 19.5667 13.6767 18.6867 15.1067V13.0717H13.5717V28.4167H18.6867V19.3783C18.6867 17.9667 19.8233 16.8117 21.235 16.8117C21.9157 16.8117 22.5686 17.0821 23.0499 17.5634C23.5313 18.0448 23.8017 18.6976 23.8017 19.3783V28.4167H28.9167ZM7.61333 10.1933C8.4302 10.1933 9.21361 9.86884 9.79122 9.29122C10.3688 8.71361 10.6933 7.9302 10.6933 7.11333C10.6933 5.40833 9.31833 4.015 7.61333 4.015C6.7916 4.015 6.00353 4.34143 5.42248 4.92248C4.84143 5.50353 4.515 6.2916 4.515 7.11333C4.515 8.81833 5.90833 10.1933 7.61333 10.1933ZM10.1617 28.4167V13.0717H5.08333V28.4167H10.1617Z"
+                        d="M16 1H4C2.9 1 2 1.9 2 3V17H4V3H16V1ZM19 5H8C6.9 5 6 5.9 6 7V21C6 22.1 6.9 23 8 23H19C20.1 23 21 22.1 21 21V7C21 5.9 20.1 5 19 5ZM19 21H8V7H19V21Z"
                         fill="black"
                       />
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_646_1252">
-                        <rect
-                          width="33"
-                          height="33"
-                          fill="white"
-                          transform="translate(0.5)"
-                        />
-                      </clipPath>
-                    </defs>
-                  </svg>
-
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 34 33"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g clipPath="url(#clip0_646_1259)">
-                      <path
-                        d="M33.5 16.5414C33.5 7.41053 26.108 0 17 0C7.892 0 0.5 7.41053 0.5 16.5414C0.5 24.5474 6.176 31.2135 13.7 32.7519V21.5038H10.4V16.5414H13.7V12.406C13.7 9.21353 16.2905 6.61654 19.475 6.61654H23.6V11.5789H20.3C19.3925 11.5789 18.65 12.3233 18.65 13.2331V16.5414H23.6V21.5038H18.65V33C26.9825 32.1729 33.5 25.1263 33.5 16.5414Z"
-                        fill="black"
-                      />
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_646_1259">
-                        <rect
-                          width="33"
-                          height="33"
-                          fill="white"
-                          transform="translate(0.5)"
-                        />
-                      </clipPath>
-                    </defs>
-                  </svg>
+                    </svg>
+                  </button>
                 </div>
               </div>
             </div>
@@ -472,11 +571,28 @@ const BlogDetailView = ({
               {currentPost?.title}
             </h1>
 
+            {/* Tags */}
+            {currentPost?.taxonomy?.tags &&
+              currentPost.taxonomy.tags.length > 0 && (
+                <div className="mb-6 lg:mb-8">
+                  <div className="flex flex-wrap gap-2">
+                    {currentPost.taxonomy.tags.map(
+                      (tag: string, index: number) => (
+                        <span
+                          key={index}
+                          className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 border border-blue-200"
+                        >
+                          #{tag}
+                        </span>
+                      )
+                    )}
+                  </div>
+                </div>
+              )}
+
             {/* Article Content */}
-            <div className="prose prose-base lg:prose-lg max-w-none mb-8 lg:mb-12 text-black">
-              <ReactMarkdown remarkPlugins={[remarkGfm as any]}>
-                {currentPost?.content?.body || ""}
-              </ReactMarkdown>
+            <div className="mb-8 lg:mb-12">
+              <MarkdownRenderer content={currentPost?.content?.body || ""} />
             </div>
 
             {/* Newsletter Subscription */}
@@ -520,27 +636,31 @@ const BlogDetailView = ({
       </div>
 
       {/* Related Posts Section */}
-      <div className="w-full bg-white py-16">
-        <div className="container mx-auto px-4 max-w-7xl">
-          {/* Section Header */}
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-bold text-gray-900">Related posts</h2>
-            <Button
-              variant="outline"
-              className="border-gray-400 text-gray-700 hover:bg-gray-50"
-            >
-              View All News
-            </Button>
-          </div>
+      {blogCards.length > 0 && (
+        <div className="w-full bg-white py-16">
+          <div className="container mx-auto px-4 max-w-7xl">
+            {/* Section Header */}
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-3xl font-bold text-gray-900">
+                Related posts
+              </h2>
+              <Button
+                variant="outline"
+                className="border-gray-400 text-gray-700 hover:bg-gray-50"
+              >
+                View All News
+              </Button>
+            </div>
 
-          {/* Related Posts Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {blogCards.map((card) => (
-              <BlogCard key={card.id} card={card} />
-            ))}
+            {/* Related Posts Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {blogCards.map((card) => (
+                <BlogCard key={card.id} card={card} />
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       <ExporeDevxToday />
     </div>

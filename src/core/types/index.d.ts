@@ -1,14 +1,35 @@
 export type SiteConfig = {
-  name: string
-  author: string
-  description: string
-  keywords: Array<string>
+  name: string;
+  author: string;
+  description: string;
+  keywords: Array<string>;
   url: {
-    base: string
-    author: string
-  }
+    base: string;
+    author: string;
+  };
   links: {
-    github: string
+    github: string;
+  };
+  ogImage: string;
+};
+
+// NextAuth module augmentation to include role on session.user
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+      role: string;
+    } & DefaultSession["user"];
   }
-  ogImage: string
+
+  interface User {
+    role: string;
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    uid?: string;
+    role?: string;
+  }
 }
