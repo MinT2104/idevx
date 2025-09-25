@@ -7,6 +7,7 @@ interface Model {
   id: string;
   image: string;
   name: string;
+  slug?: string;
   actionType?: "try" | "explore";
   customModelButtonLink?: string;
 }
@@ -22,7 +23,7 @@ interface MultiModelSectionProps {
   subtitle: string;
   models: Model[];
   steps: Step[];
-  onModelAction?: (modelId: string, actionType: string) => void;
+  onModelAction?: (modelSlug: string, actionType: string) => void;
   onLearnMore?: () => void;
   onContactExpert?: () => void;
 }

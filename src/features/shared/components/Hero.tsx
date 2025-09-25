@@ -238,6 +238,7 @@ interface BlogItem {
 type ModelItem = {
   id: string;
   name: string;
+  slug?: string;
   image: string;
   actionType?: "try" | "explore";
   customModelButtonLink?: string;
@@ -283,13 +284,12 @@ and scale processes with our AI-driven solutions."
         title="Multi-Model AI for Every Challenge"
         subtitle="DevX connects leading AI models like GPT, Claude, Gemini, and LLaMA into one platform. 
 Our flexible multi-model setup ensures speed, accuracy, and the right AI for every business need."
-        models={models && models.length ? models : mockModels}
+        models={models || []}
         steps={mockSteps}
-        onModelAction={(modelId) => {
-          const src = (models && models.length ? models : mockModels).find(
-            (m) => m.id === modelId
-          );
-          router.push(src?.customModelButtonLink || "/models");
+        onModelAction={(modelSlug) => {
+          console.log("modelSlug", modelSlug);
+          const src = (models || []).find((m) => m.slug === modelSlug);
+          router.push(src?.customModelButtonLink || `/models/${modelSlug}`);
         }}
         onLearnMore={() => {
           router.push("/models");

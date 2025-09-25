@@ -5,6 +5,7 @@ interface Model {
   id: string;
   image: string;
   name: string;
+  slug?: string;
   actionType?: "try" | "explore";
   customModelButtonLink?: string;
 }
@@ -51,7 +52,9 @@ export default function ModelsListPanel({
             image={model.image}
             name={model.name}
             actionType={model.actionType}
-            onTry={() => onModelAction?.(model.id, "try")}
+            onTry={() => {
+              onModelAction?.(model.slug || "", "try");
+            }}
             onExplore={() => onLearnMore?.()}
           />
         ))}

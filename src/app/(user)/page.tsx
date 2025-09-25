@@ -89,14 +89,16 @@ export default async function Home() {
         id: true,
         name: true,
         logo: true,
+        slug: true,
       },
     });
     models = items.map((m: any) => ({
       id: m.id,
       name: m.name || m.brand || "Model",
       image: m.logo || "/images/models/idevx.png",
+      slug: m.slug,
       actionType: "try",
-      customModelButtonLink: `/models/${m.id}`,
+      customModelButtonLink: `/models/${m.slug}`,
     }));
     models.push({
       id: "explore-more",
