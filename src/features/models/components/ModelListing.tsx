@@ -57,6 +57,21 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
     "Image Processing",
   ];
 
+  // Helper function để chuyển đổi label thành slug lowercase
+  const labelToSlug = (label: string): string => {
+    if (label === "All") return "all";
+    return label
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9-]/g, "");
+  };
+
+  // Helper function để chuyển đổi slug thành label
+  const slugToLabel = (slug: string): string => {
+    if (slug === "all") return "All";
+    return filterCategories.find((cat) => labelToSlug(cat) === slug) || slug;
+  };
+
   const availableTypes = useMemo(() => {
     const typesFromData = Array.from(
       new Set(
@@ -83,7 +98,7 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
         name: string;
         description: string;
         tags: string[];
-        link: string;
+        type: string;
         slug: string;
       }>;
       showSeeAll?: boolean;
@@ -99,8 +114,8 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
           logo: model.logo || "/logo.png",
           name: model.name || "Unknown Model",
           description: model.description || model.type || "No description",
-          tags: [model.type || "Unknown"],
-          link: model.slug ? `/models/${model.slug}` : "#",
+          tags: [labelToSlug(model.type || "Unknown")],
+          type: model.type || "Unknown",
           slug: model.slug || "#",
         })),
       });
@@ -118,8 +133,8 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
           logo: model.logo || "/logo.png",
           name: model.name || "Unknown Model",
           description: model.description || model.type || "No description",
-          tags: [model.type || "Unknown"],
-          link: model.slug ? `/models/${model.slug}` : "#",
+          tags: [labelToSlug(model.type || "Unknown")],
+          type: model.type || "Unknown",
           slug: model.slug || "#",
         });
         return acc;
@@ -132,7 +147,7 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
           name: string;
           description: string;
           tags: string[];
-          link: string;
+          type: string;
           slug: string;
         }>
       >
@@ -163,7 +178,7 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
     const modelType = model.type || "Unknown";
 
     // Strict match: only show exact type equal to the selected category
-    return modelType === category;
+    return modelType === labelToSlug(category);
   };
 
   // Helper function để check model có match với dropdown filter không
@@ -187,6 +202,7 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
         name: string;
         description: string;
         tags: string[];
+        type: string;
         slug: string;
       }>;
       showSeeAll?: boolean;
@@ -209,7 +225,8 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
               (model.type ? model.type.charAt(0).toUpperCase() : "?"),
             name: model.name || "Unknown Model",
             description: model.description || model.type || "No description",
-            tags: [model.type || "Unknown"],
+            tags: [labelToSlug(model.type || "Unknown")],
+            type: model.type || "Unknown",
             slug: model.slug || "#",
           })),
           showSeeAll: false,
@@ -239,7 +256,8 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
             (model.type ? model.type.charAt(0).toUpperCase() : "?"),
           name: model.name || "Unknown Model",
           description: model.description || model.type || "No description",
-          tags: [model.type || "Unknown"],
+          tags: [labelToSlug(model.type || "Unknown")],
+          type: model.type || "Unknown",
           slug: model.slug || "#",
         })),
         showSeeAll: false, // Không cần "See All" vì đã hiển thị tất cả
@@ -263,7 +281,8 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
             (model.type ? model.type.charAt(0).toUpperCase() : "?"),
           name: model.name || "Unknown Model",
           description: model.description || model.type || "No description",
-          tags: [model.type || "Unknown"],
+          tags: [labelToSlug(model.type || "Unknown")],
+          type: model.type || "Unknown",
           slug: model.slug || "#",
         })),
         showSeeAll: false,
@@ -300,9 +319,14 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
       setSelectedFilterType(filterTypeFromUrl);
       setSelectedFilterValue(decodedFilterValue);
       setActiveFilter("All");
-    } else if (decodedFilter && filterCategories.includes(decodedFilter)) {
-      // Có category filter
-      setActiveFilter(decodedFilter);
+    } else if (decodedFilter) {
+      // Chuyển đổi slug thành label và kiểm tra
+      const filterLabel = slugToLabel(decodedFilter);
+      if (filterCategories.includes(filterLabel)) {
+        setActiveFilter(filterLabel);
+      } else {
+        setActiveFilter("All");
+      }
     } else {
       setActiveFilter("All");
     }
@@ -319,13 +343,14 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
       setActiveFilter(filter);
     }
 
-    // Update URL params
+    // Update URL params - sử dụng slug thay vì label
     const params = new URLSearchParams(searchParams.toString());
     if (filter === "All") {
       params.delete("filter");
     } else {
-      // Encode the filter value to handle spaces and special characters
-      params.set("filter", encodeURIComponent(filter));
+      // Chuyển đổi label thành slug và encode
+      const filterSlug = labelToSlug(filter);
+      params.set("filter", encodeURIComponent(filterSlug));
     }
 
     const newUrl = params.toString() ? `?${params.toString()}` : "";
@@ -391,9 +416,8 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
                 {category}
               </Button>
             ))}
-
-          {/* Filter Button with Dropdown or Drawer (mobile) */}
-          {isMobile ? (
+          {/* Mobile Filter Button with Drawer */}
+          {isMobile && (
             <Drawer open={menuOpen} onOpenChange={setMenuOpen}>
               <DrawerTrigger asChild>
                 <Button
@@ -450,69 +474,28 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
                   </DrawerClose>
                 </DrawerHeader>
                 <div className="p-4 space-y-4">
-                  {/* Collapsible Brand */}
-                  {/* Removed Brand filter: schema no longer includes brand */}
-
-                  {/* Collapsible Type */}
-                  <details className="bg-gray-50 rounded-lg border border-gray-200">
-                    <summary className="list-none cursor-pointer select-none px-3 py-3 flex items-center justify-between">
-                      <span className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
-                        Type
-                      </span>
-                      <svg
-                        className="w-4 h-4 text-gray-500"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                    </summary>
-                    <div className="p-3 pt-0">
-                      <div className="mb-2">
-                        <input
-                          value={typeQuery}
-                          onChange={(e) => setTypeQuery(e.target.value)}
-                          placeholder="Search type..."
-                          className="w-full px-3 py-2 text-sm border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-gray-200 bg-white placeholder:text-gray-400"
-                          aria-label="Search type"
-                        />
-                      </div>
-                      <div className="max-h-[40vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-                        {filteredTypes.map((type) => (
-                          <DrawerClose asChild key={type}>
-                            <button
-                              onClick={() =>
-                                handleDropdownFilter("type", type!)
-                              }
-                              className={`w-full text-left px-3 py-3 text-base rounded transition-all duration-200 group ${
-                                selectedFilterType === "type" &&
-                                selectedFilterValue === type
-                                  ? "bg-gray-100 text-gray-900 font-medium"
-                                  : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                              }`}
-                            >
-                              <div className="flex items-center justify-between">
-                                <span className="font-medium">{type}</span>
-                                {selectedFilterType === "type" &&
-                                  selectedFilterValue === type && (
-                                    <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                                  )}
-                              </div>
-                            </button>
-                          </DrawerClose>
-                        ))}
-                        {filteredTypes.length === 0 && (
-                          <div className="px-3 py-2 text-sm text-gray-500">
-                            No types found
-                          </div>
-                        )}
-                      </div>
+                  {/* Category Filters */}
+                  <div className="space-y-2">
+                    <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
+                      Categories
+                    </h3>
+                    <div className="grid grid-cols-2 gap-2">
+                      {filterCategories.map((category) => (
+                        <DrawerClose asChild key={category}>
+                          <button
+                            onClick={() => handleFilterChange(category)}
+                            className={`px-3 py-2 text-sm font-medium transition-all duration-200 rounded-none border ${
+                              activeFilter === category
+                                ? "bg-[#E15929] text-white border-[#E15929]"
+                                : "bg-white text-gray-700 border-gray-400 hover:bg-gray-50"
+                            }`}
+                          >
+                            {category}
+                          </button>
+                        </DrawerClose>
+                      ))}
                     </div>
-                  </details>
+                  </div>
 
                   {selectedFilterType && (
                     <div className="border-t border-gray-200 pt-3">
@@ -542,78 +525,6 @@ const ModelListing: React.FC<ModelListingProps> = ({ initialModels }) => {
                 </div>
               </DrawerContent>
             </Drawer>
-          ) : (
-            <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
-              <DropdownMenuTrigger asChild>
-                <button
-                  aria-haspopup="menu"
-                  aria-expanded={menuOpen}
-                  className={`flex items-center gap-2 px-4 py-2.5 bg-white text-gray-700 border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all duration-200 text-sm whitespace-nowrap font-medium ${
-                    selectedFilterType
-                      ? "bg-gray-50 border-gray-300 text-gray-800"
-                      : "hover:bg-gray-50"
-                  } ${menuOpen ? "ring-1 ring-gray-200" : ""}`}
-                >
-                  <Filter
-                    className={`h-4 w-4 ${selectedFilterType ? "text-gray-600" : "text-gray-500"}`}
-                  />
-                  <span
-                    className={
-                      selectedFilterType ? "text-gray-800" : "text-gray-700"
-                    }
-                  >
-                    {selectedFilterType
-                      ? `${selectedFilterType}: ${selectedFilterValue}`
-                      : "Filter by"}
-                  </span>
-                  <ChevronDown
-                    className={`h-4 w-4 transition-transform duration-200 ${menuOpen ? "rotate-180" : ""} ${
-                      selectedFilterType ? "text-gray-600" : "text-gray-500"
-                    }`}
-                  />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                sideOffset={8}
-                className="p-0 border border-gray-200/60 rounded-xl shadow-2xl bg-white min-w-64 max-w-80"
-              >
-                <div className="px-4 py-3 border-b border-gray-100">
-                  <h3 className="text-sm font-semibold text-gray-900">
-                    Filter Models
-                  </h3>
-                  <p className="text-xs text-gray-500 mt-0.5">
-                    Choose a type to filter
-                  </p>
-                </div>
-                <div className="p-3 space-y-4">
-                  {/* Removed Brand filter block */}
-
-                  {selectedFilterType && (
-                    <div className="border-t border-gray-200 pt-3">
-                      <button
-                        onClick={clearDropdownFilter}
-                        className="w-full text-left px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded transition-all duration-200 font-medium flex items-center gap-2"
-                      >
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M6 18L18 6M6 6l12 12"
-                          />
-                        </svg>
-                        Clear Filter
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
           )}
         </div>
         {filteredSections.length > 0 &&

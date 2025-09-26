@@ -11,6 +11,8 @@ import { ThemeProvider } from "@/features/shared/components/theme-provider";
 import Footer from "@/features/shared/common/Footer";
 import Header from "@/features/shared/common/Header";
 import { Providers } from "@/features/shared/components/providers";
+import StructuredData from "@/features/shared/components/StructuredData";
+import PageTransition from "@/features/shared/components/PageTransition";
 
 // const inter = Inter({ subsets: ["latin"] });
 const jost = Jost({
@@ -87,7 +89,10 @@ export default async function RootLayout({ children }: RootLayoutProps) {
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <head />
+      <head>
+        <StructuredData type="organization" />
+        <StructuredData type="website" />
+      </head>
       <body
         suppressHydrationWarning
         className={cn("min-h-screen bg-white antialiased", jost.className)}

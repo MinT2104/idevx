@@ -10,6 +10,13 @@ import WhatClientSay from "@/features/home/components/WhatClientSay";
 import ExporeDevxToday from "@/features/models/components/ExporeDevxToday";
 import OurBlog from "@/features/home/components/OurBlog";
 import { useRouter } from "next/navigation";
+import {
+  SlideUp,
+  FadeIn,
+  StaggerContainer,
+  StaggerItem,
+} from "./ScrollAnimation";
+import { CardHover } from "./HoverAnimation";
 
 // GridOfBox data configuration
 const gridBoxData = {
@@ -255,80 +262,96 @@ export default function Hero({ blogs = [], models = [] }: HeroProps) {
     <div className="min-h-screen bg-white relative overflow-hidden">
       {/* Grid background pattern */}
       {/* Content */}
-      <HeroSection
-        title="AI Solutions"
-        description="DevX empowers businesses with domain-focused AI services and innovative products—from Education, Healthcare, 
+      <SlideUp delay={0.1}>
+        <HeroSection
+          title="AI Solutions"
+          description="DevX empowers businesses with domain-focused AI services and innovative products—from Education, Healthcare, 
 and Law Firms to Travel, Food, Enterprises, and Creators. Build smarter workflows, automate services, 
 and scale processes with our AI-driven solutions."
-        buttons={[
-          {
-            text: "Get Started",
-            variant: "outline",
-            size: "lg",
-            link: "/",
-          },
-          {
-            text: "Talk to an Expert",
-            variant: "default",
-            size: "lg",
-            className: "bg-orange-600 hover:bg-orange-700 text-white",
-            link: "/talk-to-us",
-          },
-        ]}
-        subtitle="Built for Your Success"
-      />
+          buttons={[
+            {
+              text: "Get Started",
+              variant: "outline",
+              size: "lg",
+              link: "/",
+            },
+            {
+              text: "Talk to an Expert",
+              variant: "default",
+              size: "lg",
+              className: "bg-orange-600 hover:bg-orange-700 text-white",
+              link: "/talk-to-us",
+            },
+          ]}
+          subtitle="Built for Your Success"
+        />
+      </SlideUp>
 
-      <CompaniesSection />
+      <SlideUp delay={0.2}>
+        <CompaniesSection />
+      </SlideUp>
 
-      <MultiModelSection
-        title="Multi-Model AI for Every Challenge"
-        subtitle="DevX connects leading AI models like GPT, Claude, Gemini, and LLaMA into one platform. 
+      <SlideUp delay={0.3}>
+        <MultiModelSection
+          title="Multi-Model AI for Every Challenge"
+          subtitle="DevX connects leading AI models like GPT, Claude, Gemini, and LLaMA into one platform. 
 Our flexible multi-model setup ensures speed, accuracy, and the right AI for every business need."
-        models={models || []}
-        steps={mockSteps}
-        onModelAction={(modelSlug) => {
-          console.log("modelSlug", modelSlug);
-          const src = (models || []).find((m) => m.slug === modelSlug);
-          router.push(src?.customModelButtonLink || `/models/${modelSlug}`);
-        }}
-        onLearnMore={() => {
-          router.push("/models");
-        }}
-        onContactExpert={() => {
-          router.push("/talk-to-us");
-        }}
-      />
+          models={models || []}
+          steps={mockSteps}
+          onModelAction={(modelSlug) => {
+            console.log("modelSlug", modelSlug);
+            const src = (models || []).find((m) => m.slug === modelSlug);
+            router.push(src?.customModelButtonLink || `/models/${modelSlug}`);
+          }}
+          onLearnMore={() => {
+            router.push("/models");
+          }}
+          onContactExpert={() => {
+            router.push("/talk-to-us");
+          }}
+        />
+      </SlideUp>
 
-      <GridOfBox
-        title={gridBoxData.title}
-        subtitle={gridBoxData.subtitle}
-        gridItems={gridBoxData.gridItems}
-        customModelTitle={gridBoxData.customModelTitle}
-        customModelDescription={gridBoxData.customModelDescription}
-        customModelButtonText={gridBoxData.customModelButtonText}
-        customModelButtonLink={gridBoxData.customModelButtonLink}
-      />
+      <SlideUp delay={0.4}>
+        <GridOfBox
+          title={gridBoxData.title}
+          subtitle={gridBoxData.subtitle}
+          gridItems={gridBoxData.gridItems}
+          customModelTitle={gridBoxData.customModelTitle}
+          customModelDescription={gridBoxData.customModelDescription}
+          customModelButtonText={gridBoxData.customModelButtonText}
+          customModelButtonLink={gridBoxData.customModelButtonLink}
+        />
+      </SlideUp>
 
-      <WhatClientSay
-        title="What Our Clients Say"
-        testimonials={testimonialsData}
-      />
+      <SlideUp delay={0.5}>
+        <WhatClientSay
+          title="What Our Clients Say"
+          testimonials={testimonialsData}
+        />
+      </SlideUp>
 
-      <GridOfBox
-        title={gridBoxData2.title}
-        subtitle={gridBoxData2.subtitle}
-        gridItems={gridBoxData2.gridItems}
-        customModelTitle={gridBoxData2.customModelTitle}
-        customModelDescription={gridBoxData2.customModelDescription}
-        customModelButtonText={gridBoxData2.customModelButtonText}
-        cardColor="bg-gray-50"
-        bgColor="bg-white"
-        customModelButtonLink={gridBoxData2.customModelButtonLink}
-      />
+      <SlideUp delay={0.6}>
+        <GridOfBox
+          title={gridBoxData2.title}
+          subtitle={gridBoxData2.subtitle}
+          gridItems={gridBoxData2.gridItems}
+          customModelTitle={gridBoxData2.customModelTitle}
+          customModelDescription={gridBoxData2.customModelDescription}
+          customModelButtonText={gridBoxData2.customModelButtonText}
+          cardColor="bg-gray-50"
+          bgColor="bg-white"
+          customModelButtonLink={gridBoxData2.customModelButtonLink}
+        />
+      </SlideUp>
 
-      <ExporeDevxToday className="bg-gray-50 my-10" />
+      <SlideUp delay={0.7}>
+        <ExporeDevxToday className="bg-gray-50 my-10" />
+      </SlideUp>
 
-      <OurBlog title="Our Blog" blogs={blogs} />
+      <SlideUp delay={0.8}>
+        <OurBlog title="Our Blog" blogs={blogs} />
+      </SlideUp>
     </div>
   );
 }

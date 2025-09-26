@@ -1,14 +1,27 @@
 "use client";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
+import OptimizedImage from "@/features/shared/components/OptimizedImage";
+
+// Helper function để chuyển đổi slug thành label
+const slugToLabel = (slug: string): string => {
+  if (slug === "all") return "All";
+  if (slug === "llm") return "LLM";
+  if (slug === "transcription") return "Transcription";
+  if (slug === "text-to-speech") return "Text to Speech";
+  if (slug === "image-generation") return "Image Generation";
+  if (slug === "embedding") return "Embedding";
+  if (slug === "speech-to-text") return "Speech to Text";
+  if (slug === "image-processing") return "Image Processing";
+  return slug; // fallback
+};
 type ModelSection = {
-  id?: string;
+  id: string;
   logo: string;
   name: string;
   description: string;
   tags: string[];
-  link?: string;
-  slug?: string;
+  type: string;
+  slug: string;
 };
 
 type ModelSectionProps = {
@@ -27,6 +40,7 @@ const ModelSection = ({
   onSeeAll,
 }: ModelSectionProps) => {
   const router = useRouter();
+  console.log(models);
   return (
     <div
       key={sectionIndex}
@@ -56,11 +70,13 @@ const ModelSection = ({
                   {model.logo &&
                   (model.logo.startsWith("/") ||
                     model.logo.startsWith("https")) ? (
-                    <Image
+                    <OptimizedImage
                       src={model.logo}
                       alt={model.name}
                       width={36}
                       height={36}
+                      sizes="36px"
+                      quality={90}
                     />
                   ) : (
                     <div className="w-12 h-12 bg-gray-200 flex items-center justify-center text-gray-600 font-semibold text-lg">
@@ -76,7 +92,7 @@ const ModelSection = ({
                       key={tagIndex}
                       className="px-2 py-1 bg-gray-100 text-gray-600 text-xs font-medium"
                     >
-                      {tag}
+                      {slugToLabel(tag)}
                     </span>
                   ))}
                 </div>

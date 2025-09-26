@@ -53,7 +53,7 @@ const GridOfBox: React.FC<GridOfBoxProps> = ({
             {gridItems.map((item) => (
               <div
                 key={item.id}
-                className={`${cardColor} p-4 md:p-6 border border-[#A9A9A9]`}
+                className={`${cardColor} p-4 md:p-6 h-full border border-[#A9A9A9]`}
               >
                 <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3">
                   {item.title}

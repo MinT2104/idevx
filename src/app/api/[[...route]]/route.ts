@@ -1,7 +1,6 @@
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 
-import todos from "../routes/todos";
 import models from "../routes/models";
 import seed from "../routes/seed";
 import blog from "../routes/blog";
@@ -28,7 +27,6 @@ app.use("*", async (c, next) => {
   await next();
 });
 
-app.route("/todos", todos);
 app.route("/models", models);
 app.route("/seed", seed);
 app.route("/test-db", testDb);

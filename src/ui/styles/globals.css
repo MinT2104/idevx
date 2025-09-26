@@ -136,9 +136,19 @@
     overflow: hidden;
   }
 
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
   /* Markdown Content Overrides for Better Text Visibility */
   .markdown-content {
     color: #1f2937 !important; /* text-gray-800 */
+    background-color: #ffffff !important; /* bg-white */
+    padding: 1.5rem !important;
+    border-radius: 0.5rem !important;
   }
 
   .markdown-content * {
@@ -254,14 +264,22 @@
   .markdown-content table {
     border-collapse: collapse !important;
     width: 100% !important;
+    max-width: 100% !important;
     margin: 1rem 0 !important;
+    table-layout: auto !important;
+    overflow-x: auto !important;
+    display: table !important;
+    background: #ffffff !important;
   }
 
   .markdown-content th,
   .markdown-content td {
     border: 1px solid #d1d5db !important; /* border-gray-300 */
-    padding: 0.5rem !important;
-    text-align: left !important;
+    padding: 0.75rem !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    vertical-align: top !important;
+    background: #ffffff !important;
   }
 
   .markdown-content th {
@@ -272,5 +290,68 @@
 
   .markdown-content td {
     color: #1f2937 !important; /* text-gray-800 */
+  }
+
+  /* Table alignment support */
+  .markdown-content th[style*="text-align: center"],
+  .markdown-content td[style*="text-align: center"] {
+    text-align: center !important;
+  }
+
+  .markdown-content th[style*="text-align: right"],
+  .markdown-content td[style*="text-align: right"] {
+    text-align: right !important;
+  }
+
+  .markdown-content th[style*="text-align: left"],
+  .markdown-content td[style*="text-align: left"] {
+    text-align: left !important;
+  }
+
+  /* Data Table Responsive */
+  .data-table-container {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  .data-table-container table {
+    min-width: 100% !important;
+    width: max-content !important;
+    table-layout: auto !important;
+  }
+
+  .data-table-container th,
+  .data-table-container td {
+    white-space: nowrap !important;
+    padding: 0.75rem 1rem !important;
+    min-width: fit-content !important;
+    vertical-align: top !important;
+  }
+
+  /* Allow message column to wrap */
+  .data-table-container td[data-column="message"] {
+    white-space: normal !important;
+  }
+
+  /* Message column specific styling */
+  .data-table-container td .max-w-xs {
+    max-width: 280px !important;
+  }
+
+  /* Allow specific columns to wrap if needed */
+  .data-table-container .wrap-text {
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    max-width: 200px !important;
+    min-width: 150px !important;
+  }
+
+  /* Ensure table doesn't break layout */
+  .data-table-wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
   }
 }

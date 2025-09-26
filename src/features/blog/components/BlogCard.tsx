@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import LazyImage from "@/features/shared/components/LazyImage";
 
 type BlogCardProps = {
   card: {
@@ -25,31 +26,21 @@ const BlogCard = ({ card }: BlogCardProps) => {
       {/* Card Content */}
       <div className="p-6">
         {/* Image/Logo Section */}
-        <div className="mb-4">
+        <div className="mb-4 overflow-hidden rounded-lg h-32">
           {card?.image ? (
-            <img
+            <LazyImage
               src={card.image}
               alt={card.title}
-              className="w-full h-32 object-cover rounded-lg"
-              loading="lazy"
+              width={400}
+              height={128}
+              className="w-full h-32 object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              quality={85}
+              threshold={0.1}
+              rootMargin="100px"
             />
           ) : (
-            <div className="w-full h-32 bg-gray-200 rounded-lg flex items-center justify-center">
-              <div className="text-center">
-                <svg
-                  className="w-16 h-16 text-gray-400 mx-auto mb-2"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <p className="text-sm text-gray-500">Image Placeholder</p>
-              </div>
-            </div>
+            <div className="w-full h-32 bg-gray-200"></div>
           )}
         </div>
 

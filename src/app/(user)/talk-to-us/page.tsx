@@ -7,9 +7,11 @@ import { createFeedbackSchema } from "@/features/feedback/schemas/feedback.schem
 
 export default function TalkToUsPage() {
   const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
+    name: "",
     email: "",
+    phone: "",
+    company: "",
+    skype: "",
     website: "",
     message: "",
   });
@@ -56,9 +58,11 @@ export default function TalkToUsPage() {
       if (result.success) {
         setSubmitStatus("success");
         setForm({
-          firstName: "",
-          lastName: "",
+          name: "",
           email: "",
+          phone: "",
+          company: "",
+          skype: "",
           website: "",
           message: "",
         });
@@ -127,47 +131,23 @@ export default function TalkToUsPage() {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label
-                    htmlFor="firstName"
-                    className="block text-sm text-gray-700 mb-2"
-                  >
-                    First name
-                  </label>
-                  <Input
-                    id="firstName"
-                    value={form.firstName}
-                    onChange={handleChange}
-                    placeholder=""
-                    className={`h-10 bg-white ${errors.firstName ? "border-red-500" : ""}`}
-                  />
-                  {errors.firstName && (
-                    <p className="mt-1 text-xs text-red-600">
-                      {errors.firstName}
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <label
-                    htmlFor="lastName"
-                    className="block text-sm text-gray-700 mb-2"
-                  >
-                    Last name
-                  </label>
-                  <Input
-                    id="lastName"
-                    value={form.lastName}
-                    onChange={handleChange}
-                    placeholder=""
-                    className={`h-10 bg-white ${errors.lastName ? "border-red-500" : ""}`}
-                  />
-                  {errors.lastName && (
-                    <p className="mt-1 text-xs text-red-600">
-                      {errors.lastName}
-                    </p>
-                  )}
-                </div>
+              <div>
+                <label
+                  htmlFor="name"
+                  className="block text-sm text-gray-700 mb-2"
+                >
+                  Your Name*
+                </label>
+                <Input
+                  id="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  placeholder="Enter your full name"
+                  className={`h-10 bg-white ${errors.name ? "border-red-500" : ""}`}
+                />
+                {errors.name && (
+                  <p className="mt-1 text-xs text-red-600">{errors.name}</p>
+                )}
               </div>
 
               <div>
@@ -175,14 +155,14 @@ export default function TalkToUsPage() {
                   htmlFor="email"
                   className="block text-sm text-gray-700 mb-2"
                 >
-                  Business email
+                  Your Email*
                 </label>
                 <Input
                   id="email"
                   type="email"
                   value={form.email}
                   onChange={handleChange}
-                  placeholder=""
+                  placeholder="your.email@company.com"
                   className={`h-10 bg-white ${errors.email ? "border-red-500" : ""}`}
                 />
                 {errors.email && (
@@ -192,16 +172,73 @@ export default function TalkToUsPage() {
 
               <div>
                 <label
+                  htmlFor="phone"
+                  className="block text-sm text-gray-700 mb-2"
+                >
+                  Your Number*
+                </label>
+                <Input
+                  id="phone"
+                  value={form.phone}
+                  onChange={handleChange}
+                  placeholder="+1 (555) 123-4567"
+                  className={`h-10 bg-white ${errors.phone ? "border-red-500" : ""}`}
+                />
+                {errors.phone && (
+                  <p className="mt-1 text-xs text-red-600">{errors.phone}</p>
+                )}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="company"
+                  className="block text-sm text-gray-700 mb-2"
+                >
+                  Company Name*
+                </label>
+                <Input
+                  id="company"
+                  value={form.company}
+                  onChange={handleChange}
+                  placeholder="Your Company Name"
+                  className={`h-10 bg-white ${errors.company ? "border-red-500" : ""}`}
+                />
+                {errors.company && (
+                  <p className="mt-1 text-xs text-red-600">{errors.company}</p>
+                )}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="skype"
+                  className="block text-sm text-gray-700 mb-2"
+                >
+                  Skype Detail*
+                </label>
+                <Input
+                  id="skype"
+                  value={form.skype}
+                  onChange={handleChange}
+                  placeholder="your.skype.username"
+                  className={`h-10 bg-white ${errors.skype ? "border-red-500" : ""}`}
+                />
+                {errors.skype && (
+                  <p className="mt-1 text-xs text-red-600">{errors.skype}</p>
+                )}
+              </div>
+
+              <div>
+                <label
                   htmlFor="website"
                   className="block text-sm text-gray-700 mb-2"
                 >
-                  Company website
+                  Your Website*
                 </label>
                 <Input
                   id="website"
                   value={form.website}
                   onChange={handleChange}
-                  placeholder=""
+                  placeholder="https://"
                   className={`h-10 bg-white ${errors.website ? "border-red-500" : ""}`}
                 />
                 {errors.website && (
@@ -214,13 +251,14 @@ export default function TalkToUsPage() {
                   htmlFor="message"
                   className="block text-sm text-gray-700 mb-2"
                 >
-                  How do you want to use DevX?
+                  Message*
                 </label>
                 <textarea
                   id="message"
                   value={form.message}
                   onChange={handleChange}
                   rows={5}
+                  placeholder="Tell us about your project, requirements, or how we can help you..."
                   className={`w-full border bg-white text-black p-3 text-sm focus:outline-none focus:ring-0 ${
                     errors.message
                       ? "border-red-500 focus:border-red-500"

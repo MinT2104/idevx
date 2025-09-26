@@ -10,9 +10,53 @@ const getPrisma = async () => {
 };
 
 export const metadata: Metadata = {
-  title: "DevX | AI Solutions Built for Your Success",
+  title: "iDevX - AI Solutions for Business Success",
   description:
-    "DevX empowers businesses with domain-focused AI services and innovative products—from Education, Healthcare, and Law Firms to Travel, Food, Enterprises, and Creators.",
+    "iDevX empowers businesses with domain-focused AI services and innovative products. From Education, Healthcare, and Law Firms to Travel, Food, Enterprises, and Creators - we deliver cutting-edge AI solutions tailored to your industry needs.",
+  keywords: [
+    "AI solutions",
+    "artificial intelligence",
+    "business AI",
+    "AI for education",
+    "AI for healthcare",
+    "AI for legal",
+    "AI for travel",
+    "AI models",
+    "machine learning",
+    "automation",
+    "business intelligence",
+    "AI consulting",
+    "custom AI development",
+    "AI integration",
+    "enterprise AI",
+  ],
+  openGraph: {
+    title: "iDevX - AI Solutions for Business Success",
+    description:
+      "Empowering businesses with domain-focused AI services and innovative products tailored to your industry needs.",
+    type: "website",
+    locale: "en_US",
+    siteName: "iDevX",
+    images: [
+      {
+        url: "/images/og-homepage.jpg",
+        width: 1200,
+        height: 630,
+        alt: "iDevX - AI Solutions for Business Success",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "iDevX - AI Solutions for Business Success",
+    description:
+      "Empowering businesses with domain-focused AI services and innovative products tailored to your industry needs.",
+    images: ["/images/og-homepage.jpg"],
+    creator: "@idevx",
+  },
+  alternates: {
+    canonical: "/",
+  },
 };
 
 // Force dynamic rendering to avoid build-time issues

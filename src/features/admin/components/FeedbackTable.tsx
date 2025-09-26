@@ -232,15 +232,12 @@ export default function FeedbackTable({
           <div className="flex-shrink-0">
             <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
               <span className="text-blue-600 font-medium text-sm">
-                {feedback.firstName.charAt(0)}
-                {feedback.lastName.charAt(0)}
+                {feedback?.name?.charAt(0).toUpperCase()}
               </span>
             </div>
           </div>
           <div>
-            <div className="font-medium text-gray-900">
-              {feedback.firstName} {feedback.lastName}
-            </div>
+            <div className="font-medium text-gray-900">{feedback.name}</div>
             <div className="text-sm text-gray-500">{feedback.email}</div>
           </div>
         </div>
@@ -263,9 +260,61 @@ export default function FeedbackTable({
     {
       key: "message",
       header: "Message",
+      render: (feedback) => {
+        const messageLength = feedback.message.length;
+        const maxLength = 80;
+        const isLongMessage = messageLength > maxLength;
+
+        return (
+          <div className="max-w-xs">
+            {isLongMessage ? (
+              <div className="flex items-start justify-between gap-2">
+                <p className="text-sm text-gray-900 line-clamp-2 flex-1">
+                  {feedback.message.substring(0, maxLength)}...
+                </p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSelectedFeedback(feedback)}
+                  className="h-6 w-6 p-0 flex-shrink-0"
+                  title="View full message"
+                >
+                  <MessageSquare className="h-3 w-3" />
+                </Button>
+              </div>
+            ) : (
+              <p className="text-sm text-gray-900 line-clamp-2">
+                {feedback.message}
+              </p>
+            )}
+          </div>
+        );
+      },
+    },
+    {
+      key: "phone",
+      header: "Phone",
       render: (feedback) => (
-        <div className="max-w-xs">
-          <p className="text-sm text-gray-900 truncate">{feedback.message}</p>
+        <div>
+          <span className="text-sm text-gray-900">{feedback.phone}</span>
+        </div>
+      ),
+    },
+    {
+      key: "company",
+      header: "Company",
+      render: (feedback) => (
+        <div>
+          <span className="text-sm text-gray-900">{feedback.company}</span>
+        </div>
+      ),
+    },
+    {
+      key: "skype",
+      header: "Skype",
+      render: (feedback) => (
+        <div>
+          <span className="text-sm text-gray-900">{feedback.skype}</span>
         </div>
       ),
     },
@@ -274,19 +323,15 @@ export default function FeedbackTable({
       header: "Website",
       render: (feedback) => (
         <div>
-          {feedback.website ? (
-            <a
-              href={feedback.website}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:text-blue-500 text-sm flex items-center space-x-1"
-            >
-              <span className="truncate max-w-32">{feedback.website}</span>
-              <ExternalLink className="w-3 h-3" />
-            </a>
-          ) : (
-            <span className="text-gray-400 text-sm">—</span>
-          )}
+          <a
+            href={feedback.website}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:text-blue-500 text-sm flex items-center space-x-1"
+          >
+            <span className="truncate max-w-32">{feedback.website}</span>
+            <ExternalLink className="w-3 h-3" />
+          </a>
         </div>
       ),
     },
@@ -439,7 +484,7 @@ export default function FeedbackTable({
                     Name
                   </label>
                   <p className="text-sm text-gray-900">
-                    {selectedFeedback.firstName} {selectedFeedback.lastName}
+                    {selectedFeedback.name}
                   </p>
                 </div>
 
@@ -458,24 +503,22 @@ export default function FeedbackTable({
                   </p>
                 </div>
 
-                {selectedFeedback.website && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Website
-                    </label>
-                    <p className="text-sm text-gray-900">
-                      <a
-                        href={selectedFeedback.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-500 flex items-center space-x-1"
-                      >
-                        <span>{selectedFeedback.website}</span>
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
-                    </p>
-                  </div>
-                )}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Website
+                  </label>
+                  <p className="text-sm text-gray-900">
+                    <a
+                      href={selectedFeedback.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-500 flex items-center space-x-1"
+                    >
+                      <span>{selectedFeedback.website}</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </p>
+                </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">

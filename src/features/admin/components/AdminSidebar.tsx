@@ -40,7 +40,7 @@ const navigationItems: NavigationItem[] = [
     icon: (p) => <Lightbulb {...p} />,
   },
   {
-    name: "Feedback",
+    name: "Contact Us",
     href: "/admin/feedback",
     icon: (p) => <MessageSquare {...p} />,
   },

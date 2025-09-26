@@ -1,9 +1,11 @@
 export interface FeedbackAdmin {
   id: string;
-  firstName: string;
-  lastName: string;
+  name: string;
   email: string;
-  website: string | null;
+  phone: string;
+  company: string;
+  skype: string;
+  website: string;
   message: string;
   status: "new" | "read" | "replied" | "archived";
   createdAt: string;

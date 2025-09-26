@@ -151,10 +151,12 @@ model Setting {
 
 model Feedback {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  firstName String
-  lastName  String
+  name      String
   email     String
-  website   String?
+  phone     String
+  company   String
+  skype     String
+  website   String
   message   String
   status    String   @default("new") // "new" | "read" | "replied" | "archived"
   createdAt DateTime @default(now())

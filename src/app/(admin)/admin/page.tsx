@@ -3,27 +3,35 @@ import Link from "next/link";
 
 async function getStats() {
   try {
-    const [usersCount, modelsCount, blogPostsCount, solutionsCount] =
-      await Promise.all([
-        prisma.user.count(),
-        prisma.model.count(),
-        prisma.blogPost.count(),
-        prisma.solution.count(),
-      ]);
+    const [
+      modelsCount,
+      blogPostsCount,
+      solutionsCount,
+      feedbackCount,
+      newsletterCount,
+    ] = await Promise.all([
+      prisma.model.count(),
+      prisma.blogPost.count(),
+      prisma.solution.count(),
+      prisma.feedback.count(),
+      prisma.newsletterSubscription.count(),
+    ]);
 
     return {
-      users: usersCount,
       models: modelsCount,
       blogPosts: blogPostsCount,
       solutions: solutionsCount,
+      feedback: feedbackCount,
+      newsletter: newsletterCount,
     };
   } catch (error) {
     console.error("Error fetching stats:", error);
     return {
-      users: 0,
       models: 0,
       blogPosts: 0,
       solutions: 0,
+      feedback: 0,
+      newsletter: 0,
     };
   }
 }
@@ -32,18 +40,6 @@ export default async function AdminDashboard() {
   const stats = await getStats();
 
   const cards = [
-    {
-      title: "Total Users",
-      value: stats.users,
-      icon: "👥",
-      theme: {
-        card: "bg-gradient-to-br from-blue-500/10 via-blue-400/10 to-cyan-400/10 border border-blue-200/60",
-        accent: "text-blue-600",
-        hover:
-          "hover:from-blue-500/20 hover:via-blue-400/20 hover:to-cyan-400/20",
-      },
-      href: "/admin/users",
-    },
     {
       title: "AI Models",
       value: stats.models,
@@ -80,6 +76,30 @@ export default async function AdminDashboard() {
       },
       href: "/admin/solutions",
     },
+    {
+      title: "Feedback",
+      value: stats.feedback,
+      icon: "💬",
+      theme: {
+        card: "bg-gradient-to-br from-blue-500/10 via-blue-400/10 to-cyan-400/10 border border-blue-200/60",
+        accent: "text-blue-600",
+        hover:
+          "hover:from-blue-500/20 hover:via-blue-400/20 hover:to-cyan-400/20",
+      },
+      href: "/admin/feedback",
+    },
+    {
+      title: "Newsletter",
+      value: stats.newsletter,
+      icon: "📧",
+      theme: {
+        card: "bg-gradient-to-br from-indigo-500/10 via-purple-400/10 to-blue-400/10 border border-indigo-200/60",
+        accent: "text-indigo-600",
+        hover:
+          "hover:from-indigo-500/20 hover:via-purple-400/20 hover:to-blue-400/20",
+      },
+      href: "/admin/newsletter",
+    },
   ];
 
   return (
@@ -92,13 +112,13 @@ export default async function AdminDashboard() {
             Admin Dashboard
           </h1>
           <p className="mt-2 text-sm sm:text-base text-gray-600">
-            Quick overview of users, models, posts, and solutions.
+            Quick overview of models, posts, solutions, feedback, and more.
           </p>
         </div>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
         {cards.map((card) => (
           <Link key={card.title} href={card.href} className="group">
             <div
@@ -128,7 +148,7 @@ export default async function AdminDashboard() {
       {/* Quick Actions */}
       <div className="rounded-2xl border border-gray-200 bg-white p-6">
         <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <Link
             href="/admin/solutions"
             className="group relative overflow-hidden rounded-xl border border-amber-200/60 bg-gradient-to-br from-amber-500/10 via-orange-400/10 to-yellow-400/10 p-4 transition-all hover:from-amber-500/20 hover:via-orange-400/20 hover:to-yellow-400/20"
@@ -172,6 +192,19 @@ export default async function AdminDashboard() {
                 <p className="text-sm text-gray-600">
                   Write a new blog article
                 </p>
+              </div>
+            </div>
+          </Link>
+
+          <Link
+            href="/admin/feedback"
+            className="group relative overflow-hidden rounded-xl border border-blue-200/60 bg-gradient-to-br from-blue-500/10 via-blue-400/10 to-cyan-400/10 p-4 transition-all hover:from-blue-500/20 hover:via-blue-400/20 hover:to-cyan-400/20"
+          >
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">💬</span>
+              <div>
+                <h3 className="font-semibold text-gray-900">View Feedback</h3>
+                <p className="text-sm text-gray-600">Check customer feedback</p>
               </div>
             </div>
           </Link>

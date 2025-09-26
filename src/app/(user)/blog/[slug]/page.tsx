@@ -1,5 +1,6 @@
 import BlogDetailView from "@/features/blog/view/BlogDetailView";
 import { notFound } from "next/navigation";
+import StructuredData from "@/features/shared/components/StructuredData";
 
 // Force dynamic rendering to avoid build-time issues
 export const dynamic = "force-dynamic";
@@ -57,7 +58,37 @@ const page = async ({ params }: { params: { slug: string } }) => {
       related = [...related, ...filtered].slice(0, 6);
     }
   }
-  return <BlogDetailView post={post as any} related={related as any} />;
+  return (
+    <>
+      <StructuredData
+        type="article"
+        data={{
+          headline: post.title,
+          description: post.excerpt || post.subtitle,
+          image: (post.cardImage as any)?.url || (post.heroImage as any)?.url,
+          datePublished: post.createdAt,
+          dateModified: post.updatedAt,
+          author: {
+            "@type": "Person",
+            name: (post.authors as any)?.[0]?.name || "iDevX Team",
+          },
+          publisher: {
+            "@type": "Organization",
+            name: "iDevX",
+            logo: {
+              "@type": "ImageObject",
+              url: "/images/logo.png",
+            },
+          },
+          mainEntityOfPage: {
+            "@type": "WebPage",
+            "@id": `${process.env.NEXT_PUBLIC_APP_URL}/blog/${post.slug}`,
+          },
+        }}
+      />
+      <BlogDetailView post={post as any} related={related as any} />
+    </>
+  );
 };
 
 export async function generateMetadata({

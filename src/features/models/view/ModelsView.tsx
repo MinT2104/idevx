@@ -2,6 +2,13 @@ import React from "react";
 import ModelHero from "../components/ModelHero";
 import ModelListing from "../components/ModelListing";
 import { ModelViewRecord } from "../services/models.service";
+import {
+  SlideUp,
+  FadeIn,
+  StaggerContainer,
+  StaggerItem,
+} from "@/features/shared/components/ScrollAnimation";
+import { CardHover } from "@/features/shared/components/HoverAnimation";
 
 interface ModelsViewProps {
   initialModels: ModelViewRecord[];
@@ -18,13 +25,17 @@ const ModelsView: React.FC<ModelsViewProps> = ({
 }) => {
   return (
     <div>
-      <ModelHero models={initialModels} />
-      <ModelListing
-        initialModels={initialModels}
-        totalModels={totalModels}
-        currentPage={currentPage}
-        totalPages={totalPages}
-      />
+      <SlideUp delay={0.1}>
+        <ModelHero models={initialModels} />
+      </SlideUp>
+      <SlideUp delay={0.2}>
+        <ModelListing
+          initialModels={initialModels}
+          totalModels={totalModels}
+          currentPage={currentPage}
+          totalPages={totalPages}
+        />
+      </SlideUp>
     </div>
   );
 };

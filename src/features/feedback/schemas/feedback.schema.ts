@@ -1,19 +1,12 @@
 import { z } from "zod";
 
 export const createFeedbackSchema = z.object({
-  firstName: z
+  name: z
     .string()
-    .min(1, "First name is required")
-    .min(2, "First name must be at least 2 characters")
-    .max(50, "First name must be less than 50 characters")
-    .regex(/^[a-zA-Z\s]+$/, "First name can only contain letters and spaces"),
-
-  lastName: z
-    .string()
-    .min(1, "Last name is required")
-    .min(2, "Last name must be at least 2 characters")
-    .max(50, "Last name must be less than 50 characters")
-    .regex(/^[a-zA-Z\s]+$/, "Last name can only contain letters and spaces"),
+    .min(1, "Name is required")
+    .min(2, "Name must be at least 2 characters")
+    .max(100, "Name must be less than 100 characters")
+    .regex(/^[a-zA-Z\s]+$/, "Name can only contain letters and spaces"),
 
   email: z
     .string()
@@ -21,11 +14,32 @@ export const createFeedbackSchema = z.object({
     .email("Please enter a valid email address")
     .max(100, "Email must be less than 100 characters"),
 
+  phone: z
+    .string()
+    .min(1, "Phone number is required")
+    .min(10, "Phone number must be at least 10 characters")
+    .max(20, "Phone number must be less than 20 characters")
+    .regex(
+      /^[\d\s\-+()]+$/,
+      "Phone number can only contain digits, spaces, dashes, plus signs, and parentheses"
+    ),
+
+  company: z
+    .string()
+    .min(1, "Company name is required")
+    .min(2, "Company name must be at least 2 characters")
+    .max(100, "Company name must be less than 100 characters"),
+
+  skype: z
+    .string()
+    .min(1, "Skype detail is required")
+    .min(2, "Skype detail must be at least 2 characters")
+    .max(100, "Skype detail must be less than 100 characters"),
+
   website: z
     .string()
-    .url("Please enter a valid website URL")
-    .optional()
-    .or(z.literal("")),
+    .min(1, "Website is required")
+    .url("Please enter a valid website URL"),
 
   message: z
     .string()

@@ -10,6 +10,13 @@ import {
   ALLOWED_BLOG_CATEGORIES,
   normalizePrimaryCategory,
 } from "@/features/blog/constants";
+import {
+  SlideUp,
+  FadeIn,
+  StaggerContainer,
+  StaggerItem,
+} from "@/features/shared/components/ScrollAnimation";
+import { CardHover } from "@/features/shared/components/HoverAnimation";
 
 interface BlogCard {
   id: number;
@@ -146,122 +153,139 @@ const BlogView = ({ posts: serverPosts }: BlogViewProps) => {
 
   return (
     <div>
-      <HeroSection
-        title="Blog"
-        description="Expert guides and engineering deep dives to help you ship faster, scale easier, and learn along the way."
-        buttons={[
-          {
-            text: "Get Started",
-            variant: "outline",
-            size: "lg",
-            link: "/",
-          },
-          {
-            text: "Talk to an Expert",
-            variant: "default",
-            size: "lg",
-            className: "bg-orange-600 hover:bg-orange-700 text-white",
-            link: "/talk-to-us",
-          },
-        ]}
-      />
+      <SlideUp delay={0.1}>
+        <HeroSection
+          title="Blog"
+          description="Expert guides and engineering deep dives to help you ship faster, scale easier, and learn along the way."
+          buttons={[
+            {
+              text: "Get Started",
+              variant: "outline",
+              size: "lg",
+              link: "/",
+            },
+            {
+              text: "Talk to an Expert",
+              variant: "default",
+              size: "lg",
+              className: "bg-orange-600 hover:bg-orange-700 text-white",
+              link: "/talk-to-us",
+            },
+          ]}
+        />
+      </SlideUp>
 
-      <div className="w-full bg-white">
-        <div className="container mx-auto px-4 py-16 max-w-7xl">
-          {/* Navigation Tabs */}
-          <div className="flex flex-wrap items-center justify-between mb-8 ">
-            <div className="flex flex-wrap gap-4 mb-4 md:mb-0">
-              {tabs.map((tab) => (
-                <Button
-                  variant="outline"
-                  key={tab}
-                  onClick={() => handleTabClick(tab)}
-                  className={`px-4 h-10 py-2 text-sm font-medium transition-colors ${
-                    activeTab === tab
-                      ? "text-white bg-[#E15929] border-2 border-[#E15929] after:bg-transparent before:bg-transparent"
-                      : "text-gray-600 border border-gray-400 hover:text-gray-900"
-                  }`}
+      <SlideUp delay={0.2}>
+        <div className="w-full bg-white">
+          <div className="container mx-auto px-4 py-16 max-w-7xl">
+            {/* Navigation Tabs */}
+            <SlideUp delay={0.3}>
+              <div className="flex flex-wrap items-center justify-between mb-8 ">
+                <div className="flex flex-wrap gap-4 mb-4 md:mb-0">
+                  {tabs.map((tab) => (
+                    <CardHover key={tab}>
+                      <Button
+                        variant="outline"
+                        onClick={() => handleTabClick(tab)}
+                        className={`px-4 h-10 py-2 text-sm font-medium transition-colors ${
+                          activeTab === tab
+                            ? "text-white bg-[#E15929] border-2 border-[#E15929] after:bg-transparent before:bg-transparent"
+                            : "text-gray-600 border border-gray-400 hover:text-gray-900"
+                        }`}
+                      >
+                        {tab}
+                      </Button>
+                    </CardHover>
+                  ))}
+                </div>
+
+                {/* Search */}
+                <div className="flex items-center gap-2 text-gray-600 mt-0">
+                  <CardHover>
+                    <Button
+                      onClick={() => setIsSearchOpen(true)}
+                      className="h-10 hover:bg-white flex flex-row items-center justify-center"
+                      variant="outline"
+                    >
+                      Search
+                    </Button>
+                  </CardHover>
+                </div>
+              </div>
+            </SlideUp>
+
+            {/* Blog Grid */}
+            <SlideUp delay={0.4}>
+              <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                {pagedCards.map((card) => (
+                  <StaggerItem key={card.id}>
+                    <BlogCard card={card} />
+                  </StaggerItem>
+                ))}
+              </StaggerContainer>
+            </SlideUp>
+
+            {/* Pagination */}
+            <SlideUp delay={0.5}>
+              <div className="flex items-center justify-center gap-2">
+                <button
+                  className="p-2 text-gray-600 hover:text-gray-900 disabled:opacity-40"
+                  disabled={safeCurrentPage === 1}
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 >
-                  {tab}
-                </Button>
-              ))}
-            </div>
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <polyline points="15,18 9,12 15,6"></polyline>
+                  </svg>
+                </button>
 
-            {/* Search */}
-            <div className="flex items-center gap-2 text-gray-600 mt-0">
-              <Button
-                onClick={() => setIsSearchOpen(true)}
-                className="h-10 hover:bg-white flex flex-row items-center justify-center"
-                variant="outline"
-              >
-                Search
-              </Button>
-            </div>
-          </div>
+                {Array.from({ length: pageCount }, (_, i) => i + 1).map((n) => (
+                  <button
+                    key={n}
+                    onClick={() => setCurrentPage(n)}
+                    className={`px-3 py-2 text-sm font-medium rounded ${
+                      n === safeCurrentPage
+                        ? "text-white bg-red-600"
+                        : "text-gray-600 hover:text-gray-900"
+                    }`}
+                  >
+                    {n}
+                  </button>
+                ))}
 
-          {/* Blog Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {pagedCards.map((card) => (
-              <BlogCard key={card.id} card={card} />
-            ))}
-          </div>
-
-          {/* Pagination */}
-          <div className="flex items-center justify-center gap-2">
-            <button
-              className="p-2 text-gray-600 hover:text-gray-900 disabled:opacity-40"
-              disabled={safeCurrentPage === 1}
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polyline points="15,18 9,12 15,6"></polyline>
-              </svg>
-            </button>
-
-            {Array.from({ length: pageCount }, (_, i) => i + 1).map((n) => (
-              <button
-                key={n}
-                onClick={() => setCurrentPage(n)}
-                className={`px-3 py-2 text-sm font-medium rounded ${
-                  n === safeCurrentPage
-                    ? "text-white bg-red-600"
-                    : "text-gray-600 hover:text-gray-900"
-                }`}
-              >
-                {n}
-              </button>
-            ))}
-
-            <button
-              className="p-2 text-gray-600 hover:text-gray-900 disabled:opacity-40"
-              disabled={safeCurrentPage === pageCount}
-              onClick={() => setCurrentPage((p) => Math.min(pageCount, p + 1))}
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polyline points="9,18 15,12 9,6"></polyline>
-              </svg>
-            </button>
+                <button
+                  className="p-2 text-gray-600 hover:text-gray-900 disabled:opacity-40"
+                  disabled={safeCurrentPage === pageCount}
+                  onClick={() =>
+                    setCurrentPage((p) => Math.min(pageCount, p + 1))
+                  }
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <polyline points="9,18 15,12 9,6"></polyline>
+                  </svg>
+                </button>
+              </div>
+            </SlideUp>
           </div>
         </div>
-      </div>
+      </SlideUp>
 
       {/* Search Modal */}
       {isSearchOpen && (

@@ -349,6 +349,7 @@ const ModelDetailView: React.FC<ModelDetailViewProps> = ({ model }) => {
             name: m.name || "Unknown Model",
             description: m.description || m.type || "",
             tags: [m.type || ""],
+            type: m.type || "unknown",
             link: m.slug ? `/models/${m.slug}` : "#",
             slug: m.slug || "#",
           }))}

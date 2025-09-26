@@ -36,9 +36,11 @@ app.get("/", async (c) => {
     // Add search functionality
     if (search) {
       where.OR = [
-        { firstName: { contains: search, mode: "insensitive" } },
-        { lastName: { contains: search, mode: "insensitive" } },
+        { name: { contains: search, mode: "insensitive" } },
         { email: { contains: search, mode: "insensitive" } },
+        { phone: { contains: search, mode: "insensitive" } },
+        { company: { contains: search, mode: "insensitive" } },
+        { skype: { contains: search, mode: "insensitive" } },
         { message: { contains: search, mode: "insensitive" } },
       ];
     }
@@ -78,10 +80,8 @@ app.post("/", zValidator("json", createFeedbackSchema), async (c) => {
   try {
     const data = c.req.valid("json");
 
-    // Clean website field - nếu empty string thì set null
     const cleanData = {
       ...data,
-      website: data.website && data.website.trim() !== "" ? data.website : null,
     };
 
     const feedback = await prisma.feedback.create({

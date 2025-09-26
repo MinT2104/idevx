@@ -1,4 +1,12 @@
 import { CreateModelInput, UpdateModelInput } from "../schemas/model.schema";
+import {
+  getCachedModels,
+  getCachedModelBySlug,
+  setCachedData,
+  getCachedData,
+  invalidateModelCache,
+} from "@/core/utils/cache";
+import { performanceMonitor } from "@/core/utils/performance";
 
 // Dynamic import for Prisma to avoid build-time issues
 const getPrisma = async () => {
@@ -62,11 +70,16 @@ export const createModel = async (
       return null;
     };
 
-    return {
+    const result = {
       ...model,
       detailedInfo: safeParseJson(model.detailedInfo),
       content: safeParseJson((model as any).content),
     };
+
+    // Invalidate cache after creating model
+    invalidateModelCache();
+
+    return result;
   } catch (error) {
     console.error("Error creating model:", error);
     throw new Error("Failed to create model");
@@ -85,67 +98,99 @@ export const getAllModels = async (
   page: number;
   totalPages: number;
 }> => {
-  try {
-    const prisma = await getPrisma();
-    const skip = (page - 1) * limit;
+  const cacheKey = `models_${page}_${limit}_${search || ""}_${type || ""}`;
 
-    // Build where clause
-    const where: any = {};
-
-    if (search) {
-      where.OR = [
-        { name: { contains: search, mode: "insensitive" } },
-        { brand: { contains: search, mode: "insensitive" } },
-        { description: { contains: search, mode: "insensitive" } },
-      ];
-    }
-
-    if (type) {
-      where.type = { equals: type, mode: "insensitive" };
-    }
-
-    const [models, total] = await Promise.all([
-      prisma.model.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy: { createdAt: "desc" },
-      }),
-      prisma.model.count({ where }),
-    ]);
-
-    const processedModels = models.map((model) => {
-      // Helper function to safely parse JSON
-      const safeParseJson = (value: any) => {
-        if (!value) return null;
-        if (typeof value === "object") return value; // Already parsed
-        if (typeof value === "string") {
-          try {
-            return JSON.parse(value);
-          } catch {
-            return null;
-          }
-        }
-        return null;
-      };
-
-      return {
-        ...model,
-        detailedInfo: safeParseJson(model.detailedInfo),
-        content: safeParseJson((model as any).content),
-      };
-    });
-
-    return {
-      models: processedModels,
-      total,
-      page,
-      totalPages: Math.ceil(total / limit),
-    };
-  } catch (error) {
-    console.error("Error fetching models:", error);
-    throw new Error("Failed to fetch models");
+  // Try to get from cache first
+  const cached = getCachedData<{
+    models: ModelRecord[];
+    total: number;
+    page: number;
+    totalPages: number;
+  }>(cacheKey);
+  if (cached) {
+    return cached;
   }
+
+  return performanceMonitor.measureDbQuery(async () => {
+    try {
+      const prisma = await getPrisma();
+      const skip = (page - 1) * limit;
+
+      // Build where clause
+      const where: any = {};
+
+      if (search) {
+        where.OR = [
+          { name: { contains: search, mode: "insensitive" } },
+          { brand: { contains: search, mode: "insensitive" } },
+          { description: { contains: search, mode: "insensitive" } },
+        ];
+      }
+
+      if (type) {
+        where.type = { equals: type, mode: "insensitive" };
+      }
+
+      const [models, total] = await Promise.all([
+        prisma.model.findMany({
+          where,
+          skip,
+          take: limit,
+          orderBy: { createdAt: "desc" },
+          select: {
+            id: true,
+            name: true,
+            logo: true,
+            type: true,
+            slug: true,
+            description: true,
+            detailedInfo: true,
+            content: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        }),
+        prisma.model.count({ where }),
+      ]);
+
+      const processedModels = models.map((model) => {
+        // Helper function to safely parse JSON
+        const safeParseJson = (value: any) => {
+          if (!value) return null;
+          if (typeof value === "object") return value; // Already parsed
+          if (typeof value === "string") {
+            try {
+              return JSON.parse(value);
+            } catch {
+              return null;
+            }
+          }
+          return null;
+        };
+
+        return {
+          ...model,
+          detailedInfo: safeParseJson(model.detailedInfo),
+          content: safeParseJson((model as any).content),
+        };
+      });
+
+      const result = {
+        models: processedModels,
+        total,
+        page,
+        totalPages: Math.ceil(total / limit),
+      };
+
+      // Cache for 5 minutes
+      setCachedData(cacheKey, result, 5 * 60 * 1000);
+
+      return result;
+    } catch (error) {
+      console.error("Error fetching models:", error);
+      throw new Error("Failed to fetch models");
+    }
+  }, "getAllModels");
 };
 
 // Tối ưu hóa hàm cho ModelView - chỉ fetch những fields cần thiết
@@ -333,11 +378,16 @@ export const updateModel = async (
       return null;
     };
 
-    return {
+    const result = {
       ...model,
       detailedInfo: safeParseJson(model.detailedInfo),
       content: safeParseJson((model as any).content),
     };
+
+    // Invalidate cache after updating model
+    invalidateModelCache();
+
+    return result;
   } catch (error) {
     console.error("Error updating model:", error);
     throw new Error("Failed to update model");
@@ -351,6 +401,9 @@ export const deleteModel = async (id: string): Promise<{ count: number }> => {
     const result = await prisma.model.delete({
       where: { id },
     });
+
+    // Invalidate cache after deleting model
+    invalidateModelCache();
 
     return { count: 1 };
   } catch (error) {

@@ -11,7 +11,7 @@ export default async function FeedbackAdminPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Main content */}
-      <main className="flex-1 p-8">
+      <main className="flex-1 p-8 max-w-full overflow-hidden">
         {/* Header */}
         <header className="flex justify-between items-center mb-10">
           <div>
@@ -25,7 +25,9 @@ export default async function FeedbackAdminPage() {
         </header>
 
         {/* Feedback Table */}
-        <FeedbackTable />
+        <div className="w-full max-w-full overflow-hidden">
+          <FeedbackTable />
+        </div>
       </main>
     </div>
   );
