@@ -33,6 +33,7 @@ export default async function EditBlogPage({ params }: EditBlogPageProps) {
       taxonomy: post.taxonomy as any,
       authors: post.authors as any,
       status: post.status as "draft" | "published",
+      blogType: (post.blogType as "automation" | "manual") || "manual",
       publishedAt: post.publishedAt?.toISOString(),
       featured: post.featured || false,
       seo: post.seo as any,

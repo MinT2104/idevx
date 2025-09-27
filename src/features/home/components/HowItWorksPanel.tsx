@@ -13,6 +13,7 @@ interface HowItWorksPanelProps {
   image: string;
   onContactExpert?: () => void;
   illustrationData?: any;
+  buttonText?: string;
 }
 
 export default function HowItWorksPanel({
@@ -21,6 +22,7 @@ export default function HowItWorksPanel({
   image,
   onContactExpert,
   illustrationData,
+  buttonText,
 }: HowItWorksPanelProps) {
   return (
     <div className="bg-[#FDFDFD] border border-dashed border-[#A9A9A9] p-6 shadow-sm h-full flex flex-col">
@@ -33,7 +35,7 @@ export default function HowItWorksPanel({
           className="text-xs px-4 py-2 h-8 bg-white border-gray-500 text-black border font-medium rounded-none cursor-pointer"
           onClick={onContactExpert}
         >
-          Talk to an Expert
+          {buttonText || "Talk to an Expert"}
         </Button>
       </div>
       <p className="text-base text-gray-600 max-w-sm leading-relaxed">

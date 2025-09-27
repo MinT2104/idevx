@@ -11,8 +11,16 @@ import socialLinks from "../routes/social-links";
 import blogAdmin from "../routes/blog-admin";
 import blogForm from "../routes/blog-form";
 import modelAdmin from "../routes/model-admin";
+import testimonialsAdmin from "../routes/testimonials-admin";
+import careers from "../routes/careers";
+import careersAdmin from "../routes/careers-admin";
+import jobsAdmin from "../routes/jobs-admin";
 import feedback from "../routes/feedback";
 import newsletter from "../routes/newsletter";
+import testimonials from "../routes/testimonials";
+import quotation from "../routes/quotation";
+import clientBrand from "../routes/client-brand";
+import automation from "../routes/automation";
 
 // Force dynamic rendering to avoid build-time issues
 export const dynamic = "force-dynamic";
@@ -39,6 +47,14 @@ app.route("/blog-form", blogForm);
 app.route("/model-admin", modelAdmin);
 app.route("/feedback", feedback);
 app.route("/newsletter", newsletter);
+app.route("/testimonials", testimonials);
+app.route("/testimonials-admin", testimonialsAdmin);
+app.route("/careers", careers);
+app.route("/careers-admin", careersAdmin);
+app.route("/jobs-admin", jobsAdmin);
+app.route("/quotation", quotation);
+app.route("/client-brand", clientBrand);
+app.route("/automation", automation);
 
 export const GET = handle(app as any);
 export const POST = handle(app as any);

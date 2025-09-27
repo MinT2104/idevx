@@ -31,10 +31,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate file type
-    if (!contentType.startsWith("image/")) {
+    // Validate file type (allow images and common document types for CV)
+    const allowed =
+      contentType.startsWith("image/") ||
+      contentType === "application/pdf" ||
+      contentType === "application/msword" ||
+      contentType ===
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+    if (!allowed) {
       return NextResponse.json(
-        { error: "Only image files are allowed" },
+        { error: "Unsupported file type" },
         { status: 400 }
       );
     }
@@ -43,7 +49,10 @@ export async function POST(request: NextRequest) {
     const timestamp = Date.now();
     const randomString = Math.random().toString(36).substring(2, 15);
     const fileExtension = filename.split(".").pop();
-    const uniqueFilename = `idevx/uploads/images/${timestamp}-${randomString}.${fileExtension}`;
+    const folder = contentType.startsWith("image/")
+      ? "idevx/uploads/images"
+      : "idevx/uploads/files";
+    const uniqueFilename = `${folder}/${timestamp}-${randomString}.${fileExtension}`;
 
     console.log("Generated filename:", uniqueFilename);
 

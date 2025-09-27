@@ -136,6 +136,7 @@ export interface BlogPost {
   richMeta?: Record<string, unknown>;
 
   status: PublishStatus;
+  blogType?: string; // "automation" | "manual"
   publishedAt?: string;
   updatedAt?: string;
   scheduledFor?: string;

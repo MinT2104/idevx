@@ -4,6 +4,7 @@ export interface BlogPostAdmin {
   slug: string;
   excerpt: string | null;
   status: string;
+  blogType: string; // "automation" | "manual"
   publishedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
@@ -30,6 +31,7 @@ export interface BlogPostsParams {
   limit?: number;
   search?: string;
   status?: string;
+  blogType?: "all" | "automation" | "manual";
   sortBy?: string;
   sortOrder?: "asc" | "desc";
 }

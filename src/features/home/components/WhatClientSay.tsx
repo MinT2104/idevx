@@ -49,35 +49,47 @@ const WhatClientSay: React.FC<WhatClientSayProps> = ({
     </div>
   );
 
-  const renderQuoteCard = (item: TestimonialItem) => (
-    <div className="bg-gray-100 w-full col-span-2 h-[220px] flex relative group  border border-[#A9A9A9]">
-      <div className="h-full aspect-square p-4">
-        <Image
-          src={item.client?.logo || ""}
-          alt={item.client?.name || ""}
-          width={0}
-          height={0}
-          sizes="100%"
-          className="w-full h-full object-contain"
-        />
-      </div>
-      <div className="flex flex-col justify-between items-start mb-4 p-4">
-        <p className="text-gray-700 text-sm leading-relaxed mb-4">
-          &ldquo;{item.quote?.text}&rdquo;
-        </p>
-        <div className="flex-1 flex items-end">
-          <Image
-            src={item.company.logo}
-            alt={item.company.name}
-            width={0}
-            height={0}
-            sizes="100%"
-            className={item.company.imageClass}
-          />
+  const renderQuoteCard = (item: TestimonialItem) => {
+    const clientLogo = item.client?.logo || "";
+    const companyLogo = item.company?.logo || "";
+    return (
+      <div className="bg-gray-100 w-full col-span-2 h-[220px] flex relative group  border border-[#A9A9A9]">
+        <div className="h-full aspect-square p-4">
+          {clientLogo ? (
+            <Image
+              src={clientLogo}
+              alt={item.client?.name || "Client"}
+              width={0}
+              height={0}
+              sizes="100%"
+              className="w-full h-full object-contain"
+            />
+          ) : (
+            <div className="w-full h-full" />
+          )}
+        </div>
+        <div className="flex flex-col justify-between items-start mb-4 p-4">
+          <p className="text-gray-700 text-sm leading-relaxed mb-4">
+            &ldquo;{item.quote?.text}&rdquo;
+          </p>
+          <div className="flex-1 flex items-end">
+            {companyLogo ? (
+              <Image
+                src={companyLogo}
+                alt={item.company?.name || "Company"}
+                width={0}
+                height={0}
+                sizes="100%"
+                className={item.company.imageClass}
+              />
+            ) : (
+              <div className="w-0 h-0" />
+            )}
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="py-16 bg-white">

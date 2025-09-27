@@ -26,6 +26,7 @@ import {
 import DataTable, { Column } from "./DataTable";
 
 interface BlogTableProps {
+  blogType?: "all" | "automation" | "manual";
   initialPosts?: BlogPostAdmin[];
   initialPagination?: {
     page: number;
@@ -36,6 +37,7 @@ interface BlogTableProps {
 }
 
 export default function BlogTable({
+  blogType = "all",
   initialPosts = [],
   initialPagination,
 }: BlogTableProps) {
@@ -78,20 +80,31 @@ export default function BlogTable({
       header: "Title",
       sortable: true,
       render: (post) => (
-        <div className="flex items-start space-x-3">
-          <div className="flex-1">
-            <div className="flex items-center space-x-2">
-              <h3 className="text-sm font-medium text-gray-900 truncate">
-                {post.title}
-              </h3>
-              {post.featured && (
-                <Star className="h-4 w-4 text-yellow-500 fill-current" />
-              )}
-            </div>
-            <p className="text-sm text-gray-500 mt-1 line-clamp-2">
-              {post.excerpt || "No excerpt available"}
-            </p>
-            <p className="text-xs text-gray-400 font-mono mt-1">/{post.slug}</p>
+        <div className="min-w-0 flex-1 max-w-md">
+          <div className="flex items-center space-x-2 mb-1">
+            <h3 className="text-sm font-medium text-gray-900 truncate">
+              {post.title}
+            </h3>
+            {post.featured && (
+              <Star className="h-4 w-4 text-yellow-500 fill-current flex-shrink-0" />
+            )}
+          </div>
+          <p className="text-xs text-gray-500 line-clamp-1 mb-1">
+            {post.excerpt || "No excerpt available"}
+          </p>
+          <p className="text-xs text-gray-400 font-mono truncate">
+            /{post.slug}
+          </p>
+          <div className="mt-2">
+            <span
+              className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                post.blogType === "automation"
+                  ? "bg-purple-100 text-purple-800"
+                  : "bg-blue-100 text-blue-800"
+              }`}
+            >
+              {post.blogType === "automation" ? "🤖 Automation" : "✍️ Manual"}
+            </span>
           </div>
         </div>
       ),
@@ -101,20 +114,22 @@ export default function BlogTable({
       header: "Status",
       sortable: true,
       render: (post) => (
-        <Select
-          value={post.status}
-          onValueChange={(value) => handleStatusUpdate(post.id, value)}
-        >
-          <SelectTrigger
-            className={`w-24 h-7 text-xs font-semibold rounded-full border ${getStatusColor(post.status)}`}
+        <div className="min-w-24">
+          <Select
+            value={post.status}
+            onValueChange={(value) => handleStatusUpdate(post.id, value)}
           >
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="draft">Draft</SelectItem>
-            <SelectItem value="published">Published</SelectItem>
-          </SelectContent>
-        </Select>
+            <SelectTrigger
+              className={`w-full h-7 text-xs font-semibold rounded-full border ${getStatusColor(post.status)}`}
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="draft">Draft</SelectItem>
+              <SelectItem value="published">Published</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       ),
     },
     {
@@ -122,14 +137,16 @@ export default function BlogTable({
       header: "Published",
       sortable: true,
       render: (post) => (
-        <div className="whitespace-nowrap text-sm text-gray-900">
+        <div className="min-w-28">
           {post.publishedAt ? (
             <div className="flex items-center space-x-1">
-              <Calendar className="h-3 w-3 text-gray-400" />
-              <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
+              <Calendar className="h-3 w-3 text-gray-400 flex-shrink-0" />
+              <span className="text-xs text-gray-900 truncate">
+                {new Date(post.publishedAt).toLocaleDateString()}
+              </span>
             </div>
           ) : (
-            <span className="text-gray-400">Not published</span>
+            <span className="text-xs text-gray-400">Not published</span>
           )}
         </div>
       ),
@@ -139,8 +156,10 @@ export default function BlogTable({
       header: "Created",
       sortable: true,
       render: (post) => (
-        <div className="whitespace-nowrap text-sm text-gray-900">
-          {new Date(post.createdAt).toLocaleDateString()}
+        <div className="min-w-24">
+          <span className="text-xs text-gray-900">
+            {new Date(post.createdAt).toLocaleDateString()}
+          </span>
         </div>
       ),
     },
@@ -149,33 +168,41 @@ export default function BlogTable({
       header: "Actions",
       sortable: false,
       render: (post) => (
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-1 min-w-24">
           <Button
             size="sm"
             variant="outline"
-            className="h-8 w-8 p-0"
+            className="h-7 w-7 p-0"
             title="View Post"
             onClick={() => handleViewPost(post.slug)}
           >
-            <Eye className="h-4 w-4" />
+            <Eye className="h-3 w-3" />
           </Button>
           <Button
             size="sm"
             variant="outline"
-            className="h-8 w-8 p-0"
+            className="h-7 w-7 p-0"
             title="Edit Post"
             onClick={() => handleEditPost(post.id)}
           >
-            <Edit className="h-4 w-4" />
+            <Edit className="h-3 w-3" />
           </Button>
           <Button
             size="sm"
             variant="outline"
-            className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+            className="h-7 w-7 p-0 text-red-600 hover:text-red-700"
             title="Delete Post"
-            onClick={() => handleDelete(post.id)}
+            onClick={() => {
+              console.log("Delete button clicked for post:", {
+                id: post.id,
+                title: post.title,
+                idType: typeof post.id,
+                idLength: post.id?.length,
+              });
+              handleDelete(post.id);
+            }}
           >
-            <Trash2 className="h-4 w-4" />
+            <Trash2 className="h-3 w-3" />
           </Button>
         </div>
       ),
@@ -190,6 +217,7 @@ export default function BlogTable({
         limit: pagination.limit.toString(),
         search,
         status: status === "all" ? "" : status,
+        blogType: blogType === "all" ? "" : blogType,
         sortBy,
         sortOrder,
       });
@@ -206,7 +234,15 @@ export default function BlogTable({
     } finally {
       setLoading(false);
     }
-  }, [pagination.page, pagination.limit, search, status, sortBy, sortOrder]);
+  }, [
+    pagination.page,
+    pagination.limit,
+    search,
+    status,
+    blogType,
+    sortBy,
+    sortOrder,
+  ]);
 
   useEffect(() => {
     fetchPosts();
@@ -239,19 +275,30 @@ export default function BlogTable({
     if (!confirm("Are you sure you want to delete this post?")) return;
 
     try {
+      console.log(`Attempting to delete blog post with ID: ${id}`);
+
       const response = await fetch(`/api/blog-admin/${id}`, {
         method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
+
       const data = await response.json();
+      console.log("Delete response:", data);
 
       if (data.success) {
+        console.log("Successfully deleted blog post, refreshing list...");
         fetchPosts(); // Refresh the list
       } else {
-        alert("Failed to delete post");
+        console.error("Delete failed:", data.error);
+        alert(`Failed to delete post: ${data.error || "Unknown error"}`);
       }
     } catch (error) {
       console.error("Error deleting post:", error);
-      alert("Failed to delete post");
+      alert(
+        `Failed to delete post: ${error instanceof Error ? error.message : "Network error"}`
+      );
     }
   };
 
@@ -286,12 +333,12 @@ export default function BlogTable({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-full overflow-hidden">
       {/* Search and Filter Bar */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 md:p-6">
         <div className="flex flex-col md:flex-row gap-4">
           {/* Search */}
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
@@ -305,7 +352,7 @@ export default function BlogTable({
           </div>
 
           {/* Status Filter */}
-          <div className="md:w-48">
+          <div className="md:w-48 flex-shrink-0">
             <Select value={status} onValueChange={handleStatusChange}>
               <SelectTrigger className="w-full bg-white text-black">
                 <SelectValue placeholder="All Statuses" />
@@ -321,36 +368,40 @@ export default function BlogTable({
           </div>
 
           {/* Results count */}
-          <div className="flex items-center text-sm text-gray-600">
+          <div className="flex items-center text-sm text-gray-600 flex-shrink-0">
             {pagination.total} posts found
           </div>
         </div>
       </div>
 
-      {/* Data Table */}
-      <DataTable
-        data={posts}
-        columns={columns}
-        pagination={pagination}
-        loading={loading}
-        onPageChange={handlePageChange}
-        onSort={handleSort}
-        sortBy={sortBy}
-        sortOrder={sortOrder}
-        emptyState={
-          <div>
-            <div className="text-gray-400 text-4xl mb-4">📝</div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              No posts found
-            </h3>
-            <p className="text-gray-500">
-              {search || (status && status !== "all")
-                ? "Try adjusting your search or filter criteria."
-                : "Start creating your first blog post."}
-            </p>
-          </div>
-        }
-      />
+      {/* Data Table with horizontal scroll */}
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <DataTable
+            data={posts}
+            columns={columns}
+            pagination={pagination}
+            loading={loading}
+            onPageChange={handlePageChange}
+            onSort={handleSort}
+            sortBy={sortBy}
+            sortOrder={sortOrder}
+            emptyState={
+              <div className="p-8 text-center">
+                <div className="text-gray-400 text-4xl mb-4">📝</div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  No posts found
+                </h3>
+                <p className="text-gray-500">
+                  {search || (status && status !== "all")
+                    ? "Try adjusting your search or filter criteria."
+                    : "Start creating your first blog post."}
+                </p>
+              </div>
+            }
+          />
+        </div>
+      </div>
     </div>
   );
 }

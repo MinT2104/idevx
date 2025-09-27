@@ -213,7 +213,7 @@ export default function TalkToUsPage() {
                   htmlFor="skype"
                   className="block text-sm text-gray-700 mb-2"
                 >
-                  Skype Detail*
+                  Skype Detail (optional)
                 </label>
                 <Input
                   id="skype"
@@ -222,7 +222,7 @@ export default function TalkToUsPage() {
                   placeholder="your.skype.username"
                   className={`h-10 bg-white ${errors.skype ? "border-red-500" : ""}`}
                 />
-                {errors.skype && (
+                {errors.skype && form.skype && (
                   <p className="mt-1 text-xs text-red-600">{errors.skype}</p>
                 )}
               </div>

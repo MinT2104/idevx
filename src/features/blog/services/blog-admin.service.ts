@@ -12,6 +12,7 @@ export class BlogAdminService {
         limit = 5,
         search = "",
         status = "",
+        blogType = "",
         sortBy = "createdAt",
         sortOrder = "desc",
       } = params;
@@ -36,6 +37,11 @@ export class BlogAdminService {
         where.status = status;
       }
 
+      // Blog type filter
+      if (blogType && blogType !== "all") {
+        where.blogType = blogType;
+      }
+
       // Build orderBy clause
       const orderBy: any = {};
       orderBy[sortBy] = sortOrder;
@@ -53,6 +59,7 @@ export class BlogAdminService {
             slug: true,
             excerpt: true,
             status: true,
+            blogType: true,
             publishedAt: true,
             createdAt: true,
             updatedAt: true,
@@ -92,6 +99,7 @@ export class BlogAdminService {
           slug: true,
           excerpt: true,
           status: true,
+          blogType: true,
           publishedAt: true,
           createdAt: true,
           updatedAt: true,
@@ -111,13 +119,72 @@ export class BlogAdminService {
    */
   static async deleteBlogPost(id: string): Promise<boolean> {
     try {
-      await prisma.blogPost.delete({
+      console.log(`Attempting to delete blog post with ID: ${id}`);
+
+      // Validate ObjectId format for MongoDB
+      if (!id || typeof id !== "string") {
+        throw new Error(
+          `Invalid blog post ID: must be a string, got ${typeof id}`
+        );
+      }
+
+      // MongoDB ObjectId should be 24 hex characters
+      const objectIdRegex = /^[0-9a-fA-F]{24}$/;
+      if (!objectIdRegex.test(id)) {
+        console.error(`Invalid ObjectId format: ${id} (length: ${id.length})`);
+        throw new Error(`Invalid ObjectId format: ${id}`);
+      }
+
+      // Check if blog post exists first
+      console.log(`Checking if blog post exists with ID: ${id}`);
+      const existingPost = await prisma.blogPost.findUnique({
+        where: { id },
+        select: { id: true, title: true, slug: true, status: true },
+      });
+
+      if (!existingPost) {
+        console.error(`Blog post not found with ID: ${id}`);
+
+        // Let's also check if there are any blog posts at all
+        const allPosts = await prisma.blogPost.findMany({
+          select: { id: true, title: true, slug: true },
+          take: 5,
+        });
+        console.log(
+          `Available blog posts:`,
+          allPosts.map((p) => ({ id: p.id, title: p.title, slug: p.slug }))
+        );
+
+        throw new Error(`Blog post with ID ${id} not found`);
+      }
+
+      console.log(
+        `Found blog post: ${existingPost.title} (ID: ${id}, Slug: ${existingPost.slug}, Status: ${existingPost.status})`
+      );
+
+      // Perform the delete operation
+      const result = await prisma.blogPost.delete({
         where: { id },
       });
+
+      console.log(`Successfully deleted blog post: ${id}`, result);
       return true;
     } catch (error) {
       console.error("Error deleting blog post:", error);
-      throw error;
+      console.error("Blog post ID:", id);
+      console.error("ID type:", typeof id);
+      console.error("ID length:", id?.length);
+      console.error(
+        "Error message:",
+        error instanceof Error ? error.message : String(error)
+      );
+
+      // Re-throw with more context
+      if (error instanceof Error) {
+        throw new Error(`Failed to delete blog post: ${error.message}`);
+      } else {
+        throw new Error(`Failed to delete blog post: ${String(error)}`);
+      }
     }
   }
 

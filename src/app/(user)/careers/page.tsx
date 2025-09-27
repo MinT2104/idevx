@@ -1,63 +1,49 @@
 import { Button } from "@/ui/components/button";
 import Link from "next/link";
+import { prisma } from "@/core/database/db";
 
-export default function CareersPage() {
-  const jobOpenings = [
-    {
-      id: 1,
-      title: "Senior AI Engineer",
-      department: "Engineering",
-      location: "Remote",
-      type: "Full-time",
-      description:
-        "Lead the development of our AI model infrastructure and optimization systems.",
-    },
-    {
-      id: 2,
-      title: "Product Manager",
-      department: "Product",
-      location: "San Francisco, CA",
-      type: "Full-time",
-      description:
-        "Drive product strategy and roadmap for our AI platform and developer tools.",
-    },
-    {
-      id: 3,
-      title: "Sales Engineer",
-      department: "Sales",
-      location: "New York, NY",
-      type: "Full-time",
-      description:
-        "Help enterprise customers implement and optimize AI solutions.",
-    },
-    {
-      id: 4,
-      title: "UX Designer",
-      department: "Design",
-      location: "Remote",
-      type: "Full-time",
-      description:
-        "Design intuitive interfaces for AI-powered applications and developer tools.",
-    },
-    {
-      id: 5,
-      title: "DevOps Engineer",
-      department: "Engineering",
-      location: "Remote",
-      type: "Full-time",
-      description:
-        "Build and maintain scalable infrastructure for our AI model serving platform.",
-    },
-    {
-      id: 6,
-      title: "Marketing Manager",
-      department: "Marketing",
-      location: "Remote",
-      type: "Full-time",
-      description:
-        "Develop and execute marketing strategies to grow our developer community.",
-    },
-  ];
+type SalaryRange = { min: number; max: number; currency: string };
+type Job = {
+  id: string | number;
+  title: string;
+  slug: string;
+  department: string;
+  location: string;
+  type: string;
+  level: string;
+  salaryRange: SalaryRange;
+  postedAt: string;
+  applicationDeadline: string;
+  description: string;
+  responsibilities: string[];
+  requirements: string[];
+  niceToHave?: string[];
+  benefits?: string[];
+  howToApply: string;
+  status: "open" | "closed";
+};
+
+function formatSalary(range: SalaryRange) {
+  const fmt = new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 });
+  return `${fmt.format(range.min)}–${fmt.format(range.max)} ${range.currency}`;
+}
+
+function getApplyHref(job: Job): { href: string; external: boolean } {
+  const params = new URLSearchParams({
+    position: job.title,
+    slug: job.slug,
+    type: job.type,
+    level: job.level,
+  });
+  return { href: `/apply-career?${params.toString()}`, external: false };
+}
+
+export default async function CareersPage() {
+  const jobOpenings = await prisma.jobPosting.findMany({
+    where: { status: "open" },
+    orderBy: { postedAt: "desc" },
+    take: 50,
+  });
 
   const benefits = [
     {
@@ -177,23 +163,72 @@ export default function CareersPage() {
                   <h3 className="text-xl font-semibold text-black">
                     {job.title}
                   </h3>
-                  <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-                    {job.type}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-700 bg-gray-100 px-2 py-1 rounded-full">
+                      {job.level}
+                    </span>
+                    <span
+                      className={`text-xs px-2 py-1 rounded-full ${
+                        job.type.toLowerCase().includes("full")
+                          ? "bg-green-100 text-green-700"
+                          : job.type.toLowerCase().includes("part")
+                            ? "bg-purple-100 text-purple-700"
+                            : "bg-gray-100 text-gray-700"
+                      }`}
+                      title={job.type}
+                    >
+                      {job.type}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex items-center text-gray-600 text-sm mb-4">
+                <div className="flex items-center text-gray-600 text-sm mb-2">
                   <span className="mr-4">{job.department}</span>
                   <span>{job.location}</span>
                 </div>
-                <p className="text-gray-700 mb-4">{job.description}</p>
-                <Link href="/talk-to-us">
-                  <Button
-                    variant="outline"
-                    className="border-gray-300 text-gray-700"
-                  >
-                    Apply Now
-                  </Button>
-                </Link>
+                {"salaryRange" in job && (
+                  <div className="text-xs text-gray-500 mb-3">
+                    <span className="mr-3">
+                      Salary: {formatSalary((job as any).salaryRange)}
+                    </span>
+                    {"postedAt" in job && (
+                      <span className="mr-3">
+                        Posted:{" "}
+                        {new Date((job as any).postedAt).toLocaleDateString()}
+                      </span>
+                    )}
+                    {"applicationDeadline" in job && (
+                      <span>
+                        Deadline:{" "}
+                        {new Date(
+                          (job as any).applicationDeadline
+                        ).toLocaleDateString()}
+                      </span>
+                    )}
+                  </div>
+                )}
+                <p className="text-gray-700 mb-4 line-clamp-3">
+                  {job.description}
+                </p>
+                <div className="flex gap-2">
+                  <Link href={`/careers/${job.slug}`}>
+                    <Button
+                      variant="outline"
+                      className="border-gray-300 text-gray-700"
+                    >
+                      View Details
+                    </Button>
+                  </Link>
+                  {(() => {
+                    const { href, external } = getApplyHref(job as any);
+                    return (
+                      <Link href={href}>
+                        <Button className="bg-orange-500 hover:bg-orange-600 text-white">
+                          Apply Now
+                        </Button>
+                      </Link>
+                    );
+                  })()}
+                </div>
               </div>
             ))}
           </div>

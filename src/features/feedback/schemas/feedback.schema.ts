@@ -32,9 +32,14 @@ export const createFeedbackSchema = z.object({
 
   skype: z
     .string()
-    .min(1, "Skype detail is required")
-    .min(2, "Skype detail must be at least 2 characters")
-    .max(100, "Skype detail must be less than 100 characters"),
+    .optional()
+    .transform((v) => (v == null ? "" : v))
+    .refine((v) => v.length === 0 || v.length >= 2, {
+      message: "Skype detail must be at least 2 characters",
+    })
+    .refine((v) => v.length <= 100, {
+      message: "Skype detail must be less than 100 characters",
+    }),
 
   website: z
     .string()

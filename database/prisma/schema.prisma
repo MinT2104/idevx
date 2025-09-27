@@ -107,6 +107,7 @@ model BlogPost {
   richMeta     Json?
 
   status       String   // "draft" | "scheduled" | "published" | "archived"
+  blogType     String   @default("manual") // "automation" | "manual"
   publishedAt  DateTime?
   updatedAt    DateTime? @updatedAt
   scheduledFor DateTime?
@@ -128,13 +129,14 @@ model BlogPost {
 
   @@index([title])
   @@index([status])
+  @@index([blogType])
 }
 
 model Solution {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   key       String   // e.g. "image-processing", "product-study-ai"
   sections  Json               // full sections array as JSON for now
-  kind      String?            // optional: "solution" | "product"
+  kind      String?            // optional: "solution" | "product" | "agentic"
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -178,5 +180,108 @@ model NewsletterSubscription {
   updatedAt DateTime @updatedAt
 
   @@index([status])
+  @@index([createdAt])
+}
+
+model CareerApplication {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  email      String
+  phone      String
+  position   String
+  linkedin   String?
+  website    String?
+  message    String?
+  cvUrl      String
+  status     String   @default("applied") // applied | reviewed | shortlisted | rejected | hired
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model JobPosting {
+  id                   String   @id @default(auto()) @map("_id") @db.ObjectId
+  title                String
+  slug                 String   @unique
+  department           String
+  location             String
+  type                 String   // Full-time | Part-time | Contract
+  level                String   // Junior | Mid | Senior | Manager
+  salaryRange          Json     // { min: number; max: number; currency: string }
+  postedAt             DateTime
+  applicationDeadline  DateTime
+  description          String
+  responsibilities     Json     // string[]
+  requirements         Json     // string[]
+  niceToHave           Json?
+  benefits             Json?
+  howToApply           String
+  status               String   @default("open") // open | closed
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@index([status])
+  @@index([postedAt])
+}
+/// Testimonials for home section "What Our Clients Say"
+model Testimonial {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  type        String   // "statistic" | "quote"
+
+  // For type === "statistic"
+  statistic   Json?    // { value: string; description: string }
+
+  // For type === "quote"
+  quote       Json?    // { text: string; person: string; position: string; image?: string }
+  client      Json?    // { name: string; logo: string }
+
+  company     Json     // { name: string; logo: string; imageClass: string }
+
+  order       Int?     // For manual ordering in UI
+  status      String   @default("active") // "active" | "inactive"
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status])
+  @@index([order])
+}
+
+model Quotation {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  projectModel  String   // Payment type
+  name          String
+  email         String
+  phone         String
+  company       String
+  skype         String
+  website       String?
+  description   String
+  budget        Json     // { min: number; max: number }
+  agreeToPrivacy Boolean @default(true)
+  status        String   @default("new") // "new" | "reviewed" | "quoted" | "accepted" | "rejected" | "archived"
+  notes         String?  // Admin notes
+  quotedPrice   Float?   // Admin can set quoted price
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([status])
+  @@index([email])
+  @@index([createdAt])
+}
+
+model ClientBrand {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  imageUrl  String   // S3 URL
+  status    String   @default("active") // "active" | "inactive"
+  order     Int?     // For manual ordering
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([order])
   @@index([createdAt])
 }

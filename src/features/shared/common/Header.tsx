@@ -156,6 +156,7 @@ const Header = () => {
       dropdownItems: [
         { label: "Model Library", href: "/models", icon: BookOpen },
         { label: "Blog", href: "/blog", icon: FileCheck },
+        { label: "Quotation", href: "/quotation", icon: FileText },
         { label: "Partner", href: "/partner", icon: Handshake },
         { label: "Careers", href: "/careers", icon: Briefcase },
         { label: "Contact Us", href: "/talk-to-us", icon: MessageCircle },

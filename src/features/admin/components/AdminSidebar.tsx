@@ -13,6 +13,11 @@ import {
   PanelsTopLeft,
   MessageSquare,
   Mail,
+  Briefcase,
+  FileText,
+  Coins,
+  Building2,
+  Clock,
 } from "lucide-react";
 
 type NavigationItem = {
@@ -48,6 +53,31 @@ const navigationItems: NavigationItem[] = [
     name: "Newsletter",
     href: "/admin/newsletter",
     icon: (p) => <Mail {...p} />,
+  },
+  {
+    name: "Careers",
+    href: "/admin/careers",
+    icon: (p) => <FileText {...p} />,
+  },
+  {
+    name: "Jobs",
+    href: "/admin/jobs",
+    icon: (p) => <Briefcase {...p} />,
+  },
+  {
+    name: "Quotations",
+    href: "/admin/quotation",
+    icon: (p) => <Coins {...p} />,
+  },
+  {
+    name: "Client Brands",
+    href: "/admin/client-brands",
+    icon: (p) => <Building2 {...p} />,
+  },
+  {
+    name: "Home Testimonial",
+    href: "/admin/testimonials",
+    icon: (p) => <Users {...p} />,
   },
   {
     name: "Settings",

@@ -25,6 +25,7 @@ export class BlogAdminController {
       const limit = parseInt(c.req.query("limit") || "5");
       const search = c.req.query("search") || "";
       const status = c.req.query("status") || "";
+      const blogType = (c.req.query("blogType") as "automation" | "manual" | "all" | undefined) || undefined;
       const sortBy = c.req.query("sortBy") || "createdAt";
       const sortOrder = (c.req.query("sortOrder") as "asc" | "desc") || "desc";
 
@@ -33,6 +34,7 @@ export class BlogAdminController {
         limit,
         search,
         status,
+        blogType,
         sortBy,
         sortOrder,
       };

@@ -1,6 +1,8 @@
+"use client";
 import { Button } from "@/ui/components/button";
 import { useRouter } from "next/navigation";
 import React from "react";
+import SolutionLink from "@/features/shared/components/SolutionLink";
 
 interface GridBoxItem {
   id: string;
@@ -8,6 +10,7 @@ interface GridBoxItem {
   description: string;
   buttonText: string;
   customModelButtonLink: string;
+  solutionKey?: string; // Optional solution key for checking existence
 }
 
 interface GridOfBoxProps {
@@ -20,6 +23,7 @@ interface GridOfBoxProps {
   cardColor?: string;
   bgColor?: string;
   customModelButtonLink?: string;
+  customModelSolutionKey?: string; // Optional solution key for custom model
 }
 
 const GridOfBox: React.FC<GridOfBoxProps> = ({
@@ -32,6 +36,7 @@ const GridOfBox: React.FC<GridOfBoxProps> = ({
   cardColor = "bg-white",
   bgColor = "bg-gray-50",
   customModelButtonLink = "/blog",
+  customModelSolutionKey,
 }) => {
   const router = useRouter();
   return (
@@ -62,15 +67,25 @@ const GridOfBox: React.FC<GridOfBoxProps> = ({
                   {item.description}
                 </p>
                 <div className="flex justify-end">
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      router.push(item.customModelButtonLink || "");
-                    }}
-                    className="px-3 md:px-4 py-2 border rounded-none border-gray-500 text-black font-medium text-xs md:text-sm bg-[#FAFAFA]"
-                  >
-                    {item.buttonText}
-                  </Button>
+                  {item.solutionKey ? (
+                    <SolutionLink
+                      solutionKey={item.solutionKey}
+                      redirectPath={item.customModelButtonLink}
+                      className="px-3 md:px-4 py-2 border rounded-none border-gray-500 text-black font-medium text-xs md:text-sm bg-[#FAFAFA] hover:bg-gray-100 transition-colors"
+                    >
+                      {item.buttonText}
+                    </SolutionLink>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        router.push(item.customModelButtonLink || "");
+                      }}
+                      className="px-3 md:px-4 py-2 border rounded-none border-gray-500 text-black font-medium text-xs md:text-sm bg-[#FAFAFA]"
+                    >
+                      {item.buttonText}
+                    </Button>
+                  )}
                 </div>
               </div>
             ))}
@@ -85,15 +100,25 @@ const GridOfBox: React.FC<GridOfBoxProps> = ({
               {customModelDescription}
             </p>
             <div className="flex justify-end">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  router.push(customModelButtonLink);
-                }}
-                className="px-3 md:px-4 py-2 border rounded-none border-gray-500 text-black font-medium text-xs md:text-sm bg-[#FAFAFA]"
-              >
-                {customModelButtonText}
-              </Button>
+              {customModelSolutionKey ? (
+                <SolutionLink
+                  solutionKey={customModelSolutionKey}
+                  redirectPath={customModelButtonLink}
+                  className="px-3 md:px-4 py-2 border rounded-none border-gray-500 text-black font-medium text-xs md:text-sm bg-[#FAFAFA] hover:bg-gray-100 transition-colors"
+                >
+                  {customModelButtonText}
+                </SolutionLink>
+              ) : (
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    router.push(customModelButtonLink);
+                  }}
+                  className="px-3 md:px-4 py-2 border rounded-none border-gray-500 text-black font-medium text-xs md:text-sm bg-[#FAFAFA]"
+                >
+                  {customModelButtonText}
+                </Button>
+              )}
             </div>
           </div>
         </div>

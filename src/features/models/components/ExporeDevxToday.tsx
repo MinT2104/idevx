@@ -18,7 +18,7 @@ const ExporeDevxToday = ({ className }: ExploreProps) => {
         <Button
           variant="outline"
           className="px-6 md:px-8 py-2 md:py-3 text-base md:text-lg bg-white border border-gray-500 text-black rounded-none w-full sm:w-auto"
-          onClick={() => router.push("/")}
+          onClick={() => router.push("/quotation")}
         >
           Get Started
         </Button>

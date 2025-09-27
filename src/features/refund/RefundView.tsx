@@ -12,7 +12,7 @@ const RefundView = () => {
             text: "Get Started",
             variant: "outline",
             size: "lg",
-            link: "/",
+            link: "/quotation",
           },
           {
             text: "Talk to an Expert",

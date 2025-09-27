@@ -14,6 +14,8 @@ interface ImageUploadProps {
   onChange: (image: { url: string; alt: string } | null) => void;
   onUseForBoth?: (image: { url: string; alt: string }) => void;
   className?: string;
+  height?: number; // preview height in px
+  hint?: string; // helper text below
 }
 
 export default function ImageUpload({
@@ -22,6 +24,8 @@ export default function ImageUpload({
   onChange,
   onUseForBoth,
   className = "",
+  height = 192,
+  hint,
 }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
@@ -50,11 +54,15 @@ export default function ImageUpload({
           filename: file.name,
           contentType: file.type,
         }),
+        credentials: "include",
       });
 
       const data = await response.json();
 
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error("Unauthorized. Please sign in as admin to upload.");
+        }
         throw new Error(data.error || "Failed to get presigned URL");
       }
 
@@ -162,32 +170,22 @@ export default function ImageUpload({
       {value ? (
         // Image Preview
         <div className="space-y-3">
-          <div className="relative group">
+          <div className="relative group rounded-xl overflow-hidden border border-gray-200 bg-white">
             <img
               src={value.url}
               alt={value.alt}
-              className="w-full h-64 object-cover rounded-lg border border-gray-200"
+              style={{ height: `${height}px` }}
+              className="w-full object-contain bg-white"
             />
-            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-200 rounded-lg flex items-center justify-center">
-              <div className="opacity-0 group-hover:opacity-100 transition-opacity space-x-2">
+            <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute inset-0 flex items-start justify-end p-3 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="flex gap-2">
                 <Button
                   type="button"
                   size="sm"
-                  variant="secondary"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="bg-white/90 hover:bg-white"
-                >
-                  <Upload className="h-4 w-4 mr-1" />
-                  Replace
-                </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="secondary"
+                  variant="destructive"
                   onClick={handleRemove}
-                  className="bg-red-500/90 hover:bg-red-600 text-white"
                 >
-                  <X className="h-4 w-4 mr-1" />
                   Remove
                 </Button>
               </div>
@@ -224,12 +222,12 @@ export default function ImageUpload({
             )}
           </div>
 
-          <p className="text-xs text-gray-500 break-all">{value.url}</p>
+          {hint && <p className="text-xs text-gray-400">{hint}</p>}
         </div>
       ) : (
         // Upload Area
         <div
-          className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors min-h-[200px] flex items-center justify-center ${
+          className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors flex items-center justify-center w-full ${
             dragOver
               ? "border-blue-400 bg-blue-50"
               : "border-gray-300 hover:border-gray-400"
@@ -271,6 +269,7 @@ export default function ImageUpload({
                   <p className="text-xs text-gray-500 mt-2">
                     PNG, JPG, GIF up to 10MB
                   </p>
+                  {hint && <p className="text-xs text-gray-400 mt-1">{hint}</p>}
                 </div>
               </>
             )}

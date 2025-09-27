@@ -147,7 +147,8 @@
   .markdown-content {
     color: #1f2937 !important; /* text-gray-800 */
     background-color: #ffffff !important; /* bg-white */
-    padding: 1.5rem !important;
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
     border-radius: 0.5rem !important;
   }
 

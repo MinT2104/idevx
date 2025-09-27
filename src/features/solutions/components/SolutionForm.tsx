@@ -19,7 +19,7 @@ type SectionValue = any;
 
 export type SolutionFormValue = {
   key: string;
-  kind: "solution" | "product";
+  kind: "solution" | "product" | "agentic";
   sections: SectionValue[];
 };
 
@@ -35,7 +35,7 @@ export default function SolutionForm({
   const { error: toastError, warning: toastWarning } = useToast();
   const router = useRouter();
   const [key, setKey] = useState(initial?.key || "");
-  const [kind, setKind] = useState<"solution" | "product">(
+  const [kind, setKind] = useState<"solution" | "product" | "agentic">(
     (initial?.kind as any) || "solution"
   );
   const [sections, setSections] = useState<SectionValue[]>(
@@ -211,6 +211,7 @@ export default function SolutionForm({
             <SelectContent>
               <SelectItem value="solution">Solution</SelectItem>
               <SelectItem value="product">Product</SelectItem>
+              <SelectItem value="agentic">Agentic</SelectItem>
             </SelectContent>
           </Select>
         </div>

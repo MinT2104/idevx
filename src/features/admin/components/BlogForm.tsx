@@ -509,6 +509,26 @@ export default function BlogForm({ initialData, postId }: BlogFormProps) {
                   </Select>
                 </div>
 
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Blog Type
+                  </label>
+                  <Select
+                    value={formData.blogType || "manual"}
+                    onValueChange={(value: any) =>
+                      handleInputChange("blogType", value)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="manual">✍️ Manual</SelectItem>
+                      <SelectItem value="automation">🤖 Automation</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
                 <div className="flex items-center space-x-2">
                   <Checkbox
                     id="featured"

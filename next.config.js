@@ -15,14 +15,6 @@ const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ["@prisma/client"],
     optimizePackageImports: ["lucide-react", "@radix-ui/react-icons"],
-    turbo: {
-      rules: {
-        "*.svg": {
-          loaders: ["@svgr/webpack"],
-          as: "*.js",
-        },
-      },
-    },
   },
 
   // Image optimization
@@ -45,6 +37,18 @@ const nextConfig = {
 
   // Webpack optimizations
   webpack: (config, { dev, isServer }) => {
+    // Ignore optional dependencies for Agenda/MongoDB
+    config.externals = config.externals || [];
+    config.externals.push({
+      'bson-ext': 'commonjs bson-ext',
+      'kerberos': 'commonjs kerberos',
+      '@mongodb-js/zstd': 'commonjs @mongodb-js/zstd',
+      'snappy': 'commonjs snappy',
+      'snappy/package.json': 'commonjs snappy/package.json',
+      'aws4': 'commonjs aws4',
+      'mongodb-client-encryption': 'commonjs mongodb-client-encryption',
+    });
+
     // Production optimizations
     if (!dev && !isServer) {
       config.optimization.splitChunks = {

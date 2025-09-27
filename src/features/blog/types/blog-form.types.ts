@@ -36,6 +36,7 @@ export interface BlogFormData {
 
   // Status & Publishing
   status: "draft" | "published";
+  blogType?: "automation" | "manual";
   publishedAt?: string;
   featured: boolean;
 

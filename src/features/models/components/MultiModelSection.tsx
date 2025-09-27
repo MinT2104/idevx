@@ -1,7 +1,9 @@
+"use client";
 import ModelsListPanel from "@/features/models/components/ModelsListPanel";
 import HowItWorksPanel from "@/features/home/components/HowItWorksPanel";
 import Image from "next/image";
 import { Suspense } from "react";
+import { useRouter } from "next/navigation";
 
 interface Model {
   id: string;
@@ -23,9 +25,6 @@ interface MultiModelSectionProps {
   subtitle: string;
   models: Model[];
   steps: Step[];
-  onModelAction?: (modelSlug: string, actionType: string) => void;
-  onLearnMore?: () => void;
-  onContactExpert?: () => void;
 }
 
 export default function MultiModelSection({
@@ -33,9 +32,6 @@ export default function MultiModelSection({
   subtitle,
   models,
   steps,
-  onModelAction,
-  onLearnMore,
-  onContactExpert,
 }: MultiModelSectionProps) {
   function AsciiBackground() {
     // Tạo ma trận ký tự ASCII với seed cố định để tránh hydration mismatch
@@ -67,6 +63,25 @@ export default function MultiModelSection({
       </Suspense>
     );
   }
+
+  const router = useRouter();
+
+  const onModelAction = (modelSlug: string) => {
+    console.log("modelSlug", modelSlug);
+    const src = (models || []).find((m) => m.slug === modelSlug);
+    router.push(src?.customModelButtonLink || `/models/${modelSlug}`);
+  };
+
+  const onLearnMore = () => {
+    router.push("/models");
+  };
+  const onContactExpert = () => {
+    router.push("/talk-to-us");
+  };
+
+  const onLearnMoreProduct = (item: string) => {
+    router.push("/product/" + item);
+  };
 
   return (
     <div className="py-16">
@@ -117,30 +132,34 @@ export default function MultiModelSection({
           {/* How It Works Panel */}
           <HowItWorksPanel
             title="AI for Education"
-            image="/images/svgs/ai_for_education/index.png"
+            image="/images/product/product_study_2.png"
             description="Personalized tutoring, curriculum Q&A, and smart content delivery."
-            onContactExpert={onContactExpert}
+            onContactExpert={() => onLearnMoreProduct("study-ai")}
+            buttonText="Learn More"
           />
           {/* How It Works Panel */}
           <HowItWorksPanel
             title="AI for Healthcare"
-            image="/images/svgs/ai_for_healthcare/index.png"
+            image="/images/product/product_health_1.png"
             description="Patient assistance, medical records summarization, and secure clinical insights."
-            onContactExpert={onContactExpert}
+            onContactExpert={() => onLearnMoreProduct("healthy-ai")}
+            buttonText="Learn More"
           />
           {/* How It Works Panel */}
           <HowItWorksPanel
             title="AI for Legal"
-            image="/images/svgs/ai_for_legal/index.png"
+            image="/images/product/product_law_1.png"
             description="Contract review, case research, and AI-powered legal drafting."
-            onContactExpert={onContactExpert}
+            onContactExpert={() => onLearnMoreProduct("legal-ai")}
+            buttonText="Learn More"
           />
           {/* How It Works Panel */}
           <HowItWorksPanel
-            image="/images/svgs/ai_for_travel/index.png"
+            image="/images/product/product_travel_1.png"
             title="AI for Travel & Food Creators"
             description="AI trip planners, itinerary builders, and intelligent video/content assistants."
-            onContactExpert={onContactExpert}
+            onContactExpert={() => onLearnMoreProduct("travel-ai")}
+            buttonText="Learn More"
           />
         </div>
 
